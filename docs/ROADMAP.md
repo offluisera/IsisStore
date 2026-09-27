@@ -12,8 +12,8 @@
 | :--- | :--- | :--- | :--- |
 | **00** | **Reconhecimento** | **CONCLUÍDA** | Auditoria e diagnóstico concluídos ([docs/PROJECT-AUDIT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/PROJECT-AUDIT.md)) |
 | **01** | **Fundação** | **CONCLUÍDA** | Next.js + TS + Tailwind + Tokens + Build OK |
-| **02** | **Design System** | **A INICIAR** | Componentes core + checklist visual e acessibilidade OK |
-| **03** | **Supabase + Banco + RLS** | Pendente | Migrations + RLS + Storage + Seeds OK |
+| **02** | **Design System** | **CONCLUÍDA** | Componentes core + checklist visual e acessibilidade OK |
+| **03** | **Supabase + Banco + RLS** | **A INICIAR** | Migrations + RLS + Storage + Seeds OK |
 | **04** | **Autenticação** | Pendente | Auth + Roles + Proteção de Rotas OK |
 | **05** | **Catálogo** | Pendente | Produtos + Categorias + Busca + Filtros + WebP OK |
 | **06** | **Carrinho** | Pendente | Adicionar/remover/quantidades + persistência OK |
@@ -66,4 +66,22 @@
   * Lint (`eslint`): OK
   * Fontes & Tokens: OK
   * Responsividade inicial: OK
+
+### Fase 02 — Design System
+* **Data de Conclusão:** 2026-09-26
+* **Status:** Concluída
+* **Entregáveis:**
+  * Especificação detalhada em [docs/DESIGN-SYSTEM.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DESIGN-SYSTEM.md)
+  * Checklist verificado em [docs/DESIGN-SYSTEM-CHECKLIST.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DESIGN-SYSTEM-CHECKLIST.md)
+  * Componentes core de UI em `src/components/ui/` (`Button`, `Badge`, `Input`, `Checkbox`, `Card`, `Dialog`, `Skeleton`, `Toast`)
+  * Componentes de domínio e layout em `src/components/commerce/` e `src/components/layout/` (`ProductCard`, `CartDrawer`, `CategoryPill`, `Header`, `BottomNav`)
+  * Extração e incorporação dos assets oficiais (`public/images/logo/logo.jpeg` e `public/images/banner-rosto.jpeg`)
+  * Vitrine interativa de componentes na Home
+* **Gate 02:**
+  * Build (`next build` Turbopack): OK
+  * Typecheck (`tsc --noEmit`): OK
+  * Lint (`eslint`): OK
+  * Fidelidade visual às 6 imagens de referência: OK
+  * Acessibilidade e estados: OK
+
 

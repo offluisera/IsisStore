@@ -22,4 +22,11 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
   - Criação do arquivo de ambiente `.env.example`.
   - Documentação da arquitetura em `docs/ARCHITECTURE.md`.
   - Implementação da tela inicial da fundação e validação 100% nos gates de build, lint e typecheck.
+- Conclusão da **Fase 02 — Design System**:
+  - Análise aprofundada de todas as referências visuais oficiais (`design-1.png`, `design-2.png`, `tela.png`, `login.png`, `cliente.png`, `logo.jpeg`, `banner-rosto.jpeg`).
+  - Criação da documentação completa em `docs/DESIGN-SYSTEM.md` e `docs/DESIGN-SYSTEM-CHECKLIST.md`.
+  - Construção de componentes atômicos: `Button`, `Badge`, `Input`, `Checkbox`, `Card`, `Dialog`, `Skeleton`, `Toast`.
+  - Construção de componentes de domínio e layout: `ProductCard`, `CartDrawer` (com barra de frete grátis), `CategoryPill` (5 categorias oficiais), `Header` (com top bar e busca), `BottomNav` (mobile).
+  - Vitrine viva integrada na Home Page com fidelidade total à identidade visual Isis Store.
+  - Aprovação em 100% dos gates de build, typecheck e lint.
 

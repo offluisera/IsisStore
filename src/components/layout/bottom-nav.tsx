@@ -1,0 +1,51 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Grid, ShoppingBag, User } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
+  const pathname = usePathname();
+
+  const links = [
+    { label: "Início", href: "/", icon: Home },
+    { label: "Categorias", href: "/categorias", icon: Grid },
+    { label: "Carrinho", href: "/carrinho", icon: ShoppingBag, badge: cartCount },
+    { label: "Conta", href: "/conta", icon: User },
+  ];
+
+  return (
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-borda-suave px-6 py-2 shadow-lg safe-area-bottom">
+      <div className="flex items-center justify-around max-w-md mx-auto">
+        {links.map((link) => {
+          const Icon = link.icon;
+          const isActive = pathname === link.href;
+
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "flex flex-col items-center gap-1 py-1 px-3 text-[11px] font-medium transition-colors relative",
+                isActive
+                  ? "text-primaria font-bold"
+                  : "text-texto-claro hover:text-texto-escuro"
+              )}
+            >
+              <div className="relative">
+                <Icon className={cn("w-5 h-5", isActive ? "stroke-[2.2]" : "stroke-[1.6]")} />
+                {Boolean(link.badge && link.badge > 0) && (
+                  <span className="absolute -top-1.5 -right-2 h-4 w-4 rounded-full bg-primaria text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                    {link.badge}
+                  </span>
+                )}
+              </div>
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
