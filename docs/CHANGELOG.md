@@ -5,6 +5,24 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## 2026-09-27
+
+### Added
+- Conclusão da **Fase 04 — Autenticação**:
+  - Instalação e integração do `zod` com schemas estritos em `src/schemas/auth.ts`.
+  - Implementação de Server Actions seguras em `src/features/auth/actions.ts` para login, cadastro, recuperação e redefinição de senha.
+  - Construção do layout de autenticação `src/app/(auth)/layout.tsx` e páginas dedicadas:
+    - `/login` com alternância de visibilidade de senha, feedback de erro e redirecionamento dinâmico.
+    - `/cadastro` com validação de termos de uso e complexidade de senha.
+    - `/recuperar-senha` e `/redefinir-senha` integrados ao fluxo do Supabase Auth.
+  - Implementação do endpoint de callback PKCE em `src/app/auth/callback/route.ts` e encerramento de sessão em `src/app/auth/signout/route.ts`.
+  - Criação de `middleware.ts` com `@supabase/ssr` para sincronização contínua de cookies de sessão e proteção contra acessos não autorizados.
+  - Implementação da Área do Cliente em `src/app/conta/page.tsx` com hub de navegação e exibição de perfil.
+  - Implementação do Painel Admin em `src/app/admin/layout.tsx` e `src/app/admin/page.tsx` com dupla barreira de autorização baseada em RBAC (`role === 'admin'`).
+  - Aprovação no **Gate 04**: Usuário comum não acessa `/admin`, redirecionamento seguro para `/conta` com aviso de restrição.
+
+---
+
 ## 2026-09-26
 
 ### Added

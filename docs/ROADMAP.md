@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-26  
-> **Status Geral:** Em andamento — Fase 00 Concluída
+> **Status Geral:** Em andamento — Fase 04 Concluída
 
 ---
 
@@ -14,8 +14,8 @@
 | **01** | **Fundação** | **CONCLUÍDA** | Next.js + TS + Tailwind + Tokens + Build OK |
 | **02** | **Design System** | **CONCLUÍDA** | Componentes core + checklist visual e acessibilidade OK |
 | **03** | **Supabase + Banco + RLS** | **CONCLUÍDA** | Migrations + RLS + Storage + Seeds OK |
-| **04** | **Autenticação** | **A INICIAR** | Auth + Roles + Proteção de Rotas OK |
-| **05** | **Catálogo** | Pendente | Produtos + Categorias + Busca + Filtros + WebP OK |
+| **04** | **Autenticação** | **CONCLUÍDA** | Auth + Roles + Proteção de Rotas OK |
+| **05** | **Catálogo** | **A INICIAR** | Produtos + Categorias + Busca + Filtros + WebP OK |
 | **06** | **Carrinho** | Pendente | Adicionar/remover/quantidades + persistência OK |
 | **07** | **Área do Cliente** | Pendente | Dashboard + Pedidos + Endereços + RLS isolado OK |
 | **08** | **Checkout** | Pendente | Snapshot de itens + cálculo server-side + concorrência estoque OK |
@@ -103,6 +103,30 @@
   * Lint (`eslint`): OK
   * RLS 100% ativo: OK
   * Migrations aplicadas no banco: OK
+
+### Fase 04 — Autenticação
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Schemas de validação Zod em [src/schemas/auth.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/schemas/auth.ts) (login, registro, recuperação e redefinição de senha com feedback em PT-BR)
+  * Server Actions seguras em [src/features/auth/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/auth/actions.ts)
+  * Telas de autenticação sob layout de marca [src/app/(auth)/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/(auth)/layout.tsx):
+    * Login: [src/app/(auth)/login/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/(auth)/login/page.tsx)
+    * Cadastro: [src/app/(auth)/cadastro/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/(auth)/cadastro/page.tsx)
+    * Recuperação de senha: [src/app/(auth)/recuperar-senha/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/(auth)/recuperar-senha/page.tsx)
+    * Redefinição de senha: [src/app/(auth)/redefinir-senha/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/(auth)/redefinir-senha/page.tsx)
+  * Endpoint PKCE Callback: [src/app/auth/callback/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/auth/callback/route.ts)
+  * Endpoint de Logout: [src/app/auth/signout/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/auth/signout/route.ts)
+  * Middleware de sessão e proteção de rotas: [src/middleware.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/middleware.ts) e [src/lib/supabase/middleware.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/supabase/middleware.ts)
+  * Área do Cliente protegida: [src/app/conta/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/page.tsx)
+  * Painel Admin com verificação server-side de role `admin`: [src/app/admin/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/layout.tsx) e [src/app/admin/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/page.tsx)
+* **Gate 04:**
+  * Build (`next build` Turbopack): OK
+  * Typecheck (`tsc --noEmit`): OK
+  * Lint (`eslint`): OK
+  * Usuário comum não acessa área administrativa (`/admin` redireciona para `/conta?error=unauthorized_admin`): OK
+  * Rotas `/conta/*` e `/admin/*` protegidas contra acesso anônimo: OK
+
 
 
 
