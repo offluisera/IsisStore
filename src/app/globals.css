@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme inline {
+  --color-primaria: var(--cor-primaria);
+  --color-primaria-hover: var(--cor-primaria-hover);
+  --color-primaria-active: var(--cor-primaria-active);
+  --color-primaria-soft: var(--cor-primaria-soft);
+  --color-primaria-border: var(--cor-primaria-border);
+
+  --color-secundaria: var(--cor-secundaria);
+  --color-secundaria-hover: var(--cor-secundaria-hover);
+  --color-secundaria-clara: var(--cor-secundaria-clara);
+
+  --color-fundo: var(--cor-fundo);
+  --color-fundo-card: var(--cor-fundo-card);
+  --color-fundo-elevado: var(--cor-fundo-elevado);
+
+  --color-texto-escuro: var(--cor-texto-escuro);
+  --color-texto-medio: var(--cor-texto-medio);
+  --color-texto-claro: var(--cor-texto-claro);
+  --color-texto-invertido: var(--cor-texto-invertido);
+
+  --color-borda: var(--cor-borda);
+  --color-borda-suave: var(--cor-borda-suave);
+  --color-borda-destaque: var(--cor-borda-destaque);
+
+  --color-sucesso: var(--cor-sucesso);
+  --color-alerta: var(--cor-alerta);
+  --color-erro: var(--cor-erro);
+  --color-info: var(--cor-info);
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
+
+  --radius-sm: var(--raio-sm);
+  --radius-md: var(--raio-md);
+  --radius-lg: var(--raio-lg);
+}
+
+body {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-escuro);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

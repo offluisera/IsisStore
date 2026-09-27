@@ -11,8 +11,8 @@
 | Fase | Título | Status | Gate / Critério |
 | :--- | :--- | :--- | :--- |
 | **00** | **Reconhecimento** | **CONCLUÍDA** | Auditoria e diagnóstico concluídos ([docs/PROJECT-AUDIT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/PROJECT-AUDIT.md)) |
-| **01** | **Fundação** | **A INICIAR** | Next.js + TS + Tailwind + Tokens + Build OK |
-| **02** | **Design System** | Pendente | Componentes core + checklist visual e acessibilidade OK |
+| **01** | **Fundação** | **CONCLUÍDA** | Next.js + TS + Tailwind + Tokens + Build OK |
+| **02** | **Design System** | **A INICIAR** | Componentes core + checklist visual e acessibilidade OK |
 | **03** | **Supabase + Banco + RLS** | Pendente | Migrations + RLS + Storage + Seeds OK |
 | **04** | **Autenticação** | Pendente | Auth + Roles + Proteção de Rotas OK |
 | **05** | **Catálogo** | Pendente | Produtos + Categorias + Busca + Filtros + WebP OK |
@@ -47,3 +47,23 @@
   * Lint: N/A
   * Auditoria: OK
   * Documentação: OK
+
+### Fase 01 — Fundação
+* **Data de Conclusão:** 2026-09-26
+* **Status:** Concluída
+* **Entregáveis:**
+  * Base técnica Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
+  * Dependências de UI (`clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`)
+  * Design tokens oficiais em [src/styles/tokens.css](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/styles/tokens.css)
+  * Tipografia oficial (Inter e Playfair Display via `next/font`)
+  * Estrutura de pastas arquitetural em `src/`
+  * Variáveis de ambiente de exemplo em [.env.example](file:///c:/xampp/htdocs/AluraProjects/IsisStore/.env.example)
+  * Documento de arquitetura em [docs/ARCHITECTURE.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/ARCHITECTURE.md)
+  * [README.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/README.md) atualizado
+* **Gate 01:**
+  * Build (`next build`): OK
+  * Typecheck (`tsc --noEmit`): OK
+  * Lint (`eslint`): OK
+  * Fontes & Tokens: OK
+  * Responsividade inicial: OK
+
