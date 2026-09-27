@@ -25,88 +25,81 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CartItemData } from "@/components/commerce/cart-drawer";
+import { createClient } from "@/lib/supabase/client";
 
-// Produtos oficiais de demonstração baseados no catálogo oficial
-const SAMPLE_PRODUCTS = [
-  {
-    id: "p1",
-    slug: "headphone-bluetooth-rosa-soft",
-    name: "Headphone Bluetooth Rosa Soft",
-    category: "Casa / Eletrônicos",
-    price: 19990,
-    originalPrice: 24990,
-    discountPercent: 20,
-    rating: 4.8,
-    reviewCount: 124,
-    imageUrl: "/images/products/headphone-bluetooth-rosa-soft.jpg",
-    colors: ["#E08CA3", "#F9C7D4", "#574240"],
-  },
-  {
-    id: "p2",
-    slug: "ursinho-de-pelucia-carinho",
-    name: "Ursinho de Pelúcia Carinho",
-    category: "Infantil / Baby",
-    price: 8990,
-    badgeText: "Novo",
-    rating: 4.9,
-    reviewCount: 89,
-    imageUrl: "/images/products/ursinho-de-pelucia-carinho.jpg",
-    colors: ["#D4A373", "#E08CA3"],
-  },
-  {
-    id: "p3",
-    slug: "mochila-feminina-elegante",
-    name: "Mochila Feminina Elegante",
-    category: "Acessórios",
-    price: 16990,
-    originalPrice: 19990,
-    discountPercent: 15,
-    rating: 4.7,
-    reviewCount: 67,
-    imageUrl: "/images/products/mochila-feminina-elegante.jpg",
-    colors: ["#E08CA3", "#574240"],
-  },
-  {
-    id: "p4",
-    slug: "colar-coracao-delicado-ouro-rosa",
-    name: "Colar Coração Delicado Ouro Rosa",
-    category: "Acessórios",
-    price: 5990,
-    badgeText: "Mais vendido",
-    rating: 4.9,
-    reviewCount: 156,
-    imageUrl: "/images/products/colar-coracao-delicado-ouro-rosa.jpg",
-  },
-];
+interface HomeProduct {
+  id: string;
+  slug: string;
+  name: string;
+  price_cents: number;
+  sale_price_cents?: number | null;
+  stock: number;
+  featured: boolean;
+  categories?: { name: string } | null;
+  product_images?: { public_url: string; is_primary: boolean }[];
+}
 
 export default function Home() {
-  const [cart, setCart] = React.useState<CartItemData[]>([
-    {
-      id: "p1",
-      name: "Headphone Bluetooth Rosa Soft",
-      price: 19990,
-      quantity: 1,
-      imageUrl: "/images/banner-rosto.jpeg",
-    },
-  ]);
-  const [wishlistCount, setWishlistCount] = React.useState(2);
-  const [activeTab, setActiveTab] = React.useState<"mais-vendidos" | "novidades" | "promocoes">(
-    "mais-vendidos"
-  );
+  const [products, setProducts] = React.useState<HomeProduct[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = React.useState(true);
+  const [cart, setCart] = React.useState<CartItemData[]>([]);
+  const [wishlistCount, setWishlistCount] = React.useState(0);
+  const [activeTab, setActiveTab] = React.useState<
+    "mais-vendidos" | "novidades" | "promocoes"
+  >("mais-vendidos");
   const [notification, setNotification] = React.useState<{
     title: string;
     description: string;
     variant: "success" | "warning" | "error" | "info";
   } | null>(null);
 
+  React.useEffect(() => {
+    async function loadProducts() {
+      try {
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("products")
+          .select(
+            "id, slug, name, price_cents, sale_price_cents, stock, featured, categories(name), product_images(public_url, is_primary)"
+          )
+          .eq("status", "published")
+          .order("created_at", { ascending: false })
+          .limit(8);
+
+        setProducts((data as unknown as HomeProduct[]) || []);
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    }
+    loadProducts();
+  }, []);
+
   const handleAddToCart = (productId: string) => {
     const existing = cart.find((i) => i.id === productId);
     if (existing) {
-      setCart(cart.map((i) => (i.id === productId ? { ...i, quantity: i.quantity + 1 } : i)));
+      setCart(
+        cart.map((i) =>
+          i.id === productId ? { ...i, quantity: i.quantity + 1 } : i
+        )
+      );
     } else {
-      const prod = SAMPLE_PRODUCTS.find((p) => p.id === productId);
+      const prod = products.find((p) => p.id === productId);
       if (prod) {
-        setCart([...cart, { id: prod.id, name: prod.name, price: prod.price, quantity: 1, imageUrl: prod.imageUrl }]);
+        const primaryImg =
+          prod.product_images?.find((i) => i.is_primary) ||
+          prod.product_images?.[0];
+        setCart([
+          ...cart,
+          {
+            id: prod.id,
+            name: prod.name,
+            price: prod.sale_price_cents || prod.price_cents,
+            quantity: 1,
+            imageUrl: primaryImg?.public_url || "/images/logo/logo.jpeg",
+          },
+        ]);
       }
     }
     setNotification({
@@ -320,22 +313,83 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {SAMPLE_PRODUCTS.map((product) => (
-              <Link
-                key={product.id}
-                href={`/produtos/${product.slug}`}
-                className="block h-full group"
-              >
-                <ProductCard
-                  {...product}
-                  onAddToCart={handleAddToCart}
-                  onToggleWishlist={handleToggleWishlist}
-                  className="h-full"
-                />
-              </Link>
-            ))}
-          </div>
+          {isLoadingProducts ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  className="rounded-2xl border border-borda bg-white p-4 h-84 animate-pulse flex flex-col justify-between"
+                >
+                  <div className="aspect-square bg-fundo rounded-xl w-full" />
+                  <div className="space-y-2 mt-4">
+                    <div className="h-4 bg-fundo rounded w-3/4" />
+                    <div className="h-4 bg-fundo rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map((product) => {
+                const primaryImg =
+                  product.product_images?.find((i) => i.is_primary) ||
+                  product.product_images?.[0];
+                const discount =
+                  product.sale_price_cents &&
+                  product.sale_price_cents < product.price_cents
+                    ? Math.round(
+                        ((product.price_cents - product.sale_price_cents) /
+                          product.price_cents) *
+                          100
+                      )
+                    : undefined;
+
+                return (
+                  <Link
+                    key={product.id}
+                    href={`/produtos/${product.slug}`}
+                    className="block h-full group"
+                  >
+                    <ProductCard
+                      id={product.id}
+                      name={product.name}
+                      category={product.categories?.name}
+                      price={product.sale_price_cents || product.price_cents}
+                      originalPrice={
+                        product.sale_price_cents ? product.price_cents : undefined
+                      }
+                      discountPercent={discount}
+                      imageUrl={primaryImg?.public_url || ""}
+                      onAddToCart={handleAddToCart}
+                      onToggleWishlist={handleToggleWishlist}
+                      badgeText={product.featured ? "Destaque" : undefined}
+                      className="h-full"
+                    />
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-borda p-12 text-center flex flex-col items-center justify-center shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-primaria-soft text-primaria flex items-center justify-center mb-3">
+                <Package className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-lg font-semibold text-texto-escuro">
+                Catálogo em Atualização
+              </h3>
+              <p className="text-xs text-texto-claro mt-1 max-w-sm">
+                Nenhum produto cadastrado no momento. Cadastre as peças reais da loja pelo Painel Admin.
+              </p>
+              <div className="mt-4">
+                <Link
+                  href="/admin/produtos/novo"
+                  className="text-xs font-semibold text-primaria hover:underline"
+                >
+                  Cadastrar Primeiro Produto no Admin &rarr;
+                </Link>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Vitrine do Design System: Componentes e Estados (design-1.png & design-2.png) */}
