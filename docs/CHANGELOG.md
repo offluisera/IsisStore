@@ -29,4 +29,13 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
   - Construção de componentes de domínio e layout: `ProductCard`, `CartDrawer` (com barra de frete grátis), `CategoryPill` (5 categorias oficiais), `Header` (com top bar e busca), `BottomNav` (mobile).
   - Vitrine viva integrada na Home Page com fidelidade total à identidade visual Isis Store.
   - Aprovação em 100% dos gates de build, typecheck e lint.
+- Conclusão da **Fase 03 — Supabase + Banco + RLS**:
+  - Modelagem e aplicação de schema no PostgreSQL do Supabase (`wjhmukemyvimgxapscao` em sa-east-1).
+  - 11 tabelas de domínio criadas com constraints de integridade (`stock >= 0`, `price_cents >= 0`, snapshots imutáveis).
+  - 100% das tabelas protegidas por Row Level Security (RLS) para visitantes, clientes e administradores.
+  - Bucket `products` provisionado no Supabase Storage com políticas de acesso.
+  - Geração de tipos TypeScript automáticos em `src/types/database.ts`.
+  - Instalação do SDK oficial `@supabase/supabase-js` e `@supabase/ssr` com clientes em `src/lib/supabase/`.
+  - Documentação completa em `docs/DATABASE.md`.
+
 

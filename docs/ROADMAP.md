@@ -13,8 +13,8 @@
 | **00** | **Reconhecimento** | **CONCLUÍDA** | Auditoria e diagnóstico concluídos ([docs/PROJECT-AUDIT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/PROJECT-AUDIT.md)) |
 | **01** | **Fundação** | **CONCLUÍDA** | Next.js + TS + Tailwind + Tokens + Build OK |
 | **02** | **Design System** | **CONCLUÍDA** | Componentes core + checklist visual e acessibilidade OK |
-| **03** | **Supabase + Banco + RLS** | **A INICIAR** | Migrations + RLS + Storage + Seeds OK |
-| **04** | **Autenticação** | Pendente | Auth + Roles + Proteção de Rotas OK |
+| **03** | **Supabase + Banco + RLS** | **CONCLUÍDA** | Migrations + RLS + Storage + Seeds OK |
+| **04** | **Autenticação** | **A INICIAR** | Auth + Roles + Proteção de Rotas OK |
 | **05** | **Catálogo** | Pendente | Produtos + Categorias + Busca + Filtros + WebP OK |
 | **06** | **Carrinho** | Pendente | Adicionar/remover/quantidades + persistência OK |
 | **07** | **Área do Cliente** | Pendente | Dashboard + Pedidos + Endereços + RLS isolado OK |
@@ -83,5 +83,26 @@
   * Lint (`eslint`): OK
   * Fidelidade visual às 6 imagens de referência: OK
   * Acessibilidade e estados: OK
+
+### Fase 03 — Supabase + Banco + RLS
+* **Data de Conclusão:** 2026-09-26
+* **Status:** Concluída
+* **Entregáveis:**
+  * Documentação detalhada em [docs/DATABASE.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DATABASE.md)
+  * Migration versionada em [supabase/migrations/20260927000000_initial_schema.sql](file:///c:/xampp/htdocs/AluraProjects/IsisStore/supabase/migrations/20260927000000_initial_schema.sql)
+  * 11 tabelas de domínio criadas e validadas no projeto Supabase `wjhmukemyvimgxapscao` (sa-east-1)
+  * Row Level Security (RLS) habilitado e verificado em 100% das tabelas públicas
+  * Bucket de Storage `products` criado com leitura pública e escrita restrita a admins
+  * Tabela de idempotência `payment_events` e modelo de snapshot de pedidos `order_items`
+  * Seeds oficiais aplicadas (5 categorias da marca e produtos realistas)
+  * Tipos TypeScript gerados em [src/types/database.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/types/database.ts)
+  * Clientes Supabase em [src/lib/supabase/client.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/supabase/client.ts), [src/lib/supabase/server.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/supabase/server.ts) e [src/lib/supabase/admin.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/supabase/admin.ts)
+* **Gate 03:**
+  * Build (`next build` Turbopack): OK
+  * Typecheck (`tsc --noEmit`): OK
+  * Lint (`eslint`): OK
+  * RLS 100% ativo: OK
+  * Migrations aplicadas no banco: OK
+
 
 
