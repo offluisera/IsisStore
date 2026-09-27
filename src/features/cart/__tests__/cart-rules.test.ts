@@ -1,5 +1,5 @@
 // Teste de integridade de regras de negócio do carrinho (Fase 06)
-const assert = require("assert");
+import assert from "node:assert";
 
 interface CartItem {
   id: string;

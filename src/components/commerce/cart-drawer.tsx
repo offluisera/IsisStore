@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
+import { cn } from "@/lib/utils";
 
 export interface CartItemData {
   id: string;
@@ -81,19 +82,31 @@ export function CartDrawer(props: CartDrawerProps) {
     });
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
+    <div
+      className={cn(
+        "fixed inset-0 z-50 overflow-hidden transition-all duration-300",
+        isOpen ? "visible pointer-events-auto" : "invisible pointer-events-none delay-300"
+      )}
+      aria-hidden={!isOpen}
+    >
+      {/* Backdrop com transição suave de opacidade e blur */}
       <div
-        className="fixed inset-0 bg-texto-escuro/40 backdrop-blur-xs transition-opacity animate-in fade-in"
+        className={cn(
+          "fixed inset-0 bg-texto-escuro/40 backdrop-blur-xs transition-opacity duration-300 ease-out",
+          isOpen ? "opacity-100" : "opacity-0"
+        )}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div className="w-screen max-w-md bg-fundo-card border-l border-borda shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
+      <div className="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
+        <div
+          className={cn(
+            "w-screen max-w-md bg-fundo-card border-l border-borda shadow-2xl flex flex-col justify-between pointer-events-auto transform transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            isOpen ? "translate-x-0" : "translate-x-full"
+          )}
+        >
           {/* Header */}
           <div className="p-6 border-b border-borda-suave flex items-center justify-between">
             <div className="flex items-center gap-2">
