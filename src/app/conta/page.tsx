@@ -80,8 +80,11 @@ export default async function ContaPage({ searchParams }: ContaPageProps) {
         return <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200">Entregue</Badge>;
       case "shipped":
         return <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">Enviado</Badge>;
+      case "processing":
+        return <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">Em Separação</Badge>;
       case "paid":
         return <Badge variant="secondary" className="bg-amber-50 text-amber-700 border-amber-200">Pago</Badge>;
+      case "pending_payment":
       case "pending":
         return <Badge variant="outline" className="text-amber-600 border-amber-300">Aguardando Pagamento</Badge>;
       case "cancelled":

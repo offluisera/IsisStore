@@ -18,8 +18,8 @@
 | **05** | **Catálogo** | **CONCLUÍDA** | Produtos + Categorias + Busca + Filtros + WebP OK |
 | **06** | **Carrinho** | **CONCLUÍDA** | Adicionar/remover/quantidades + persistência OK |
 | **07** | **Área do Cliente** | **CONCLUÍDA** | Dashboard + Pedidos + Endereços + RLS isolado OK |
-| **08** | **Checkout** | **A INICIAR** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
-| **09** | **Mercado Pago** | Pendente | Gateway adapter + Webhooks server-side + Idempotência OK |
+| **08** | **Checkout** | **CONCLUÍDA** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
+| **09** | **Mercado Pago** | **A INICIAR** | Gateway adapter + Webhooks server-side + Idempotência OK |
 | **10** | **Painel Admin** | Pendente | Gestão produtos/pedidos/estoque + auditoria OK |
 | **11** | **Motion / UX** | Pendente | Microinterações + feedback + reduced-motion OK |
 | **12** | **Responsividade** | Pendente | 320px a 1920px sem overflow crítico OK |
@@ -195,6 +195,29 @@
   * Typecheck (`tsc --noEmit`): OK (0 erros)
   * Lint (`eslint`): OK (0 erros, 0 avisos)
   * Isolamento de RLS: OK (Cliente A nunca vê pedidos, itens ou endereços do Cliente B; tentativas diretas retornam `notFound()`)
+
+### Fase 08 — Checkout
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Schema Zod em [src/schemas/checkout.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/schemas/checkout.ts) (`checkoutSchema`, `checkoutItemSchema`) com validação de endereço, opções de frete (PAC/Sedex), pagamento (Pix/Crédito), cupom e array de itens.
+  * Server Action [src/features/checkout/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/checkout/actions.ts) (`createOrderAction`):
+    * Cálculo 100% server-side de preços (`price_cents`, `sale_price_cents`). Zero confiança em valores vindos do cliente.
+    * Validação concorrente de estoque (`stock >= quantity`) com bloqueio de itens inativos/esgotados.
+    * Snapshot imutável de endereço gravado em `orders.shipping_address`.
+    * Snapshot imutável de itens inserido em `order_items` (`product_name`, `sku`, `quantity`, `unit_price_cents`, `subtotal_cents`).
+    * Regras de negócio de frete (PAC grátis acima de R$ 199,00) e desconto Pix de 5% cumulativo com cupom `ISIS10`.
+    * Baixa imediata de estoque no banco (`products.stock = stock - quantity`).
+    * Limpeza automática do carrinho remoto (`cart_items`) e local.
+  * Componente cliente interativo em [src/components/commerce/checkout-form.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/checkout-form.tsx) com proteção contra duplo clique, seletor de endereço salvo ou novo com busca de CEP, escolha de frete e cupom dinâmico.
+  * Página de Checkout em [src/app/checkout/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/checkout/page.tsx) com cabeçalho limpo focado em conversão e selos de segurança.
+  * Página de Sucesso da Compra em [src/app/checkout/sucesso/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/checkout/sucesso/page.tsx) com código do pedido `#ISIS-XXXX`, instruções e cópia de chave Pix e direcionamento para acompanhamento.
+  * Suite de testes unitários de regras de negócio em [src/features/checkout/__tests__/checkout-rules.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/checkout/__tests__/checkout-rules.test.ts).
+* **Gate 08:**
+  * Build (`next build` Turbopack): OK (22 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Pedido criado corretamente com snapshot imutável, baixa de estoque e cálculo server-side: OK
 
 
 

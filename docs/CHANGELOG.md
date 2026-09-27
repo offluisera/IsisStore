@@ -8,6 +8,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 08 — Checkout**:
+  - Implementação do schema Zod em `src/schemas/checkout.ts` (`checkoutSchema`, `checkoutItemSchema`).
+  - Criação da Server Action `createOrderAction` em `src/features/checkout/actions.ts` com cálculo 100% server-side de preços (`price_cents`, `sale_price_cents`), validação de estoque concorrente, criação de pedido `#ISIS-XXXX` em status `pending_payment`, snapshot imutável em `order_items` e baixa automática de estoque.
+  - Construção do componente de checkout `CheckoutForm` em `src/components/commerce/checkout-form.tsx` com seleção de endereço existente ou cadastro inline, frete dinâmico (PAC grátis acima de R$ 199,00 / Sedex), desconto Pix de 5%, cupom promocional e proteção contra submissão duplicada.
+  - Criação da página `/checkout` em `src/app/checkout/page.tsx` com design clean de alta conversão e selos de criptografia e proteção de dados.
+  - Implementação da página de confirmação `/checkout/sucesso` em `src/app/checkout/sucesso/page.tsx` com código de rastreamento do pedido e chave Pix gerada para pagamento.
+  - Suite de testes de integridade em `src/features/checkout/__tests__/checkout-rules.test.ts`.
+  - Aprovação no **Gate 08**: Pedido criado com snapshot imutável, cálculo server-side, concorrência de estoque e 22 rotas compiladas.
 - Conclusão da **Fase 07 — Área do Cliente**:
   - Schemas Zod em `src/schemas/account.ts` (`profileUpdateSchema`, `addressSchema`).
   - Server Actions em `src/features/account/actions.ts` (`updateProfileAction`, `createAddressAction`, `deleteAddressAction`, `setDefaultAddressAction`) com isolamento por `auth.uid()`.

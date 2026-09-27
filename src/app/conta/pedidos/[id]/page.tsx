@@ -88,9 +88,11 @@ export default async function PedidoDetalhesPage({
 
   const getStepIndex = (status: string) => {
     switch (status) {
+      case "pending_payment":
       case "pending":
         return 0;
       case "paid":
+      case "processing":
         return 1;
       case "shipped":
         return 2;
