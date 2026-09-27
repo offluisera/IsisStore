@@ -14,12 +14,15 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/features/cart/context/cart-context";
 
 interface ProductActionsProps {
   productId: string;
   productName: string;
   priceCents: number;
   stock: number;
+  imageUrl?: string;
+  slug?: string;
 }
 
 export function ProductActions({
@@ -27,6 +30,8 @@ export function ProductActions({
   productName,
   priceCents,
   stock,
+  imageUrl,
+  slug,
 }: ProductActionsProps) {
   const router = useRouter();
   const [quantity, setQuantity] = React.useState(1);
@@ -37,6 +42,14 @@ export function ProductActions({
     sedex: { price: number; days: number };
   } | null>(null);
   const [isCalculatingShipping, setIsCalculatingShipping] = React.useState(false);
+
+  let cartCtx: ReturnType<typeof useCart> | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    cartCtx = useCart();
+  } catch {
+    cartCtx = null;
+  }
 
   const isOutOfStock = stock <= 0;
 
@@ -52,23 +65,43 @@ export function ProductActions({
     }
   };
 
-  const handleAddToCart = () => {
-    // Adiciona feedback visual imediato
+  const handleAddToCart = (openDrawer = true) => {
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2500);
 
-    // Evento disparado para sincronização com CartDrawer/Contexto
-    if (typeof window !== "undefined") {
+    if (cartCtx) {
+      cartCtx.addItem(
+        {
+          id: productId,
+          name: productName,
+          price: priceCents,
+          imageUrl: imageUrl || "/images/logo/logo.jpeg",
+          slug,
+          stock,
+        },
+        quantity
+      );
+      if (openDrawer) {
+        cartCtx.openCart();
+      }
+    } else if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("cart:add-item", {
-          detail: { productId, quantity, priceCents, productName },
+          detail: {
+            productId,
+            quantity,
+            priceCents,
+            productName,
+            imageUrl,
+            slug,
+          },
         })
       );
     }
   };
 
   const handleBuyNow = () => {
-    handleAddToCart();
+    handleAddToCart(false);
     router.push("/checkout");
   };
 
@@ -138,7 +171,7 @@ export function ProductActions({
         {/* Botão Adicionar ao Carrinho */}
         <Button
           type="button"
-          onClick={handleAddToCart}
+          onClick={() => handleAddToCart(true)}
           disabled={isOutOfStock}
           variant="outline"
           size="lg"

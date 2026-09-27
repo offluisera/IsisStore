@@ -8,6 +8,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 06 — Carrinho**:
+  - Modelagem de tipos de domínio em `src/features/cart/types.ts` (`CartItem`, `CartContextType`).
+  - Implementação do `CartContext` e hook `useCart()` em `src/features/cart/context/cart-context.tsx` com persistência em `localStorage` (`isis_store_cart_v1`), sincronização automática com Supabase (`carts`/`cart_items`) para clientes logados e listener de evento global `cart:add-item`.
+  - Construção da gaveta deslizante `CartDrawer` em `src/components/commerce/cart-drawer.tsx` com progresso dinâmico de frete grátis (meta R$ 199,00) e atalho para checkout.
+  - Implementação da página completa de carrinho em `src/app/carrinho/page.tsx` com controle de quantidade, remoção, cálculo seguro em centavos e aplicação de cupom promocional (`ISIS10`).
+  - Conexão global no `RootLayout`, `Header`, `BottomNav`, cards de catálogo `ProductCard` e na página de detalhes `ProductActions`.
+  - Suite de testes de regras financeiras em `src/features/cart/__tests__/cart-rules.test.ts`.
+  - Aprovação no **Gate 06**: Persistência após reload da página, suporte a múltiplos produtos e cálculos em centavos validados.
 - Conclusão da **Fase 05 — Catálogo**:
   - Implementação do serviço de catálogo em `src/services/catalog.service.ts` com filtros, busca textual, ordenação por preço/relevância e paginação eficiente.
   - Criação da página de listagem em `src/app/produtos/page.tsx` com componente de filtros `CatalogFilters` e paginação `CatalogPagination`.

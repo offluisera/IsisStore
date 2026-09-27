@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/features/cart/context/cart-context";
 
 export interface CartItemData {
   id: string;
@@ -15,20 +16,34 @@ export interface CartItemData {
 }
 
 interface CartDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   items?: CartItemData[];
   onUpdateQuantity?: (id: string, newQty: number) => void;
   onRemoveItem?: (id: string) => void;
 }
 
-export function CartDrawer({
-  isOpen,
-  onClose,
-  items = [],
-  onUpdateQuantity,
-  onRemoveItem,
-}: CartDrawerProps) {
+const noop = () => {};
+
+export function CartDrawer(props: CartDrawerProps) {
+  let cartContext: ReturnType<typeof useCart> | null = null;
+  try {
+    // Permite uso com contexto global ou propriedades controladas
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    cartContext = useCart();
+  } catch {
+    cartContext = null;
+  }
+
+  const isOpen =
+    props.isOpen !== undefined ? props.isOpen : (cartContext?.isOpen ?? false);
+  const onClose = props.onClose ?? cartContext?.closeCart ?? noop;
+  const items =
+    props.items !== undefined ? props.items : (cartContext?.items ?? []);
+  const onUpdateQuantity =
+    props.onUpdateQuantity || cartContext?.updateQuantity;
+  const onRemoveItem = props.onRemoveItem || cartContext?.removeItem;
+
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -45,10 +60,19 @@ export function CartDrawer({
     };
   }, [isOpen, onClose]);
 
-  const subtotalCents = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotalCents = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
   const freeShippingThreshold = 19900; // R$ 199,00
-  const missingForFreeShipping = Math.max(0, freeShippingThreshold - subtotalCents);
-  const freeShippingProgress = Math.min(100, (subtotalCents / freeShippingThreshold) * 100);
+  const missingForFreeShipping = Math.max(
+    0,
+    freeShippingThreshold - subtotalCents
+  );
+  const freeShippingProgress = Math.min(
+    100,
+    (subtotalCents / freeShippingThreshold) * 100
+  );
 
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
@@ -99,8 +123,10 @@ export function CartDrawer({
             ) : (
               <p className="text-texto-medio">
                 Faltam apenas{" "}
-                <strong className="text-primaria">{formatPrice(missingForFreeShipping)}</strong> para{" "}
-                <strong>Frete Grátis</strong>!
+                <strong className="text-primaria">
+                  {formatPrice(missingForFreeShipping)}
+                </strong>{" "}
+                para <strong>Frete Grátis</strong>!
               </p>
             )}
             <div className="mt-2 h-1.5 w-full rounded-full bg-borda overflow-hidden">
@@ -161,7 +187,13 @@ export function CartDrawer({
                     <div className="mt-2 flex items-center gap-2">
                       <div className="flex items-center rounded-lg border border-borda bg-white">
                         <button
-                          onClick={() => onUpdateQuantity?.(item.id, Math.max(1, item.quantity - 1))}
+                          type="button"
+                          onClick={() =>
+                            onUpdateQuantity?.(
+                              item.id,
+                              Math.max(1, item.quantity - 1)
+                            )
+                          }
                           className="p-1 hover:text-primaria text-texto-medio transition-colors"
                           aria-label="Diminuir quantidade"
                         >
@@ -171,7 +203,10 @@ export function CartDrawer({
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => onUpdateQuantity?.(item.id, item.quantity + 1)}
+                          type="button"
+                          onClick={() =>
+                            onUpdateQuantity?.(item.id, item.quantity + 1)
+                          }
                           className="p-1 hover:text-primaria text-texto-medio transition-colors"
                           aria-label="Aumentar quantidade"
                         >
@@ -180,6 +215,7 @@ export function CartDrawer({
                       </div>
 
                       <button
+                        type="button"
                         onClick={() => onRemoveItem?.(item.id)}
                         className="text-texto-claro hover:text-erro p-1 transition-colors"
                         aria-label="Remover item"
@@ -199,12 +235,16 @@ export function CartDrawer({
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-texto-medio text-xs">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-texto-escuro">{formatPrice(subtotalCents)}</span>
+                  <span className="font-semibold text-texto-escuro">
+                    {formatPrice(subtotalCents)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-texto-medio text-xs">
                   <span>Frete</span>
                   <span className="font-semibold text-sucesso">
-                    {missingForFreeShipping === 0 ? "Grátis" : "Calculado no checkout"}
+                    {missingForFreeShipping === 0
+                      ? "Grátis"
+                      : "Calculado no checkout"}
                   </span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-texto-escuro pt-2 border-t border-borda-suave">
@@ -215,12 +255,30 @@ export function CartDrawer({
                 </div>
               </div>
 
-              <Link href="/checkout" onClick={onClose} className="block w-full">
-                <Button variant="default" size="lg" className="w-full gap-2 shadow-sm font-semibold">
-                  Finalizar compra
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link
+                  href="/carrinho"
+                  onClick={onClose}
+                  className="w-full text-center text-xs font-semibold text-primaria hover:underline py-1"
+                >
+                  Ver Carrinho Completo
+                </Link>
+
+                <Link
+                  href="/checkout"
+                  onClick={onClose}
+                  className="block w-full"
+                >
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="w-full gap-2 shadow-sm font-semibold"
+                  >
+                    Finalizar compra
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
         </div>

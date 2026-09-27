@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, Heart, User, ShoppingBag, Menu, X, Truck, HelpCircle, PhoneCall } from "lucide-react";
 import { CartDrawer, type CartItemData } from "@/components/commerce/cart-drawer";
+import { useCart } from "@/features/cart/context/cart-context";
 
 export function Header({
   cartCount = 0,
@@ -20,6 +21,24 @@ export function Header({
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+
+  let cartCtx: ReturnType<typeof useCart> | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    cartCtx = useCart();
+  } catch {
+    cartCtx = null;
+  }
+
+  const totalCartItems = cartCount > 0 ? cartCount : (cartCtx?.itemsCount ?? 0);
+
+  const handleOpenCart = () => {
+    if (cartCtx) {
+      cartCtx.openCart();
+    } else {
+      setIsCartOpen(true);
+    }
+  };
 
   return (
     <>
@@ -147,14 +166,14 @@ export function Header({
 
             {/* Carrinho */}
             <button
-              onClick={() => setIsCartOpen(true)}
+              onClick={handleOpenCart}
               className="relative p-2.5 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors"
               aria-label="Abrir carrinho"
             >
               <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
-              {cartCount > 0 && (
+              {totalCartItems > 0 && (
                 <span className="absolute top-1 right-1 h-4.5 w-4.5 rounded-full bg-primaria text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50">
-                  {cartCount}
+                  {totalCartItems}
                 </span>
               )}
             </button>
@@ -229,12 +248,14 @@ export function Header({
         )}
       </header>
 
-      {/* Cart Drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-      />
+      {/* Cart Drawer Fallback se fora de CartProvider */}
+      {!cartCtx && (
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+          items={cartItems}
+        />
+      )}
     </>
   );
 }

@@ -54,6 +54,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     notFound();
   }
 
+  const primaryImage =
+    product.product_images.find((img) => img.is_primary) ||
+    product.product_images[0];
+
   const relatedProducts = await getRelatedProducts(
     product.category_id,
     product.id,
@@ -188,6 +192,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               productName={product.name}
               priceCents={priceCents}
               stock={product.stock}
+              imageUrl={primaryImage?.public_url}
+              slug={product.slug}
             />
           </div>
         </div>

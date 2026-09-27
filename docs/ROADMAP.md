@@ -16,8 +16,8 @@
 | **03** | **Supabase + Banco + RLS** | **CONCLUÍDA** | Migrations + RLS + Storage + Seeds OK |
 | **04** | **Autenticação** | **CONCLUÍDA** | Auth + Roles + Proteção de Rotas OK |
 | **05** | **Catálogo** | **CONCLUÍDA** | Produtos + Categorias + Busca + Filtros + WebP OK |
-| **06** | **Carrinho** | **A INICIAR** | Adicionar/remover/quantidades + persistência OK |
-| **07** | **Área do Cliente** | Pendente | Dashboard + Pedidos + Endereços + RLS isolado OK |
+| **06** | **Carrinho** | **CONCLUÍDA** | Adicionar/remover/quantidades + persistência OK |
+| **07** | **Área do Cliente** | **A INICIAR** | Dashboard + Pedidos + Endereços + RLS isolado OK |
 | **08** | **Checkout** | Pendente | Snapshot de itens + cálculo server-side + concorrência estoque OK |
 | **09** | **Mercado Pago** | Pendente | Gateway adapter + Webhooks server-side + Idempotência OK |
 | **10** | **Painel Admin** | Pendente | Gestão produtos/pedidos/estoque + auditoria OK |
@@ -146,6 +146,33 @@
   * Typecheck (`tsc --noEmit`): OK
   * Lint (`eslint`): OK
   * Produto criado via admin/banco renderizado imediatamente no catálogo e storefront: OK
+
+### Fase 06 — Carrinho
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Tipos de domínio em [src/features/cart/types.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/cart/types.ts) (`CartItem`, `CartContextType`).
+  * Contexto e Hook global [src/features/cart/context/cart-context.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/cart/context/cart-context.tsx):
+    * Persistência em `localStorage` sob chave `isis_store_cart_v1`.
+    * Sincronização automática com tabelas `carts` e `cart_items` do Supabase para usuários autenticados.
+    * Event listener global para desacoplamento de adição rápida (`cart:add-item`).
+    * Métodos atômicos: `addItem`, `removeItem`, `updateQuantity`, `clearCart`, `openCart`, `closeCart`.
+  * Gaveta deslizante [src/components/commerce/cart-drawer.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/cart-drawer.tsx) conectada ao contexto, com cálculo em tempo real, barra de progresso para frete grátis (meta R$ 199,00) e atalho para checkout.
+  * Página completa do carrinho em [src/app/carrinho/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/carrinho/page.tsx):
+    * Tabela de produtos com thumbnail, controle de quantidade e remoção.
+    * Resumo financeiro estrito em centavos (`price_cents`, `subtotal_cents`).
+    * Suporte a cupom de desconto (ex: `ISIS10` concedendo 10% OFF).
+    * Indicador de frete grátis inteligente.
+    * Links de continuidade de compras e botão de finalização com link direto para `/checkout`.
+  * Integração no RootLayout [src/app/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/layout.tsx), Header [src/components/layout/header.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/header.tsx) e BottomNav [src/components/layout/bottom-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/bottom-nav.tsx) com atualização imediata do badge numérico.
+  * Conexão dos botões dos cards de produtos [src/components/commerce/product-card.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-card.tsx) e da página de detalhes [src/components/commerce/product-actions.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-actions.tsx).
+  * Suite de testes unitários de regras de negócio em [src/features/cart/__tests__/cart-rules.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/cart/__tests__/cart-rules.test.ts).
+* **Gate 06:**
+  * Build (`next build` Turbopack): OK (todas as 17 rotas estáticas/dinâmicas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Teste múltiplos produtos e reload: OK (persistência via `localStorage` e recarga validada)
+  * Cálculos financeiros: 100% em centavos inteiros com regra de arredondamento precisa.
 
 
 

@@ -4,14 +4,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Grid, ShoppingBag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/features/cart/context/cart-context";
 
 export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
   const pathname = usePathname();
 
+  let cartCtx: ReturnType<typeof useCart> | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    cartCtx = useCart();
+  } catch {
+    cartCtx = null;
+  }
+
+  const totalCartCount = cartCount > 0 ? cartCount : (cartCtx?.itemsCount ?? 0);
+
   const links = [
     { label: "Início", href: "/", icon: Home },
     { label: "Categorias", href: "/categorias", icon: Grid },
-    { label: "Carrinho", href: "/carrinho", icon: ShoppingBag, badge: cartCount },
+    { label: "Carrinho", href: "/carrinho", icon: ShoppingBag, badge: totalCartCount },
     { label: "Conta", href: "/conta", icon: User },
   ];
 

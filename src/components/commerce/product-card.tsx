@@ -160,7 +160,25 @@ export function ProductCard({
           </div>
 
           <Button
-            onClick={() => onAddToCart?.(id)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (onAddToCart) {
+                onAddToCart(id);
+              } else if (typeof window !== "undefined") {
+                window.dispatchEvent(
+                  new CustomEvent("cart:add-item", {
+                    detail: {
+                      productId: id,
+                      productName: name,
+                      priceCents: price,
+                      imageUrl: imageUrl,
+                      quantity: 1,
+                    },
+                  })
+                );
+              }
+            }}
             variant="default"
             className="w-full text-xs font-semibold h-10 gap-2 shadow-xs group-hover:bg-primaria-hover"
           >
