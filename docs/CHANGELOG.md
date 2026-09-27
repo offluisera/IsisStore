@@ -8,6 +8,16 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 07 — Área do Cliente**:
+  - Schemas Zod em `src/schemas/account.ts` (`profileUpdateSchema`, `addressSchema`).
+  - Server Actions em `src/features/account/actions.ts` (`updateProfileAction`, `createAddressAction`, `deleteAddressAction`, `setDefaultAddressAction`) com isolamento por `auth.uid()`.
+  - Layout da conta em `src/app/conta/layout.tsx` e abas de navegação responsiva `AccountNav` em `src/components/account/account-nav.tsx`.
+  - Dashboard geral em `src/app/conta/page.tsx` com métricas de pedidos, endereço padrão e atalhos rápidos.
+  - Página de histórico de pedidos em `src/app/conta/pedidos/page.tsx` e tela de detalhes do pedido em `src/app/conta/pedidos/[id]/page.tsx` com timeline de rastreio e snapshot de itens.
+  - Gestão de endereços em `src/app/conta/enderecos/page.tsx` com formulário `AddressForm` com autopreenchimento de CEP (ViaCEP) e `AddressCard`.
+  - Página de dados cadastrais e segurança da conta em `src/app/conta/dados/page.tsx` com formulário `ProfileForm`.
+  - Suite de testes de isolamento de RLS em `src/features/account/__tests__/rls-isolation.test.ts`.
+  - Aprovação no **Gate 07**: Isolamento estrito de dados entre clientes A e B aprovado, rotas protegidas e 20 páginas compiladas.
 - Conclusão da **Fase 06 — Carrinho**:
   - Modelagem de tipos de domínio em `src/features/cart/types.ts` (`CartItem`, `CartContextType`).
   - Implementação do `CartContext` e hook `useCart()` em `src/features/cart/context/cart-context.tsx` com persistência em `localStorage` (`isis_store_cart_v1`), sincronização automática com Supabase (`carts`/`cart_items`) para clientes logados e listener de evento global `cart:add-item`.

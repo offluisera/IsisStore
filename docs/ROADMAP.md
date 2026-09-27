@@ -17,8 +17,8 @@
 | **04** | **Autenticação** | **CONCLUÍDA** | Auth + Roles + Proteção de Rotas OK |
 | **05** | **Catálogo** | **CONCLUÍDA** | Produtos + Categorias + Busca + Filtros + WebP OK |
 | **06** | **Carrinho** | **CONCLUÍDA** | Adicionar/remover/quantidades + persistência OK |
-| **07** | **Área do Cliente** | **A INICIAR** | Dashboard + Pedidos + Endereços + RLS isolado OK |
-| **08** | **Checkout** | Pendente | Snapshot de itens + cálculo server-side + concorrência estoque OK |
+| **07** | **Área do Cliente** | **CONCLUÍDA** | Dashboard + Pedidos + Endereços + RLS isolado OK |
+| **08** | **Checkout** | **A INICIAR** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
 | **09** | **Mercado Pago** | Pendente | Gateway adapter + Webhooks server-side + Idempotência OK |
 | **10** | **Painel Admin** | Pendente | Gestão produtos/pedidos/estoque + auditoria OK |
 | **11** | **Motion / UX** | Pendente | Microinterações + feedback + reduced-motion OK |
@@ -173,6 +173,28 @@
   * Lint (`eslint`): OK (0 erros, 0 avisos)
   * Teste múltiplos produtos e reload: OK (persistência via `localStorage` e recarga validada)
   * Cálculos financeiros: 100% em centavos inteiros com regra de arredondamento precisa.
+
+### Fase 07 — Área do Cliente
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Schemas Zod em [src/schemas/account.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/schemas/account.ts) para validação estrita de dados de perfil (`profileUpdateSchema`) e endereços (`addressSchema`).
+  * Server Actions com proteção e isolamento por `auth.uid()` em [src/features/account/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/account/actions.ts):
+    * `updateProfileAction`: atualização de nome e telefone/whatsapp.
+    * `createAddressAction`: cadastro de endereço com atribuição de padrão automático no primeiro item.
+    * `deleteAddressAction`: exclusão de endereço restrita ao proprietário.
+    * `setDefaultAddressAction`: alternância atômica do endereço principal de entrega.
+  * Layout unificado da conta em [src/app/conta/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/layout.tsx) com identificação do cliente, badges de role e barra de navegação responsiva em abas [src/components/account/account-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/account/account-nav.tsx).
+  * Dashboard de visão geral em [src/app/conta/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/page.tsx) com métricas de compras, último pedido e atalhos rápidos.
+  * Módulo de pedidos em [src/app/conta/pedidos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/pedidos/page.tsx) e detalhes em [src/app/conta/pedidos/[id]/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/pedidos/%5Bid%5D/page.tsx) com timeline de rastreamento visual e snapshot imutável de itens.
+  * Módulo de endereços em [src/app/conta/enderecos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/enderecos/page.tsx) com formulário interativo [src/components/account/address-form.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/account/address-form.tsx) integrado com busca automática por CEP (ViaCEP) e cards em [src/components/account/address-card.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/account/address-card.tsx).
+  * Gestão de dados pessoais e segurança da conta em [src/app/conta/dados/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/dados/page.tsx) com formulário [src/components/account/profile-form.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/account/profile-form.tsx).
+  * Teste de validação do Gate 07 em [src/features/account/__tests__/rls-isolation.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/account/__tests__/rls-isolation.test.ts).
+* **Gate 07:**
+  * Build (`next build` Turbopack): OK (20 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Isolamento de RLS: OK (Cliente A nunca vê pedidos, itens ou endereços do Cliente B; tentativas diretas retornam `notFound()`)
 
 
 
