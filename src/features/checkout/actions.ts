@@ -3,12 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { checkoutSchema, type CheckoutInput } from "@/schemas/checkout";
+import {
+  createPixPayment,
+  createPreference,
+} from "@/lib/payments/mercadopago";
 
 export type CheckoutActionResult = {
   success: boolean;
   message?: string;
   orderId?: string;
   orderNumber?: string;
+  paymentRedirectUrl?: string;
   errors?: Record<string, string[]>;
 };
 
@@ -205,7 +210,63 @@ export async function createOrderAction(
       console.error("Erro ao salvar itens do pedido:", itemsInsertError);
     }
 
-    // 11. Baixa Concorrente no Estoque dos Produtos
+    // 11. Integrar com Gateway Mercado Pago
+    let paymentRedirectUrl: string | undefined;
+
+    if (paymentMethod === "pix") {
+      const pixPayment = await createPixPayment({
+        orderId: newOrder.id,
+        orderNumber: newOrder.order_number,
+        amountCents: totalCents,
+        payer: {
+          email: user.email!,
+          name: address.recipient_name,
+        },
+      });
+
+      await supabase.from("payments").insert({
+        order_id: newOrder.id,
+        gateway: "mercadopago",
+        gateway_payment_id: pixPayment.paymentId,
+        amount_cents: totalCents,
+        payment_method: "pix",
+        status: "pending",
+        qr_code: pixPayment.qrCode,
+        qr_code_base64: pixPayment.qrCodeBase64,
+        ticket_url: pixPayment.ticketUrl,
+      });
+    } else {
+      const pref = await createPreference({
+        orderId: newOrder.id,
+        orderNumber: newOrder.order_number,
+        items: validatedItems.map((i) => ({
+          id: i.productId,
+          title: i.productName,
+          quantity: i.quantity,
+          unitPriceCents: i.unitPriceCents,
+        })),
+        payer: {
+          email: user.email!,
+          name: address.recipient_name,
+        },
+        shippingCents,
+        discountCents,
+      });
+
+      paymentRedirectUrl = pref.initPoint;
+
+      await supabase.from("payments").insert({
+        order_id: newOrder.id,
+        gateway: "mercadopago",
+        gateway_payment_id: pref.preferenceId,
+        amount_cents: totalCents,
+        payment_method: "credit_card",
+        status: "pending",
+        ticket_url: pref.initPoint,
+      });
+    }
+
+    // 12. Baixa Concorrente no Estoque dos Produtos
     for (const item of validatedItems) {
       const prod = productMap.get(item.productId)!;
       const newStock = Math.max(0, prod.stock - item.quantity);
@@ -216,7 +277,7 @@ export async function createOrderAction(
         .eq("id", item.productId);
     }
 
-    // 12. Limpar carrinho remoto do usuário no Supabase se existir
+    // 13. Limpar carrinho remoto do usuário no Supabase se existir
     const { data: userCart } = await supabase
       .from("carts")
       .select("id")
@@ -236,6 +297,7 @@ export async function createOrderAction(
       message: "Pedido realizado com sucesso!",
       orderId: newOrder.id,
       orderNumber: newOrder.order_number,
+      paymentRedirectUrl,
     };
   } catch (err) {
     console.error("Erro inesperado em createOrderAction:", err);

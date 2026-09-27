@@ -1,8 +1,8 @@
 # ROADMAP OFICIAL — ISIS STORE
 
 > **Documento:** `docs/ROADMAP.md`  
-> **Última atualização:** 2026-09-26  
-> **Status Geral:** Em andamento — Fase 05 Concluída
+> **Última atualização:** 2026-09-27  
+> **Status Geral:** Em andamento — Fase 09 Concluída
 
 ---
 
@@ -19,8 +19,8 @@
 | **06** | **Carrinho** | **CONCLUÍDA** | Adicionar/remover/quantidades + persistência OK |
 | **07** | **Área do Cliente** | **CONCLUÍDA** | Dashboard + Pedidos + Endereços + RLS isolado OK |
 | **08** | **Checkout** | **CONCLUÍDA** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
-| **09** | **Mercado Pago** | **A INICIAR** | Gateway adapter + Webhooks server-side + Idempotência OK |
-| **10** | **Painel Admin** | Pendente | Gestão produtos/pedidos/estoque + auditoria OK |
+| **09** | **Mercado Pago** | **CONCLUÍDA** | Gateway adapter + Webhooks server-side + Idempotência OK |
+| **10** | **Painel Admin** | **A INICIAR** | Gestão produtos/pedidos/estoque + auditoria OK |
 | **11** | **Motion / UX** | Pendente | Microinterações + feedback + reduced-motion OK |
 | **12** | **Responsividade** | Pendente | 320px a 1920px sem overflow crítico OK |
 | **13** | **Segurança** | Pendente | Zero secrets expostos + RLS auditado + sanitização OK |
@@ -218,6 +218,32 @@
   * Typecheck (`tsc --noEmit`): OK (0 erros)
   * Lint (`eslint`): OK (0 erros, 0 avisos)
   * Pedido criado corretamente com snapshot imutável, baixa de estoque e cálculo server-side: OK
+
+### Fase 09 — Mercado Pago
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Gateway Adapter oficial em [src/lib/payments/mercadopago.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/payments/mercadopago.ts):
+    * `createPixPayment`: geração de QR Code Pix (payload EMV e Base64) com fallback para Sandbox Simulator local caso credenciais de produção não estejam presentes.
+    * `createPreference`: criação de checkout preference para pagamentos via cartão de crédito com back_urls e auto_return.
+    * `getPaymentDetails`: consulta de transações na API do gateway.
+    * `verifyWebhookSignature`: validação criptográfica de integridade de requisições via HMAC SHA-256 (`id`, `request-id`, `ts`).
+  * Endpoint oficial de Webhook em [src/app/api/webhooks/mercadopago/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/api/webhooks/mercadopago/route.ts):
+    * Idempotência estrita implementada gravando na tabela `payment_events` com chave única `event_id`. Retentativas repetidas retornam 200 OK imediato sem duplicidade.
+    * Mapeamento seguro de status (`approved` -> `paid`, `in_process` -> `processing`, `rejected`/`cancelled` -> `cancelled`).
+    * Atualização sincronizada das tabelas `orders` e `payments`.
+    * Reversão automática de estoque dos produtos em caso de pedidos cancelados ou reembolsados.
+    * Registro de auditoria em `admin_audit_logs`.
+    * Rota GET de liveness para verificação automática do gateway.
+  * Integração na criação de pedidos [src/features/checkout/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/checkout/actions.ts) gerando o registro em `payments` e direcionando fluxo de Pix ou Cartão.
+  * Componente interativo de pagamento Pix [src/components/commerce/pix-payment-box.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/pix-payment-box.tsx) na tela de sucesso [src/app/checkout/sucesso/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/checkout/sucesso/page.tsx) com renderização de QR Code, chave copia-e-cola com feedback visual e temporizador de 30 minutos.
+  * Teste automatizado do Gate 09 em [src/features/checkout/__tests__/mercadopago-gateway.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/checkout/__tests__/mercadopago-gateway.test.ts) validando geração de Pix, Preferences, assinatura HMAC SHA-256, deduplicação de webhooks e mapeamento de status.
+* **Gate 09:**
+  * Build (`next build` Turbopack): OK (23 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Testes unitários do Gateway e Idempotência: OK (100% aprovados)
+  * Ambiente Sandbox / Produção desacoplado e seguro: OK
+
 
 
 

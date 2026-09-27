@@ -8,6 +8,13 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 09 — Mercado Pago**:
+  - Implementação do Gateway Adapter oficial em `src/lib/payments/mercadopago.ts` com funções `createPixPayment`, `createPreference`, `getPaymentDetails` e `verifyWebhookSignature` (validação HMAC SHA-256 e fallback para Sandbox Simulator local).
+  - Criação do endpoint oficial de Webhook em `src/app/api/webhooks/mercadopago/route.ts` com idempotência financeira na tabela `payment_events`, mapeamento de status (`approved` -> `paid`, `cancelled` -> `cancelled`), reversão de estoque em caso de cancelamento e auditoria em `admin_audit_logs`.
+  - Conexão do fluxo de pagamento na criação de pedidos em `src/features/checkout/actions.ts` registrando em `payments`.
+  - Componente de exibição Pix `PixPaymentBox` em `src/components/commerce/pix-payment-box.tsx` integrado à página de sucesso `/checkout/sucesso` com QR Code visual, cópia da chave Pix em um clique e contador de expiração.
+  - Suite de testes automatizados do gateway e webhooks em `src/features/checkout/__tests__/mercadopago-gateway.test.ts`.
+  - Aprovação no **Gate 09**: Testes de assinatura, geração de Pix, idempotência e mapeamento de status aprovados com 23 rotas compiladas e typecheck 100% limpo.
 - Conclusão da **Fase 08 — Checkout**:
   - Implementação do schema Zod em `src/schemas/checkout.ts` (`checkoutSchema`, `checkoutItemSchema`).
   - Criação da Server Action `createOrderAction` em `src/features/checkout/actions.ts` com cálculo 100% server-side de preços (`price_cents`, `sale_price_cents`), validação de estoque concorrente, criação de pedido `#ISIS-XXXX` em status `pending_payment`, snapshot imutável em `order_items` e baixa automática de estoque.
