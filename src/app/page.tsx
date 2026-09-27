@@ -26,10 +26,11 @@ import { Toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CartItemData } from "@/components/commerce/cart-drawer";
 
-// Produtos oficiais de demonstração baseados na tela.png e banner oficial
+// Produtos oficiais de demonstração baseados no catálogo oficial
 const SAMPLE_PRODUCTS = [
   {
     id: "p1",
+    slug: "headphone-bluetooth-rosa-soft",
     name: "Headphone Bluetooth Rosa Soft",
     category: "Casa / Eletrônicos",
     price: 19990,
@@ -37,22 +38,24 @@ const SAMPLE_PRODUCTS = [
     discountPercent: 20,
     rating: 4.8,
     reviewCount: 124,
-    imageUrl: "/images/banner-rosto.jpeg",
+    imageUrl: "/images/products/headphone-bluetooth-rosa-soft.jpg",
     colors: ["#E08CA3", "#F9C7D4", "#574240"],
   },
   {
     id: "p2",
+    slug: "ursinho-de-pelucia-carinho",
     name: "Ursinho de Pelúcia Carinho",
     category: "Infantil / Baby",
     price: 8990,
     badgeText: "Novo",
     rating: 4.9,
     reviewCount: 89,
-    imageUrl: "/images/banner-rosto.jpeg",
+    imageUrl: "/images/products/ursinho-de-pelucia-carinho.jpg",
     colors: ["#D4A373", "#E08CA3"],
   },
   {
     id: "p3",
+    slug: "mochila-feminina-elegante",
     name: "Mochila Feminina Elegante",
     category: "Acessórios",
     price: 16990,
@@ -60,18 +63,19 @@ const SAMPLE_PRODUCTS = [
     discountPercent: 15,
     rating: 4.7,
     reviewCount: 67,
-    imageUrl: "/images/banner-rosto.jpeg",
+    imageUrl: "/images/products/mochila-feminina-elegante.jpg",
     colors: ["#E08CA3", "#574240"],
   },
   {
     id: "p4",
+    slug: "colar-coracao-delicado-ouro-rosa",
     name: "Colar Coração Delicado Ouro Rosa",
     category: "Acessórios",
     price: 5990,
     badgeText: "Mais vendido",
     rating: 4.9,
     reviewCount: 156,
-    imageUrl: "/images/banner-rosto.jpeg",
+    imageUrl: "/images/products/colar-coracao-delicado-ouro-rosa.jpg",
   },
 ];
 
@@ -318,12 +322,18 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {SAMPLE_PRODUCTS.map((product) => (
-              <ProductCard
+              <Link
                 key={product.id}
-                {...product}
-                onAddToCart={handleAddToCart}
-                onToggleWishlist={handleToggleWishlist}
-              />
+                href={`/produtos/${product.slug}`}
+                className="block h-full group"
+              >
+                <ProductCard
+                  {...product}
+                  onAddToCart={handleAddToCart}
+                  onToggleWishlist={handleToggleWishlist}
+                  className="h-full"
+                />
+              </Link>
             ))}
           </div>
         </section>

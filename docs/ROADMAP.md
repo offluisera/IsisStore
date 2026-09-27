@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-26  
-> **Status Geral:** Em andamento — Fase 04 Concluída
+> **Status Geral:** Em andamento — Fase 05 Concluída
 
 ---
 
@@ -15,8 +15,8 @@
 | **02** | **Design System** | **CONCLUÍDA** | Componentes core + checklist visual e acessibilidade OK |
 | **03** | **Supabase + Banco + RLS** | **CONCLUÍDA** | Migrations + RLS + Storage + Seeds OK |
 | **04** | **Autenticação** | **CONCLUÍDA** | Auth + Roles + Proteção de Rotas OK |
-| **05** | **Catálogo** | **A INICIAR** | Produtos + Categorias + Busca + Filtros + WebP OK |
-| **06** | **Carrinho** | Pendente | Adicionar/remover/quantidades + persistência OK |
+| **05** | **Catálogo** | **CONCLUÍDA** | Produtos + Categorias + Busca + Filtros + WebP OK |
+| **06** | **Carrinho** | **A INICIAR** | Adicionar/remover/quantidades + persistência OK |
 | **07** | **Área do Cliente** | Pendente | Dashboard + Pedidos + Endereços + RLS isolado OK |
 | **08** | **Checkout** | Pendente | Snapshot de itens + cálculo server-side + concorrência estoque OK |
 | **09** | **Mercado Pago** | Pendente | Gateway adapter + Webhooks server-side + Idempotência OK |
@@ -126,6 +126,27 @@
   * Lint (`eslint`): OK
   * Usuário comum não acessa área administrativa (`/admin` redireciona para `/conta?error=unauthorized_admin`): OK
   * Rotas `/conta/*` e `/admin/*` protegidas contra acesso anônimo: OK
+
+### Fase 05 — Catálogo
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Serviço de catálogo em [src/services/catalog.service.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/services/catalog.service.ts) com suporte a busca, filtros por categoria, ordenação e paginação.
+  * Galeria de fotos do produto em [src/components/commerce/product-gallery.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-gallery.tsx) com miniaturas e zoom suave.
+  * Ações do produto em [src/components/commerce/product-actions.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-actions.tsx) com controle de estoque, cálculo simulado de frete (PAC/Sedex) e adição ao carrinho.
+  * Filtros interativos em [src/components/commerce/catalog-filters.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/catalog-filters.tsx) e paginação em [src/components/commerce/catalog-pagination.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/catalog-pagination.tsx).
+  * Página do catálogo [src/app/produtos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/produtos/page.tsx) com metadados dinâmicos e empty state refinado.
+  * Página do produto [src/app/produtos/[slug]/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/produtos/%5Bslug%5D/page.tsx) com especificações, parcelamento e recomendações relacionadas.
+  * Página de categorias [src/app/categorias/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/categorias/page.tsx) com contadores de produtos por departamento.
+  * Painel Admin de produtos em [src/app/admin/produtos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/produtos/page.tsx) e cadastro em [src/app/admin/produtos/novo/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/produtos/novo/page.tsx).
+  * Server Action [src/features/admin/product-actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/admin/product-actions.ts) e schema Zod [src/schemas/product.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/schemas/product.ts).
+  * Imagens reais e dedicadas em alta definição geradas e armazenadas em `public/images/products/`.
+* **Gate 05:**
+  * Build (`next build` Turbopack): OK
+  * Typecheck (`tsc --noEmit`): OK
+  * Lint (`eslint`): OK
+  * Produto criado via admin/banco renderizado imediatamente no catálogo e storefront: OK
+
 
 
 

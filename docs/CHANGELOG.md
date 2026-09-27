@@ -8,6 +8,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 05 — Catálogo**:
+  - Implementação do serviço de catálogo em `src/services/catalog.service.ts` com filtros, busca textual, ordenação por preço/relevância e paginação eficiente.
+  - Criação da página de listagem em `src/app/produtos/page.tsx` com componente de filtros `CatalogFilters` e paginação `CatalogPagination`.
+  - Construção da página de detalhes do produto `src/app/produtos/[slug]/page.tsx` com galeria interativa `ProductGallery`, simulador de frete, opções de parcelamento e produtos relacionados.
+  - Implementação da página de categorias `src/app/categorias/page.tsx` com contagem em tempo real de itens por departamento.
+  - Módulo administrativo de catálogo com listagem em `src/app/admin/produtos/page.tsx`, cadastro em `src/app/admin/produtos/novo/page.tsx` e Server Action em `src/features/admin/product-actions.ts`.
+  - Produção e incorporação de fotografias de produtos em alta definição em `public/images/products/`.
+  - Aprovação no **Gate 05**: Produto cadastrado no banco/admin visível instantaneamente no storefront.
 - Conclusão da **Fase 04 — Autenticação**:
   - Instalação e integração do `zod` com schemas estritos em `src/schemas/auth.ts`.
   - Implementação de Server Actions seguras em `src/features/auth/actions.ts` para login, cadastro, recuperação e redefinição de senha.
