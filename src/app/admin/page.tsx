@@ -127,7 +127,7 @@ export default async function AdminDashboardPage() {
         <KPICard
           title="Total de Vendas"
           value={formatPrice(totalRevenueCents)}
-          icon={DollarSign}
+          iconType="sales"
           variation={{ value: "↑ 12,5%", isPositive: true }}
           periodText="em relação ao mês anterior"
           sparklineData={[18, 22, 19, 32, 28, 40, 52]}
@@ -138,7 +138,7 @@ export default async function AdminDashboardPage() {
         <KPICard
           title="Pedidos"
           value={String(ordersCount ?? 0)}
-          icon={ShoppingBag}
+          iconType="orders"
           variation={{ value: "↑ 8,3%", isPositive: true }}
           periodText="em relação ao mês anterior"
           sparklineData={[8, 12, 11, 15, 14, 18, 24]}
@@ -149,7 +149,7 @@ export default async function AdminDashboardPage() {
         <KPICard
           title="Clientes"
           value={String(customersCount ?? 0)}
-          icon={Users}
+          iconType="customers"
           variation={{ value: "↑ 15,2%", isPositive: true }}
           periodText="em relação ao mês anterior"
           sparklineData={[14, 18, 22, 21, 26, 30, 36]}
@@ -160,7 +160,7 @@ export default async function AdminDashboardPage() {
         <KPICard
           title="Produtos"
           value={String(productsCount ?? 0)}
-          icon={Package}
+          iconType="products"
           variation={{ value: "↑ 6,7%", isPositive: true }}
           periodText="em relação ao mês anterior"
           link={{ href: "/admin/produtos", label: "Ver todos →" }}

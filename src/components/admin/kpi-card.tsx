@@ -1,14 +1,21 @@
-"use client";
-
 import Link from "next/link";
-import { TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  ArrowRight,
+  DollarSign,
+  ShoppingBag,
+  Users,
+  Package,
+} from "lucide-react";
 import { MetricSparkline } from "./metric-sparkline";
 import { cn } from "@/lib/utils";
 
 interface KPICardProps {
   title: string;
   value: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ReactNode;
+  iconType?: "sales" | "orders" | "customers" | "products";
   variation?: {
     value: string;
     isPositive?: boolean;
@@ -25,7 +32,8 @@ interface KPICardProps {
 export function KPICard({
   title,
   value,
-  icon: Icon,
+  icon,
+  iconType,
   variation,
   periodText = "em relação ao mês anterior",
   sparklineData = [12, 18, 15, 25, 22, 30, 38],
@@ -34,12 +42,29 @@ export function KPICard({
 }: KPICardProps) {
   const isPositive = variation ? variation.isPositive ?? true : true;
 
+  // Renderizar ícone por tipo ou elemento JSX
+  const renderIcon = () => {
+    if (icon) return icon;
+    switch (iconType) {
+      case "sales":
+        return <DollarSign className="w-5 h-5" />;
+      case "orders":
+        return <ShoppingBag className="w-5 h-5" />;
+      case "customers":
+        return <Users className="w-5 h-5" />;
+      case "products":
+        return <Package className="w-5 h-5" />;
+      default:
+        return <DollarSign className="w-5 h-5" />;
+    }
+  };
+
   return (
     <div className="relative bg-white border border-[#F0E5E7] rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group overflow-hidden">
       {/* Topo do Card: Ícone e Link Opcional */}
       <div className="flex items-center justify-between pb-3">
         <div className="w-11 h-11 rounded-xl bg-[#FDF2F4] text-primaria flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200 border border-primaria/10">
-          <Icon className="w-5 h-5" />
+          {renderIcon()}
         </div>
 
         {link && (

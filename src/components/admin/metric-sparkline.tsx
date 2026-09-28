@@ -1,5 +1,3 @@
-"use client";
-
 interface MetricSparklineProps {
   data: number[];
   color?: string;
