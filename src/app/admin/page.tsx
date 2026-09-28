@@ -201,6 +201,49 @@ export default async function AdminDashboardPage() {
     },
   ];
 
+  // Cálculo real do crescimento dos últimos 7 dias vs 7 dias anteriores
+  const sevenDaysAgoMs = now.getTime() - 7 * 24 * 60 * 60 * 1000;
+  const fourteenDaysAgoMs = now.getTime() - 14 * 24 * 60 * 60 * 1000;
+
+  const current7dSales = paidOrders
+    .filter((ord) => {
+      if (!ord.created_at) return false;
+      const t = new Date(ord.created_at).getTime();
+      return t >= sevenDaysAgoMs;
+    })
+    .reduce((sum, ord) => sum + (ord.total_cents || 0), 0);
+
+  const prev7dSales = paidOrders
+    .filter((ord) => {
+      if (!ord.created_at) return false;
+      const t = new Date(ord.created_at).getTime();
+      return t >= fourteenDaysAgoMs && t < sevenDaysAgoMs;
+    })
+    .reduce((sum, ord) => sum + (ord.total_cents || 0), 0);
+
+  let salesGrowth = {
+    percentage: 0,
+    isPositive: true,
+  };
+
+  if (prev7dSales > 0) {
+    const diff = current7dSales - prev7dSales;
+    salesGrowth = {
+      percentage: Math.abs(Math.round((diff / prev7dSales) * 1000) / 10),
+      isPositive: diff >= 0,
+    };
+  } else if (current7dSales > 0) {
+    salesGrowth = {
+      percentage: 100,
+      isPositive: true,
+    };
+  } else {
+    salesGrowth = {
+      percentage: 0,
+      isPositive: true,
+    };
+  }
+
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
       style: "currency",
@@ -229,9 +272,15 @@ export default async function AdminDashboardPage() {
           title="Total de Vendas"
           value={formatPrice(totalRevenueCents)}
           iconType="sales"
-          variation={{ value: "↑ 12,5%", isPositive: true }}
-          periodText="em relação ao mês anterior"
-          sparklineData={[18, 22, 19, 32, 28, 40, 52]}
+          variation={{
+            value:
+              salesGrowth.percentage > 0
+                ? `${salesGrowth.isPositive ? "↑" : "↓"} ${salesGrowth.percentage.toFixed(1).replace(".", ",")}%`
+                : "0,0%",
+            isPositive: salesGrowth.isPositive,
+          }}
+          periodText="em relação aos 7 dias anteriores"
+          sparklineData={realLast7DaysData.map((d) => d.amountCents)}
           gradientId="grad-kpi-vendas"
         />
 
@@ -271,11 +320,11 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* 3. Seção Visual: Gráfico de Vendas 7 Dias (8 cols) & Distribuição de Pedidos Donut (4 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col">
-          <SalesAreaChart data={realLast7DaysData} />
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+        <div className="xl:col-span-8 flex flex-col">
+          <SalesAreaChart data={realLast7DaysData} growth={salesGrowth} />
         </div>
-        <div className="lg:col-span-5 xl:col-span-4 flex flex-col">
+        <div className="xl:col-span-4 flex flex-col">
           <OrdersDistributionDonut
             items={distributionItems}
             totalOrders={totalOrdersCalc}

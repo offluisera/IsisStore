@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, TrendingUp } from "lucide-react";
+import { ChevronDown, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DataPoint {
@@ -13,6 +13,10 @@ interface DataPoint {
 interface SalesAreaChartProps {
   data?: DataPoint[];
   periodLabel?: string;
+  growth?: {
+    percentage: number;
+    isPositive: boolean;
+  };
 }
 
 const DEFAULT_7_DAYS_DATA: DataPoint[] = [
@@ -27,6 +31,7 @@ const DEFAULT_7_DAYS_DATA: DataPoint[] = [
 
 export function SalesAreaChart({
   data = DEFAULT_7_DAYS_DATA,
+  growth,
 }: SalesAreaChartProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<"7d" | "30d" | "month">("7d");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -43,9 +48,9 @@ export function SalesAreaChart({
   // Dimensões do gráfico SVG
   const width = 640;
   const height = 220;
-  const paddingLeft = 60;
-  const paddingRight = 20;
-  const paddingTop = 20;
+  const paddingLeft = 55;
+  const paddingRight = 15;
+  const paddingTop = 25;
   const paddingBottom = 30;
 
   const innerWidth = width - paddingLeft - paddingRight;
@@ -97,19 +102,42 @@ export function SalesAreaChart({
   const totalPeriodRevenue = chartData.reduce((acc, curr) => acc + curr.amountCents, 0);
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-6 shadow-xs flex flex-col justify-between select-none">
+    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
       {/* Cabeçalho do Gráfico */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F7EFF1]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F7EFF1]">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
               Vendas dos últimos 7 dias
             </h2>
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sucesso bg-sucesso/10 px-2 py-0.5 rounded-full">
-              <TrendingUp className="w-3 h-3" />
-              +18,4%
-            </span>
+
+            {/* Indicador de subida com dados reais */}
+            {growth && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-colors",
+                  growth.percentage === 0
+                    ? "text-texto-claro bg-[#FAF7F8] border border-[#F0E5E7]"
+                    : growth.isPositive
+                    ? "text-sucesso bg-sucesso/10"
+                    : "text-erro bg-erro/10"
+                )}
+              >
+                {growth.percentage > 0 && growth.isPositive && (
+                  <TrendingUp className="w-3 h-3" />
+                )}
+                {growth.percentage > 0 && !growth.isPositive && (
+                  <TrendingDown className="w-3 h-3" />
+                )}
+                <span>
+                  {growth.percentage > 0
+                    ? `${growth.isPositive ? "+" : "-"}${growth.percentage.toFixed(1).replace(".", ",")}%`
+                    : "0,0%"}
+                </span>
+              </span>
+            )}
           </div>
+
           <p className="text-xs text-texto-claro mt-0.5">
             Evolução diária de faturamento confirmado &bull; Total:{" "}
             <span className="font-bold text-primaria">
@@ -133,11 +161,11 @@ export function SalesAreaChart({
         </div>
       </div>
 
-      {/* Área do Gráfico SVG */}
-      <div className="relative pt-4 w-full overflow-x-auto">
+      {/* Área do Gráfico SVG - 100% fluida e responsiva sem overflow cortado */}
+      <div className="relative pt-3 w-full">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-auto min-w-[500px] overflow-visible"
+          className="w-full h-auto overflow-visible select-none"
         >
           <defs>
             <linearGradient id="salesGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -247,12 +275,13 @@ export function SalesAreaChart({
           })}
         </svg>
 
-        {/* Tooltip flutuante no ponto com foco */}
+        {/* Tooltip flutuante posicionado acima do ponto para não colidir com o cabeçalho */}
         {hoveredIndex !== null && points[hoveredIndex] && (
           <div
-            className="absolute -top-3 transform -translate-x-1/2 bg-texto-escuro text-white text-[11px] rounded-xl px-3 py-1.5 shadow-xl pointer-events-none z-10 whitespace-nowrap animate-in fade-in duration-150"
+            className="absolute transform -translate-x-1/2 bg-texto-escuro text-white text-[11px] rounded-xl px-3 py-1.5 shadow-xl pointer-events-none z-20 whitespace-nowrap animate-in fade-in duration-150"
             style={{
-              left: `${(points[hoveredIndex].x / width) * 100}%`,
+              left: `${Math.min(Math.max((points[hoveredIndex].x / width) * 100, 15), 85)}%`,
+              top: `${Math.max(points[hoveredIndex].y - 48, 4)}px`,
             }}
           >
             <div className="font-semibold">
