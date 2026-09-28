@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 11 Concluída
+> **Status Geral:** Em andamento — Fase 13 Concluída
 
 ---
 
@@ -22,9 +22,9 @@
 | **09** | **Mercado Pago** | **CONCLUÍDA** | Gateway adapter + Webhooks server-side + Idempotência OK |
 | **10** | **Painel Admin** | **CONCLUÍDA** | Gestão produtos/pedidos/estoque + auditoria OK |
 | **11** | **Motion / UX** | **CONCLUÍDA** | Microinterações + feedback + reduced-motion OK |
-| **12** | **Responsividade** | **A INICIAR** | 320px a 1920px sem overflow crítico OK |
-| **13** | **Segurança** | Pendente | Zero secrets expostos + RLS auditado + sanitização OK |
-| **14** | **Performance** | Pendente | Core Web Vitals + bundle + queries otimizadas OK |
+| **12** | **Responsividade** | **CONCLUÍDA** | 320px a 1920px sem overflow crítico OK |
+| **13** | **Segurança** | **CONCLUÍDA** | Zero secrets expostos + RLS auditado + sanitização OK |
+| **14** | **Performance** | **A INICIAR** | Core Web Vitals + bundle + queries otimizadas OK |
 | **15** | **Testes** | Pendente | Unitários + Integração + E2E fluxos críticos OK |
 | **16** | **Design System Checklist** | Pendente | Revisão formal designsystemchecklist.com OK |
 | **17** | **QA Final** | Pendente | Fluxo ponta a ponta sem falhas OK |
@@ -325,8 +325,50 @@
 ---
 
 ## Fase 13 — Segurança & Auditoria
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Auditoria de Segredos e Chaves:**
+    * Auditoria completa de `.env.example`, `.env.local` e `.gitignore`.
+    * Zero chaves mestras ou privadas (`service_role`, `SUPABASE_SERVICE_ROLE_KEY`, tokens reais de pagamento) expostas no client-side ou versionadas no git.
+    * Todas as variáveis sensíveis limitadas exclusivamente a Server Components e Server Actions.
+  * **Cabeçalhos de Segurança HTTP (Hardening Web):**
+    * Configuração de headers estritos de segurança em [next.config.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/next.config.ts):
+      * `X-Frame-Options: DENY` (proteção contra Clickjacking).
+      * `X-Content-Type-Options: nosniff` (proteção contra MIME-sniffing).
+      * `Referrer-Policy: strict-origin-when-cross-origin` (privacidade de navegação).
+      * `Permissions-Policy: camera=(), microphone=(), geolocation=()` (restrição de APIs sensíveis do navegador).
+  * **Mitigação Estrita contra Open Redirect:**
+    * Validação e sanitização de parâmetro de redirecionamento (`next`) em [src/app/auth/callback/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/auth/callback/route.ts) e [src/lib/supabase/middleware.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/lib/supabase/middleware.ts).
+    * Bloqueio explícito contra vetores de bypass como protocolo relativo (`//malicious.com`), barras invertidas (`/\malicious.com`) ou URLs absolutas externas.
+  * **Auditoria de Banco de Dados e Políticas RLS (Row Level Security):**
+    * 100% das 13 tabelas públicas do Supabase com RLS ativo (`rowsecurity = true`).
+    * Isolamento estrito por usuário (`auth.uid() = user_id`) em `profiles`, `addresses`, `orders`, `cart_items` e `wishlists`.
+  * **Hardening de Funções PostgreSQL (SECURITY DEFINER):**
+    * Criação e aplicação da migration [supabase/migrations/20260927000001_security_hardening.sql](file:///c:/xampp/htdocs/AluraProjects/IsisStore/supabase/migrations/20260927000001_security_hardening.sql):
+      * Revogação de privilégios de execução pública/anônima de `handle_new_user()` (`REVOKE EXECUTE ON FUNCTION handle_new_user FROM public, anon`).
+      * Restrição de execução da função de RBAC `is_admin(uuid)` aos usuários autenticados (`REVOKE EXECUTE ON FUNCTION is_admin FROM public, anon; GRANT EXECUTE ON FUNCTION is_admin TO authenticated`).
+  * **Integridade de Preços e Antifraude Server-Side:**
+    * Confirmação da integridade de cálculo financeiro no checkout em [src/features/checkout/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/checkout/actions.ts): valores e descontos consultados diretamente no banco de dados, recalculando subtotal, cupons, frete e total estritamente no servidor.
+  * **Assinatura HMAC e Idempotência Financeira:**
+    * Webhook do Mercado Pago [src/app/api/webhooks/mercadopago/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/api/webhooks/mercadopago/route.ts) protegido com validação de assinatura HMAC SHA-256 e gravação em tabela idempotente (`payment_events`).
+  * **Proteção contra Auto-Rebaixamento e Elevação de Privilégio:**
+    * Validação no backoffice [src/features/admin/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/admin/actions.ts) impedindo que o último admin ou o próprio administrador logado remova seu papel.
+  * **Suite de Testes Automatizados de Segurança:**
+    * Criação do teste de conformidade e auditoria em [src/features/security/__tests__/security-audit.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/security/__tests__/security-audit.test.ts).
+* **Gate 13:**
+  * Build (`next build` Turbopack): OK (27 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Teste do Gate 13: OK (100% aprovado)
+  * Nenhum segredo exposto, RLS ativo em 100% das tabelas, RBAC auditado e Open Redirect mitigado: OK
+
+---
+
+## Fase 14 — Performance & Otimização
 * **Status:** A INICIAR
-* **Objetivo:** Auditar e blindar RLS, autenticação, permissões de roles, sanitização de inputs, proteção de webhooks, secrets e logs.
+* **Objetivo:** Otimização de imagens, bundle size, queries do banco, cacheamento e Core Web Vitals (LCP, FID/INP, CLS).
+
 
 
 

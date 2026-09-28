@@ -76,8 +76,13 @@ export async function updateSession(request: NextRequest) {
   if (user && authRoutes.some((route) => pathname === route)) {
     const nextParam = request.nextUrl.searchParams.get("next");
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname =
-      nextParam && nextParam.startsWith("/") ? nextParam : "/conta";
+    const isValidPath =
+      nextParam &&
+      nextParam.startsWith("/") &&
+      !nextParam.startsWith("//") &&
+      !nextParam.includes("\\");
+
+    redirectUrl.pathname = isValidPath ? nextParam : "/conta";
     redirectUrl.searchParams.delete("next");
     return NextResponse.redirect(redirectUrl);
   }

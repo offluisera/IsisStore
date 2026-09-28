@@ -8,6 +8,18 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 13 — Segurança & Auditoria**:
+  - Auditoria completa de segredos e chaves: `.gitignore` e `.env.example` protegidos, zero chaves privadas expostas no bundle client-side.
+  - Implementação de cabeçalhos de segurança HTTP em `next.config.ts` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`).
+  - Proteção robusta contra Open Redirect em `src/app/auth/callback/route.ts` e `src/lib/supabase/middleware.ts` com validação de caminho relativo estrito contra vetores `//` e `\`.
+  - Auditoria de banco de dados e políticas RLS (Row Level Security) em 100% das 13 tabelas públicas do Supabase com isolamento de dados do cliente.
+  - Hardening de funções PostgreSQL `SECURITY DEFINER` na migration `supabase/migrations/20260927000001_security_hardening.sql`: revogação de execução anônima em `handle_new_user()` e restrição de `is_admin()` para usuários autenticados.
+  - Integridade antifraude no checkout `src/features/checkout/actions.ts`: recálculo financeiro completo no servidor sem confiança em parâmetros client-side.
+  - Proteção de webhooks financeiros com validação criptográfica HMAC SHA-256 e gravação idempotente em `payment_events`.
+  - Proteção contra auto-rebaixamento e elevação de privilégios de administradores no backoffice `src/features/admin/actions.ts`.
+  - Suite de testes automatizados de segurança `src/features/security/__tests__/security-audit.test.ts`.
+  - Aprovação no **Gate 13**: 100% de conformidade de segurança e auditoria alcançada.
+
 - **Upload de Imagens do PC com Conversão Automática para .webp**:
   - Implementação de conversor client-side de imagens para `.webp` de alta eficiência em `src/lib/images/convert-to-webp.ts` (`convertFileToWebP`, `convertBatchToWebP`).
   - Criação de Server Actions administrativas em `src/features/admin/actions.ts`: `uploadProductImagesAction`, `deleteProductImageAction` e `setPrimaryProductImageAction` com gravação na tabela `product_images` e bucket `products` do Supabase Storage.
