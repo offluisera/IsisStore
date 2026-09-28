@@ -25,8 +25,8 @@
 - [x] Desenvolver `OrdersDistributionDonut` em SVG com contagem central dinâmica e legenda categorizada por status de pedido.
 
 ### Etapa 4: Pedidos Recentes & Feed de Notificações
-- [ ] Criar `RecentOrdersTable` com avatares dos clientes, status badges padronizados (Pago, Pendente, Processando, Cancelado) e botão de inspeção direta `/admin/pedidos/[id]`.
-- [ ] Criar `AdminNotificationsFeed` alimentado em tempo real com eventos de novos pedidos, pagamentos e logs de auditoria recentes.
+- [x] Criar `RecentOrdersTable` com avatares dos clientes, status badges padronizados (Pago, Pendente, Processando, Cancelado, Reembolsado) e botão de inspeção direta `/admin/pedidos/[id]`.
+- [x] Criar `AdminNotificationsFeed` alimentado em tempo real com eventos de novos pedidos, pagamentos, alertas de estoque crítico, novos clientes e logs de auditoria recentes.
 
 ### Etapa 5: Mais Vendidos, Ações Rápidas & Dica do Dia
 - [ ] Criar `TopSellingProducts` agregando itens de pedidos com fotos reais do catálogo e barras de progresso percentuais.

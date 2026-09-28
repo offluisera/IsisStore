@@ -15,6 +15,14 @@ import { DashboardHeader } from "@/components/admin/dashboard-header";
 import { KPICard } from "@/components/admin/kpi-card";
 import { SalesAreaChart } from "@/components/admin/sales-area-chart";
 import { OrdersDistributionDonut } from "@/components/admin/orders-distribution-donut";
+import {
+  RecentOrdersTable,
+  RecentOrderItem,
+} from "@/components/admin/recent-orders-table";
+import {
+  AdminNotificationsFeed,
+  NotificationFeedItem,
+} from "@/components/admin/admin-notifications-feed";
 
 interface RecentOrderSummary {
   id: string;
@@ -59,6 +67,8 @@ export default async function AdminDashboardPage() {
     { data: allOrdersData },
     { data: recentOrders },
     { data: recentLogs },
+    { data: lowStockProducts },
+    { data: recentCustomers },
   ] = await Promise.all([
     supabase.from("products").select("*", { count: "exact", head: true }),
     supabase
@@ -81,10 +91,11 @@ export default async function AdminDashboardPage() {
         status,
         total_cents,
         created_at,
+        shipping_address,
         profiles (full_name)
       `)
       .order("created_at", { ascending: false })
-      .limit(5),
+      .limit(6),
     supabase
       .from("admin_audit_logs")
       .select(`
@@ -96,6 +107,17 @@ export default async function AdminDashboardPage() {
       `)
       .order("created_at", { ascending: false })
       .limit(5),
+    supabase
+      .from("products")
+      .select("id, name, stock")
+      .lte("stock", 5)
+      .order("stock", { ascending: true })
+      .limit(2),
+    supabase
+      .from("profiles")
+      .select("id, full_name, email, created_at")
+      .order("created_at", { ascending: false })
+      .limit(2),
   ]);
 
   // Faturamento Aprovado (Pedidos pagos, em separação ou despachados)
@@ -260,6 +282,125 @@ export default async function AdminDashboardPage() {
     });
   };
 
+  // Formatar pedidos recentes para a tabela oficial
+  const formattedRecentOrders: RecentOrderItem[] = (recentOrders || []).map(
+    (ord) => {
+      const recipientName = (
+        ord.shipping_address as { recipient_name?: string } | null
+      )?.recipient_name;
+      const profileName = (
+        ord.profiles as { full_name: string | null } | null
+      )?.full_name;
+
+      return {
+        id: ord.id,
+        order_number: ord.order_number,
+        customer_name: profileName || recipientName || "Cliente",
+        created_at: ord.created_at,
+        status: ord.status,
+        total_cents: ord.total_cents,
+      };
+    }
+  );
+
+  const formatRelativeTime = (iso: string) => {
+    try {
+      const diffMs = Date.now() - new Date(iso).getTime();
+      const diffMin = Math.floor(diffMs / (1000 * 60));
+      if (diffMin < 1) return "Agora";
+      if (diffMin < 60) return `${diffMin} min atrás`;
+      const diffHours = Math.floor(diffMin / 60);
+      if (diffHours < 24)
+        return `${diffHours} ${diffHours === 1 ? "hora" : "horas"} atrás`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays} ${diffDays === 1 ? "dia" : "dias"} atrás`;
+    } catch {
+      return "Recentemente";
+    }
+  };
+
+  // Montar notificações em tempo real combinando pedidos, estoque, novos clientes e auditoria
+  const assembledNotifications: NotificationFeedItem[] = [];
+
+  // 1. Pedidos e Pagamentos
+  (recentOrders || []).slice(0, 3).forEach((ord) => {
+    const isPaid = ["paid", "shipped", "delivered"].includes(ord.status);
+    const recipientName = (
+      ord.shipping_address as { recipient_name?: string } | null
+    )?.recipient_name;
+    const customer =
+      (ord.profiles as { full_name: string | null } | null)?.full_name ||
+      recipientName ||
+      "Cliente";
+
+    if (isPaid) {
+      assembledNotifications.push({
+        id: `pay-${ord.id}`,
+        type: "payment",
+        title: "Pagamento aprovado",
+        description: `Pedido #${ord.order_number} · ${formatPrice(ord.total_cents)}`,
+        timestamp: formatRelativeTime(ord.created_at),
+        href: `/admin/pedidos/${ord.id}`,
+      });
+    } else {
+      assembledNotifications.push({
+        id: `ord-${ord.id}`,
+        type: "order",
+        title: `Novo pedido #${ord.order_number}`,
+        description: `Cliente ${customer} · ${formatPrice(ord.total_cents)}`,
+        timestamp: formatRelativeTime(ord.created_at),
+        href: `/admin/pedidos/${ord.id}`,
+      });
+    }
+  });
+
+  // 2. Alertas de estoque crítico com nome real do produto
+  if (lowStockProducts && lowStockProducts.length > 0) {
+    lowStockProducts.forEach((prod) => {
+      assembledNotifications.push({
+        id: `stock-${prod.id}`,
+        type: "stock",
+        title: "Produto com estoque baixo",
+        description: `${prod.name} (${prod.stock} unidades)`,
+        timestamp: "Atenção",
+        href: "/admin/produtos",
+      });
+    });
+  } else if ((lowStockCount ?? 0) > 0) {
+    assembledNotifications.push({
+      id: "stock-alert",
+      type: "stock",
+      title: "Produto com estoque baixo",
+      description: `${lowStockCount} produto(s) com quantidade crítica (≤ 5 un)`,
+      timestamp: "Atenção",
+      href: "/admin/produtos",
+    });
+  }
+
+  // 3. Novo cliente cadastrado
+  (recentCustomers || []).slice(0, 1).forEach((cust) => {
+    assembledNotifications.push({
+      id: `cust-${cust.id}`,
+      type: "customer",
+      title: "Novo cliente cadastrado",
+      description: cust.full_name ? `${cust.full_name} (${cust.email})` : cust.email,
+      timestamp: formatRelativeTime(cust.created_at),
+      href: "/admin/clientes",
+    });
+  });
+
+  // 4. Logs de Auditoria do Administrador
+  (recentLogs || []).slice(0, 2).forEach((log) => {
+    assembledNotifications.push({
+      id: `log-${log.id}`,
+      type: "audit",
+      title: `Auditoria: ${log.action}`,
+      description: `${log.entity} por ${(log.profiles as { full_name: string | null } | null)?.full_name || "Admin"}`,
+      timestamp: formatRelativeTime(log.created_at),
+      href: "/admin/auditoria",
+    });
+  });
+
   return (
     <div className="flex flex-col gap-8">
       {/* 1. Cabeçalho Oficial Isis Store */}
@@ -332,104 +473,13 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Grid: Últimos Pedidos & Auditoria Recente */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Últimos Pedidos */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-borda/60 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-primaria" />
-              <h2 className="font-serif text-sm font-bold text-texto-escuro">
-                Últimos Pedidos
-              </h2>
-            </div>
-            <Link
-              href="/admin/pedidos"
-              className="text-xs text-primaria hover:underline font-semibold flex items-center gap-1"
-            >
-              <span>Ver todos</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="divide-y divide-borda/60 text-xs">
-            {recentOrders && recentOrders.length > 0 ? (
-              (recentOrders as unknown as RecentOrderSummary[]).map((ord) => (
-                <div
-                  key={ord.id}
-                  className="p-4 flex items-center justify-between gap-4 hover:bg-fundo/40 transition-colors"
-                >
-                  <div>
-                    <Link
-                      href={`/admin/pedidos/${ord.id}`}
-                      className="font-semibold text-texto-escuro hover:text-primaria transition-colors"
-                    >
-                      #{ord.order_number}
-                    </Link>
-                    <p className="text-[11px] text-texto-claro">
-                      {ord.profiles?.full_name || "Cliente"} &bull; {formatDate(ord.created_at)}
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="font-bold text-primaria">
-                      {formatPrice(ord.total_cents)}
-                    </p>
-                    <span className="text-[10px] uppercase font-semibold text-texto-medio">
-                      {ord.status}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-6 text-center text-texto-claro">
-                Nenhum pedido recente registrado.
-              </div>
-            )}
-          </div>
+      {/* 4. Seção Visual: Pedidos Recentes (8 cols) & Feed de Notificações em Tempo Real (4 cols) */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+        <div className="xl:col-span-8 flex flex-col">
+          <RecentOrdersTable orders={formattedRecentOrders} />
         </div>
-
-        {/* Últimos Logs de Auditoria */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-borda/60 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-primaria" />
-              <h2 className="font-serif text-sm font-bold text-texto-escuro">
-                Trilha de Auditoria Recente
-              </h2>
-            </div>
-            <Link
-              href="/admin/auditoria"
-              className="text-xs text-primaria hover:underline font-semibold flex items-center gap-1"
-            >
-              <span>Ver todos</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="divide-y divide-borda/60 text-xs">
-            {recentLogs && recentLogs.length > 0 ? (
-              (recentLogs as unknown as RecentLogSummary[]).map((log) => (
-                <div key={log.id} className="p-4 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-texto-escuro text-[11px]">
-                      {log.profiles?.full_name || "Sistema"}
-                    </span>
-                    <span className="text-[10px] text-texto-claro font-mono">
-                      {formatDate(log.created_at)}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-texto-medio font-mono">
-                    {log.action} &rarr; {log.entity}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <div className="p-6 text-center text-texto-claro">
-                Nenhuma ação de auditoria registrada.
-              </div>
-            )}
-          </div>
+        <div className="xl:col-span-4 flex flex-col">
+          <AdminNotificationsFeed notifications={assembledNotifications} />
         </div>
       </div>
 
