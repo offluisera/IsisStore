@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 14 Concluída
+> **Status Geral:** Em andamento — Fase 15 Concluída
 
 ---
 
@@ -25,8 +25,8 @@
 | **12** | **Responsividade** | **CONCLUÍDA** | 320px a 1920px sem overflow crítico OK |
 | **13** | **Segurança** | **CONCLUÍDA** | Zero secrets expostos + RLS auditado + sanitização OK |
 | **14** | **Performance** | **CONCLUÍDA** | Core Web Vitals + bundle + queries otimizadas OK |
-| **15** | **Testes** | **A INICIAR** | Unitários + Integração + E2E fluxos críticos OK |
-| **16** | **Design System Checklist** | Pendente | Revisão formal designsystemchecklist.com OK |
+| **15** | **Testes** | **CONCLUÍDA** | Unitários + Integração + E2E fluxos críticos OK |
+| **16** | **Design System Checklist** | **A INICIAR** | Revisão formal designsystemchecklist.com OK |
 | **17** | **QA Final** | Pendente | Fluxo ponta a ponta sem falhas OK |
 | **18** | **Produção** | Pendente | Deploy seguro + monitoramento + backups OK |
 
@@ -408,8 +408,52 @@
 ---
 
 ## Fase 15 — Testes & QA Automatizado
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Configuração Oficial do Runner de Testes (`npm test`):**
+    * Adição do pacote `tsx` às `devDependencies` e script `"test": "tsx --test src/**/__tests__/*.test.ts"` em [package.json](file:///c:/xampp/htdocs/AluraProjects/IsisStore/package.json).
+  * **Suite de Testes E2E de Fluxos Críticos ([src/features/qa/__tests__/e2e-critical-flows.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/qa/__tests__/e2e-critical-flows.test.ts)):**
+    * **1. Catálogo e Regras Comerciais do Carrinho:**
+      * Cálculo de subtotal, frete grátis (>= R$ 199,00) e desconto percentual de cupom (`ISIS10`).
+    * **2. Autorização e Controle de Acesso (RBAC & RLS):**
+      * Bloqueio estrito de clientes comuns executando Server Actions administrativas.
+      * Proteção contra auto-rebaixamento de privilégio do último administrador ou do usuário logado.
+    * **3. Checkout e Integridade Financeira Server-Side:**
+      * Criação de snapshot imutável de itens.
+      * Recálculo compulsório de preços no servidor com bloqueio de tentativas de manipulação de preço pelo client (anti-tampering).
+      * Validação atômica e concorrência de estoque.
+    * **4. Webhooks, Assinatura HMAC e Idempotência:**
+      * Validação criptográfica de assinaturas HMAC SHA-256 (`id`, `request-id`, `ts`).
+      * Rejeição imediata de payloads com assinaturas forjadas ou adulteradas.
+      * Deduplicação idempotente de eventos em retentativas de rede.
+    * **5. Ciclo de Vida do Pedido e Reversão de Estoque:**
+      * Transições de status válidas e reversão automática das quantidades para o estoque em cancelamentos e reembolsos.
+  * **Cobertura Total de Testes do Projeto (11 Suites Automatizadas):**
+    * `src/features/account/__tests__/rls-isolation.test.ts` (Gate 07 - Isolamento RLS entre clientes)
+    * `src/features/admin/__tests__/admin-management.test.ts` (Gate 10 - Gestão de produtos, pedidos e auditoria)
+    * `src/features/admin/__tests__/product-image-upload.test.ts` (Upload de fotos do PC e conversão WebP)
+    * `src/features/cart/__tests__/cart-rules.test.ts` (Gate 06 - Regras de carrinho e cupom)
+    * `src/features/checkout/__tests__/checkout-rules.test.ts` (Gate 08 - Snapshot imutável e concorrência)
+    * `src/features/checkout/__tests__/mercadopago-gateway.test.ts` (Gate 09 - Gateway Pix/Cartão e HMAC)
+    * `src/features/security/__tests__/security-audit.test.ts` (Gate 13 - Auditoria de segredos, headers e RLS)
+    * `src/features/performance/__tests__/performance-audit.test.ts` (Gate 14 - Imagens, React cache e índices SQL)
+    * `src/features/ui/__tests__/motion-ux.test.ts` (Gate 11 - 60FPS motion e prefers-reduced-motion)
+    * `src/features/ui/__tests__/responsiveness-audit.test.ts` (Gate 12 - 9 breakpoints de 320px a 1920px)
+    * `src/features/qa/__tests__/e2e-critical-flows.test.ts` (Gate 15 - Integração E2E ponta a ponta)
+* **Gate 15:**
+  * Execução `npm test`: OK (23 testes em 7 suites, 100% aprovados em ~1.2s)
+  * Build (`next build` Turbopack): OK (compilado em 3.0s, 27 rotas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Todos os fluxos críticos (Unit, Integration, E2E, Auth, Checkout, Webhook) validados: OK
+
+---
+
+## Fase 16 — Design System Checklist
 * **Status:** A INICIAR
-* **Objetivo:** Suite completa de testes unitários, testes de integração, testes de autorização/RLS e validação dos fluxos críticos de ponta a ponta (catálogo, carrinho, checkout, webhook e admin).
+* **Objetivo:** Auditoria formal e evidência completa de conformidade com os critérios do designsystemchecklist.com (Design Tokens, Tipografia, Cores, Componentes Core, Acessibilidade WCAG, Documentação).
+
 
 
 

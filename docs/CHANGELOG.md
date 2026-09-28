@@ -8,6 +8,19 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 15 — Testes & QA Automatizado**:
+  - Configuração oficial do script de testes `npm test` via `tsx --test src/**/__tests__/*.test.ts` adicionando `tsx` às devDependencies.
+  - Implementação da suite de testes de integração e ponta a ponta `src/features/qa/__tests__/e2e-critical-flows.test.ts` validando:
+    - Regras comerciais do catálogo e carrinho (subtotal, frete grátis a partir de R$ 199,00 e cupom `ISIS10`).
+    - Autorização RBAC e bloqueio de clientes em endpoints administrativos.
+    - Proteção contra auto-rebaixamento de administrador.
+    - Integridade financeira do checkout com snapshot imutável, recálculo compulsório server-side e anti-tampering.
+    - Assinaturas de Webhook HMAC SHA-256 com verificação de integridade e rejeição de payloads adulterados.
+    - Idempotência financeira garantindo resiliência contra duplicidade de requisições de rede.
+    - Transições de ciclo de vida do pedido e reversão automática de estoque em cancelamentos.
+  - Total de 11 suites de testes automatizados consolidadas (23 testes passando com 100% de sucesso em ~1.2s).
+  - Aprovação no **Gate 15**: Testes unitários, de integração, E2E, de autorização, checkout e webhook 100% aprovados, 27 rotas no build, 0 erros no typecheck e 0 erros no lint.
+
 - Conclusão da **Fase 14 — Performance & Otimização**:
   - Configuração de otimização de imagens modernas em `next.config.ts`: formatos AVIF e WebP habilitados, compressão Gzip/Brotli ativa e `poweredByHeader: false`.
   - Auditoria de imagens em componentes `.tsx`: 100% dos assets usando `next/image` e zero tags `<img>` cruas no projeto.
