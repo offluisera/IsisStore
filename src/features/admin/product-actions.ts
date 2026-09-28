@@ -113,7 +113,52 @@ export async function createProductAction(
     };
   }
 
-  if (validation.data.imageUrl) {
+  // Processamento de imagens enviadas do computador (.webp)
+  const rawFiles = formData.getAll("files");
+  const primaryIndex = parseInt((formData.get("primaryIndex") as string) || "0", 10);
+  const files: File[] = [];
+
+  for (const item of rawFiles) {
+    if (item instanceof File && item.size > 0) {
+      files.push(item);
+    }
+  }
+
+  if (files.length > 0) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substring(2, 8);
+      const storagePath = `${newProduct.id}/${timestamp}-${randomSuffix}.webp`;
+
+      try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const { error: uploadError } = await supabase.storage
+          .from("products")
+          .upload(storagePath, buffer, {
+            contentType: "image/webp",
+            upsert: true,
+          });
+
+        if (!uploadError) {
+          const { data: urlData } = supabase.storage
+            .from("products")
+            .getPublicUrl(storagePath);
+
+          await supabase.from("product_images").insert({
+            product_id: newProduct.id,
+            storage_path: storagePath,
+            public_url: urlData.publicUrl,
+            alt_text: newProduct.name,
+            is_primary: i === primaryIndex,
+            sort_order: i + 1,
+          });
+        }
+      } catch (err) {
+        console.error("Erro no upload de foto para novo produto:", err);
+      }
+    }
+  } else if (validation.data.imageUrl) {
     await supabase.from("product_images").insert({
       product_id: newProduct.id,
       public_url: validation.data.imageUrl,
