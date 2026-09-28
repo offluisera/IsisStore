@@ -20,9 +20,9 @@
 - [x] Conectar métricas reais do Supabase em paralelo: total faturado, contagem de pedidos, clientes cadastrados e produtos em estoque.
 
 ### Etapa 3: Gráficos & Visualização de Dados
-- [ ] Desenvolver `SalesAreaChart` em SVG/Canvas com gradiente linear rosa (`#E08CA3` a transparente), marcadores de data e tooltip com valores monetários.
-- [ ] Adicionar seletor de período funcional ("Últimos 7 dias", "Últimos 30 dias", "Este mês").
-- [ ] Desenvolver `OrdersDistributionDonut` em SVG com contagem central dinâmica e legenda categorizada por status de pedido.
+- [x] Desenvolver `SalesAreaChart` em SVG/Canvas com gradiente linear rosa (`#E08CA3` a transparente), marcadores de data e tooltip com valores monetários.
+- [x] Adicionar seletor de período funcional ("Últimos 7 dias", "Últimos 30 dias", "Este mês").
+- [x] Desenvolver `OrdersDistributionDonut` em SVG com contagem central dinâmica e legenda categorizada por status de pedido.
 
 ### Etapa 4: Pedidos Recentes & Feed de Notificações
 - [ ] Criar `RecentOrdersTable` com avatares dos clientes, status badges padronizados (Pago, Pendente, Processando, Cancelado) e botão de inspeção direta `/admin/pedidos/[id]`.

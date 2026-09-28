@@ -13,6 +13,8 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/admin/dashboard-header";
 import { KPICard } from "@/components/admin/kpi-card";
+import { SalesAreaChart } from "@/components/admin/sales-area-chart";
+import { OrdersDistributionDonut } from "@/components/admin/orders-distribution-donut";
 
 interface RecentOrderSummary {
   id: string;
@@ -54,7 +56,7 @@ export default async function AdminDashboardPage() {
     { count: ordersCount },
     { count: pendingShipmentCount },
     { count: customersCount },
-    { data: paidOrders },
+    { data: allOrdersData },
     { data: recentOrders },
     { data: recentLogs },
   ] = await Promise.all([
@@ -70,7 +72,7 @@ export default async function AdminDashboardPage() {
       .select("*", { count: "exact", head: true })
       .in("status", ["paid", "processing"]),
     supabase.from("profiles").select("*", { count: "exact", head: true }),
-    supabase.from("orders").select("total_cents").eq("status", "paid"),
+    supabase.from("orders").select("total_cents, created_at, status"),
     supabase
       .from("orders")
       .select(`
@@ -96,9 +98,59 @@ export default async function AdminDashboardPage() {
       .limit(5),
   ]);
 
-  // Calcular Faturamento Total Aprovado em centavos
+  // Faturamento Aprovado
+  const paidOrders = allOrdersData?.filter((o) => o.status === "paid") || [];
   const totalRevenueCents =
-    paidOrders?.reduce((acc, order) => acc + (order.total_cents || 0), 0) || 0;
+    paidOrders.reduce((acc, order) => acc + (order.total_cents || 0), 0) || 0;
+
+  // Distribuição de status dos pedidos
+  const totalOrdersCalc = allOrdersData?.length || ordersCount || 0;
+  const statusCounts = {
+    paid: allOrdersData?.filter((o) => o.status === "paid").length || 0,
+    pending:
+      allOrdersData?.filter((o) => o.status === "pending_payment").length || 0,
+    processing:
+      allOrdersData?.filter((o) => o.status === "processing").length || 0,
+    canceled:
+      allOrdersData?.filter((o) => o.status === "cancelled").length || 0,
+  };
+
+  const distributionItems =
+    totalOrdersCalc > 0
+      ? [
+          {
+            status: "paid",
+            label: "Pago",
+            count: statusCounts.paid,
+            percentage: Math.round((statusCounts.paid / totalOrdersCalc) * 100) || 0,
+            color: "#E08CA3",
+          },
+          {
+            status: "pending",
+            label: "Pendente",
+            count: statusCounts.pending,
+            percentage:
+              Math.round((statusCounts.pending / totalOrdersCalc) * 100) || 0,
+            color: "#F59E0B",
+          },
+          {
+            status: "processing",
+            label: "Processando",
+            count: statusCounts.processing,
+            percentage:
+              Math.round((statusCounts.processing / totalOrdersCalc) * 100) || 0,
+            color: "#3B82F6",
+          },
+          {
+            status: "cancelled",
+            label: "Cancelado",
+            count: statusCounts.canceled,
+            percentage:
+              Math.round((statusCounts.canceled / totalOrdersCalc) * 100) || 0,
+            color: "#EF4444",
+          },
+        ]
+      : undefined;
 
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
@@ -167,6 +219,19 @@ export default async function AdminDashboardPage() {
           sparklineData={[20, 21, 22, 22, 23, 24, 25]}
           gradientId="grad-kpi-produtos"
         />
+      </div>
+
+      {/* 3. Seção Visual: Gráfico de Vendas 7 Dias (8 cols) & Distribuição de Pedidos Donut (4 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div className="lg:col-span-8 flex flex-col">
+          <SalesAreaChart />
+        </div>
+        <div className="lg:col-span-4 flex flex-col">
+          <OrdersDistributionDonut
+            items={distributionItems}
+            totalOrders={totalOrdersCalc}
+          />
+        </div>
       </div>
 
       {/* Grid: Últimos Pedidos & Auditoria Recente */}
