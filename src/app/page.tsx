@@ -187,6 +187,7 @@ export default function Home() {
                   src="/images/banner-rosto.jpeg"
                   alt="Isis Store — Coleção Especial"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover object-center"
                   priority
                 />
@@ -504,7 +505,7 @@ export default function Home() {
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               <div className="relative h-10 w-10 rounded-full overflow-hidden border border-primaria-border">
-                <Image src="/images/logo/logo.jpeg" alt="Logo Isis Store" fill className="object-cover" />
+                <Image src="/images/logo/logo.jpeg" alt="Logo Isis Store" fill sizes="40px" className="object-cover" />
               </div>
               <span className="font-serif text-xl font-bold text-texto-escuro">Isis Store</span>
             </div>

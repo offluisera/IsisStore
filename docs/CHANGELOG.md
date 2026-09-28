@@ -8,6 +8,17 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 14 — Performance & Otimização**:
+  - Configuração de otimização de imagens modernas em `next.config.ts`: formatos AVIF e WebP habilitados, compressão Gzip/Brotli ativa e `poweredByHeader: false`.
+  - Auditoria de imagens em componentes `.tsx`: 100% dos assets usando `next/image` e zero tags `<img>` cruas no projeto.
+  - Otimização de LCP (Largest Contentful Paint) no banner principal da Home `src/app/page.tsx` (`priority`, `sizes="(max-width: 1024px) 100vw, 42vw"`) e galeria de produtos `src/components/commerce/product-gallery.tsx`.
+  - Deduplicação de consultas com React `cache()` em `src/services/catalog.service.ts` para `getCategories`, `getCategoryBySlug`, `getProductBySlug` e `getRelatedProducts`, eliminando viagens redundantes ao Supabase entre `generateMetadata` e Page components.
+  - Criação da migration `supabase/migrations/20260927000002_performance_optimization.sql`: índices cobrindo 100% das foreign keys (`addresses`, `admin_audit_logs`, `cart_items`, `carts`, `order_items`) e índices compostos de ordenação (`products(status, created_at DESC)`, `orders(created_at DESC)`).
+  - Resolução completa de avisos `auth_rls_initplan` nas políticas RLS do Supabase com `(select auth.uid())`.
+  - Garantia de 60FPS com aceleração de GPU (`will-change: transform`, `translateZ(0)`) e respeito a `prefers-reduced-motion: reduce`.
+  - Suite de testes automatizados do Gate 14 em `src/features/performance/__tests__/performance-audit.test.ts`.
+  - Aprovação no **Gate 14**: 27 rotas compiladas em 2.7s pelo Turbopack, 0 erros no typecheck e 0 erros no lint.
+
 - Conclusão da **Fase 13 — Segurança & Auditoria**:
   - Auditoria completa de segredos e chaves: `.gitignore` e `.env.example` protegidos, zero chaves privadas expostas no bundle client-side.
   - Implementação de cabeçalhos de segurança HTTP em `next.config.ts` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`).

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
 export interface GetProductsParams {
@@ -50,7 +51,7 @@ export interface CatalogCategory {
   is_active: boolean;
 }
 
-export async function getCategories(): Promise<CatalogCategory[]> {
+export const getCategories = cache(async (): Promise<CatalogCategory[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
@@ -64,11 +65,11 @@ export async function getCategories(): Promise<CatalogCategory[]> {
   }
 
   return data as CatalogCategory[];
-}
+});
 
-export async function getCategoryBySlug(
+export const getCategoryBySlug = cache(async (
   slug: string
-): Promise<CatalogCategory | null> {
+): Promise<CatalogCategory | null> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
@@ -81,7 +82,7 @@ export async function getCategoryBySlug(
   }
 
   return data as CatalogCategory;
-}
+});
 
 export async function getProducts(params: GetProductsParams = {}) {
   const {
@@ -176,9 +177,9 @@ export async function getProducts(params: GetProductsParams = {}) {
   };
 }
 
-export async function getProductBySlug(
+export const getProductBySlug = cache(async (
   slug: string
-): Promise<CatalogProduct | null> {
+): Promise<CatalogProduct | null> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("products")
@@ -194,13 +195,13 @@ export async function getProductBySlug(
   }
 
   return (data as unknown) as CatalogProduct;
-}
+});
 
-export async function getRelatedProducts(
+export const getRelatedProducts = cache(async (
   categoryId: string | null,
   excludeId: string,
   limit = 4
-): Promise<CatalogProduct[]> {
+): Promise<CatalogProduct[]> => {
   const supabase = await createClient();
   let query = supabase
     .from("products")
@@ -221,4 +222,4 @@ export async function getRelatedProducts(
   }
 
   return (data as unknown) as CatalogProduct[];
-}
+});

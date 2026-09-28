@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 13 Concluída
+> **Status Geral:** Em andamento — Fase 14 Concluída
 
 ---
 
@@ -24,8 +24,8 @@
 | **11** | **Motion / UX** | **CONCLUÍDA** | Microinterações + feedback + reduced-motion OK |
 | **12** | **Responsividade** | **CONCLUÍDA** | 320px a 1920px sem overflow crítico OK |
 | **13** | **Segurança** | **CONCLUÍDA** | Zero secrets expostos + RLS auditado + sanitização OK |
-| **14** | **Performance** | **A INICIAR** | Core Web Vitals + bundle + queries otimizadas OK |
-| **15** | **Testes** | Pendente | Unitários + Integração + E2E fluxos críticos OK |
+| **14** | **Performance** | **CONCLUÍDA** | Core Web Vitals + bundle + queries otimizadas OK |
+| **15** | **Testes** | **A INICIAR** | Unitários + Integração + E2E fluxos críticos OK |
 | **16** | **Design System Checklist** | Pendente | Revisão formal designsystemchecklist.com OK |
 | **17** | **QA Final** | Pendente | Fluxo ponta a ponta sem falhas OK |
 | **18** | **Produção** | Pendente | Deploy seguro + monitoramento + backups OK |
@@ -366,8 +366,51 @@
 ---
 
 ## Fase 14 — Performance & Otimização
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Otimização de Assets e Imagens (next/image):**
+    * Configuração de formatos de última geração em [next.config.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/next.config.ts): suporte nativo e negociação automática de `image/avif` e `image/webp`.
+    * Compressão de respostas HTTP (`compress: true`) e remoção de fingerprinting (`poweredByHeader: false`).
+    * Auditoria completa de imagens em componentes `.tsx`: 100% de uso do `<Image>` oficial do Next.js com zero tags `<img>` cruas no projeto.
+    * Priorização de LCP (Largest Contentful Paint) no Banner Hero da Home [src/app/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/page.tsx) com `priority` e `sizes="(max-width: 1024px) 100vw, 42vw"`, e na galeria de produtos [src/components/commerce/product-gallery.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-gallery.tsx).
+  * **Deduplicação de Queries com React cache:**
+    * Encapsulamento das funções do catálogo em [src/services/catalog.service.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/services/catalog.service.ts) (`getCategories`, `getCategoryBySlug`, `getProductBySlug`, `getRelatedProducts`) com `cache()` do React.
+    * Eliminação de consultas duplicadas durante o ciclo de renderização SSR (deduplicação entre `generateMetadata` e `Page` component).
+  * **Auditoria e Otimização do Banco de Dados PostgreSQL (Supabase):**
+    * Criação e aplicação da migration [supabase/migrations/20260927000002_performance_optimization.sql](file:///c:/xampp/htdocs/AluraProjects/IsisStore/supabase/migrations/20260927000002_performance_optimization.sql).
+    * Criação de índices de cobertura para 100% das chaves estrangeiras pendentes:
+      * `addresses(profile_id)`
+      * `admin_audit_logs(actor_id)`
+      * `cart_items(product_id)`
+      * `carts(profile_id)`
+      * `order_items(product_id)`
+    * Criação de índices compostos e de ordenação para consultas críticas:
+      * `products(status, created_at DESC)` (catálogo e vitrines)
+      * `orders(created_at DESC)` (pedidos recentes do cliente e admin)
+      * `admin_audit_logs(created_at DESC)` (trilha de auditoria)
+    * Resolução completa do problema `auth_rls_initplan` em todas as políticas RLS (`profiles`, `addresses`, `carts`, `cart_items`, `orders`, `order_items`, `payments`), substituindo `auth.uid()` por `(select auth.uid())` para avaliação em tempo de `InitPlan` (única por consulta) em vez de `SubPlan` (por linha).
+    * Auditoria do Supabase Performance Linter zerada em `unindexed_foreign_keys` e `auth_rls_initplan`.
+  * **Auditoria de Bundle e Animações 60FPS:**
+    * Dependências enxutas sem frameworks pesados de terceiros.
+    * Animações exclusivamente baseadas em `transform` e `opacity` com aceleração por GPU (`will-change: transform`, `translateZ(0)`).
+    * Desativação universal de animações quando `prefers-reduced-motion: reduce` é detectado.
+    * Tipografia com `next/font` e `display: 'swap'` eliminando atrasos no FCP.
+  * **Suite de Testes de Performance:**
+    * Suite automatizada criada em [src/features/performance/__tests__/performance-audit.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/performance/__tests__/performance-audit.test.ts) (7 testes aprovados).
+* **Gate 14:**
+  * Build (`next build` Turbopack): OK (compilado em 2.7s, 27 rotas otimizadas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Teste do Gate 14: OK (100% aprovado)
+  * Zero avisos críticos de performance no Supabase Linter: OK
+
+---
+
+## Fase 15 — Testes & QA Automatizado
 * **Status:** A INICIAR
-* **Objetivo:** Otimização de imagens, bundle size, queries do banco, cacheamento e Core Web Vitals (LCP, FID/INP, CLS).
+* **Objetivo:** Suite completa de testes unitários, testes de integração, testes de autorização/RLS e validação dos fluxos críticos de ponta a ponta (catálogo, carrinho, checkout, webhook e admin).
+
 
 
 
