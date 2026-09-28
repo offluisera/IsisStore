@@ -29,9 +29,9 @@
 - [x] Criar `AdminNotificationsFeed` alimentado em tempo real com eventos de novos pedidos, pagamentos, alertas de estoque crítico, novos clientes e logs de auditoria recentes.
 
 ### Etapa 5: Mais Vendidos, Ações Rápidas & Dica do Dia
-- [ ] Criar `TopSellingProducts` agregando itens de pedidos com fotos reais do catálogo e barras de progresso percentuais.
-- [ ] Implementar `QuickActionsGrid` com navegação funcional para novos produtos, gestão de pedidos, clientes, gateways e auditoria.
-- [ ] Implementar card visual `DailyTipCard` com assinatura estética Isis Store.
+- [x] Criar `TopSellingProducts` agregando itens de pedidos com fotos reais do catálogo e barras de progresso percentuais.
+- [x] Implementar `QuickActionsGrid` com navegação funcional para novos produtos, gestão de pedidos, clientes, gateways e auditoria.
+- [x] Implementar card visual `DailyTipCard` com assinatura estética Isis Store.
 
 ### Etapa 6: Estados, Resiliência & Auditoria
 - [ ] Criar skeletons completos para carregamento suave (`loading.tsx`).

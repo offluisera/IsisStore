@@ -23,6 +23,12 @@ import {
   AdminNotificationsFeed,
   NotificationFeedItem,
 } from "@/components/admin/admin-notifications-feed";
+import {
+  TopSellingProducts,
+  TopSellingItem,
+} from "@/components/admin/top-selling-products";
+import { QuickActions } from "@/components/admin/quick-actions";
+import { DailyTipCard } from "@/components/admin/daily-tip-card";
 
 interface RecentOrderSummary {
   id: string;
@@ -69,6 +75,8 @@ export default async function AdminDashboardPage() {
     { data: recentLogs },
     { data: lowStockProducts },
     { data: recentCustomers },
+    { data: topOrderItems },
+    { data: catalogProducts },
   ] = await Promise.all([
     supabase.from("products").select("*", { count: "exact", head: true }),
     supabase
@@ -118,6 +126,32 @@ export default async function AdminDashboardPage() {
       .select("id, full_name, email, created_at")
       .order("created_at", { ascending: false })
       .limit(2),
+    supabase
+      .from("order_items")
+      .select(`
+        product_id,
+        product_name,
+        quantity,
+        subtotal_cents,
+        products (
+          id,
+          name,
+          slug,
+          product_images (public_url, is_primary)
+        )
+      `)
+      .limit(100),
+    supabase
+      .from("products")
+      .select(`
+        id,
+        name,
+        slug,
+        price_cents,
+        product_images (public_url, is_primary)
+      `)
+      .eq("status", "published")
+      .limit(5),
   ]);
 
   // Faturamento Aprovado (Pedidos pagos, em separação ou despachados)
@@ -401,6 +435,86 @@ export default async function AdminDashboardPage() {
     });
   });
 
+  // 5. Agregação dos Produtos Mais Vendidos a partir de order_items
+  const productSalesMap = new Map<
+    string,
+    {
+      id: string;
+      name: string;
+      slug?: string;
+      imageUrl?: string | null;
+      total_sold: number;
+      revenue_cents: number;
+    }
+  >();
+
+  (topOrderItems || []).forEach((item) => {
+    const key = item.product_id || item.product_name;
+    const prodRel = item.products as {
+      id?: string;
+      name?: string;
+      slug?: string;
+      product_images?: { public_url: string; is_primary: boolean }[];
+    } | null;
+
+    const primaryImage =
+      prodRel?.product_images?.find((img) => img.is_primary) ||
+      prodRel?.product_images?.[0];
+
+    const existing = productSalesMap.get(key) || {
+      id: item.product_id || key,
+      name: item.product_name,
+      slug: prodRel?.slug,
+      imageUrl: primaryImage?.public_url || null,
+      total_sold: 0,
+      revenue_cents: 0,
+    };
+
+    existing.total_sold += item.quantity || 1;
+    existing.revenue_cents += item.subtotal_cents || 0;
+    if (!existing.imageUrl && primaryImage?.public_url) {
+      existing.imageUrl = primaryImage.public_url;
+    }
+
+    productSalesMap.set(key, existing);
+  });
+
+  const sortedSales = Array.from(productSalesMap.values()).sort(
+    (a, b) => b.total_sold - a.total_sold
+  );
+
+  const maxSold = sortedSales.length > 0 ? sortedSales[0].total_sold : 1;
+
+  let finalTopSelling: TopSellingItem[] = [];
+
+  if (sortedSales.length > 0) {
+    finalTopSelling = sortedSales.slice(0, 5).map((item) => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      imageUrl: item.imageUrl,
+      total_sold: item.total_sold,
+      revenue_cents: item.revenue_cents,
+      percentage: Math.min(Math.round((item.total_sold / maxSold) * 100), 100),
+    }));
+  } else if (catalogProducts && catalogProducts.length > 0) {
+    finalTopSelling = catalogProducts.slice(0, 5).map((p) => {
+      const primaryImage =
+        p.product_images?.find((img) => img.is_primary) ||
+        p.product_images?.[0];
+
+      return {
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        imageUrl: primaryImage?.public_url || null,
+        total_sold: 0,
+        revenue_cents: 0,
+        percentage: 0,
+      };
+    });
+  }
+
   return (
     <div className="flex flex-col gap-8">
       {/* 1. Cabeçalho Oficial Isis Store */}
@@ -480,6 +594,17 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="xl:col-span-4 flex flex-col">
           <AdminNotificationsFeed notifications={assembledNotifications} />
+        </div>
+      </div>
+
+      {/* 5. Seção Visual: Produtos Mais Vendidos (8 cols) & Ações Rápidas + Dica do Dia (4 cols) */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+        <div className="xl:col-span-8 flex flex-col">
+          <TopSellingProducts products={finalTopSelling} />
+        </div>
+        <div className="xl:col-span-4 flex flex-col gap-6">
+          <QuickActions />
+          <DailyTipCard />
         </div>
       </div>
 
