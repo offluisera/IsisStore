@@ -8,6 +8,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 16 — Design System Checklist**:
+  - Auditoria formal e estruturação de evidências de 100% dos critérios do `designsystemchecklist.com` em `docs/DESIGN-SYSTEM-CHECKLIST.md`.
+  - Validação matemática de contraste de cores conforme especificações W3C WCAG 2.1: texto escuro (`#574240`) sobre fundo (`#FFF5F6`) atinge 8.55:1 e sobre card branco atinge 8.92:1 (superando o critério AAA de 7.0:1).
+  - Enriquecimento dos componentes core (`Button`, `Input`, `Badge`, `Checkbox`, `Toast`, `Skeleton`) garantindo foco acessível com `focus-visible:ring-2`, estados de erro e variantes semânticas.
+  - Criação da documentação oficial de segurança da loja em `docs/SECURITY.md`.
+  - Suite de testes automatizados do Gate 16 em `src/features/ui/__tests__/design-system-checklist.test.ts`.
+  - Aprovação no **Gate 16**: 28 testes passando na suite geral `npm test`, 27 rotas geradas no build com Turbopack, 0 erros no typecheck e 0 erros no lint.
+
 - Conclusão da **Fase 15 — Testes & QA Automatizado**:
   - Configuração oficial do script de testes `npm test` via `tsx --test src/**/__tests__/*.test.ts` adicionando `tsx` às devDependencies.
   - Implementação da suite de testes de integração e ponta a ponta `src/features/qa/__tests__/e2e-critical-flows.test.ts` validando:

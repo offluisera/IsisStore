@@ -30,6 +30,7 @@ export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
             <Link
               key={link.href}
               href={link.href}
+              aria-label={link.label}
               className={cn(
                 "flex flex-col items-center justify-center gap-1 py-1 px-2 sm:px-3 min-h-[44px] min-w-[44px] text-[10px] min-[360px]:text-[11px] font-medium transition-colors relative touch-manipulation",
                 isActive

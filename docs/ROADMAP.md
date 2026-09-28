@@ -1,8 +1,8 @@
 # ROADMAP OFICIAL — ISIS STORE
 
 > **Documento:** `docs/ROADMAP.md`  
-> **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 15 Concluída
+> **Última atualização:** 2026-09-28  
+> **Status Geral:** Em andamento — Fase 16 Concluída
 
 ---
 
@@ -26,8 +26,8 @@
 | **13** | **Segurança** | **CONCLUÍDA** | Zero secrets expostos + RLS auditado + sanitização OK |
 | **14** | **Performance** | **CONCLUÍDA** | Core Web Vitals + bundle + queries otimizadas OK |
 | **15** | **Testes** | **CONCLUÍDA** | Unitários + Integração + E2E fluxos críticos OK |
-| **16** | **Design System Checklist** | **A INICIAR** | Revisão formal designsystemchecklist.com OK |
-| **17** | **QA Final** | Pendente | Fluxo ponta a ponta sem falhas OK |
+| **16** | **Design System Checklist** | **CONCLUÍDA** | Revisão formal designsystemchecklist.com OK |
+| **17** | **QA Final** | **A INICIAR** | Fluxo ponta a ponta sem falhas OK |
 | **18** | **Produção** | Pendente | Deploy seguro + monitoramento + backups OK |
 
 ---
@@ -451,8 +451,47 @@
 ---
 
 ## Fase 16 — Design System Checklist
+* **Data de Conclusão:** 2026-09-28
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Auditoria Formal de Conformidade com o designsystemchecklist.com ([docs/DESIGN-SYSTEM-CHECKLIST.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DESIGN-SYSTEM-CHECKLIST.md)):**
+    * **1. Fundamentos & Design Tokens:**
+      * Paleta oficial calibrada (`#E08CA3`, `#F9C7D4`, `#FFF5F6`, `#574240`) com estados derivados (hover, active, soft, border) em [src/styles/tokens.css](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/styles/tokens.css).
+      * Cores semânticas/funcionais (sucesso `#4E8752`, alerta `#B8860B`, erro `#C24343`, info `#5A7EA8`).
+      * Escala de espaçamento Base 4, raios de borda (`--raio-sm` a `--raio-full`), sombras quentes anti-IA e tokens de motion com curvas Bezier naturais.
+    * **2. Componentes de UI Core Auditados:**
+      * `Button` com suporte completo a variantes (`primary`, `secondary`, `outline`, `ghost`, `link`), tamanhos, estados de carregamento com spinner e anel de foco.
+      * `Input` com foco visual acessível (`focus-visible:ring-2 focus-visible:ring-primaria`), suporte a erros e ícones contextuais.
+      * `Badge` com variantes temáticas e promocionais (`discount`).
+      * `Toast` integrado globalmente com auto-dismiss e animação fluida acelerada por hardware.
+      * `Skeleton` pulsante prevenindo CLS em todas as rotas críticas.
+      * `ProductCard` e `CartDrawer` com conformidade visual e acessível.
+    * **3. Acessibilidade WCAG 2.1 (Níveis AA & AAA):**
+      * Proporção de contraste calculada matematicamente: **8.55:1** no fundo e **8.92:1** em cards brancos (supera inclusive o nível AAA de 7.0:1).
+      * Anel de foco visível universal (`focus-visible:ring-offset-2`).
+      * Semântica HTML5 nativa sem botões falsos (`<div>` clicável).
+      * Atributos `aria-label` em botões de ícone e navegações móveis (`Header`, `BottomNav`).
+      * Touch targets de no mínimo 44x44px.
+      * Desativação de animações sob `@media (prefers-reduced-motion: reduce)`.
+    * **4. Documentação Técnica Consolidada:**
+      * [docs/DESIGN-SYSTEM.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DESIGN-SYSTEM.md)
+      * [docs/DESIGN-SYSTEM-CHECKLIST.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DESIGN-SYSTEM-CHECKLIST.md)
+      * [docs/SECURITY.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/SECURITY.md)
+    * **5. Suite de Testes do Checklist ([src/features/ui/__tests__/design-system-checklist.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/ui/__tests__/design-system-checklist.test.ts)):**
+      * 5 testes automatizados cobrindo tokens, cálculo de contraste W3C, componentes core, acessibilidade e documentação.
+* **Gate 16:**
+  * Build (`next build` Turbopack): OK (compilado em 2.9s, 27 rotas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Teste do Gate 16 e suite geral (`npm test`): OK (28 testes aprovados em 1.4s)
+  * 100% dos critérios do designsystemchecklist.com verificados e documentados: OK
+
+---
+
+## Fase 17 — QA Final
 * **Status:** A INICIAR
-* **Objetivo:** Auditoria formal e evidência completa de conformidade com os critérios do designsystemchecklist.com (Design Tokens, Tipografia, Cores, Componentes Core, Acessibilidade WCAG, Documentação).
+* **Objetivo:** Execução do fluxo completo de testes ponta a ponta (abrir loja -> buscar produto -> detalhes -> adicionar ao carrinho -> alterar quantidade -> login -> checkout -> pagamento simulado -> webhook -> pedido -> conta do cliente -> painel admin -> despacho e rastreamento).
+
 
 
 

@@ -10,6 +10,8 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primaria text-white shadow-sm hover:bg-primaria-hover hover:shadow active:bg-primaria-active",
+        primary:
+          "bg-primaria text-white shadow-sm hover:bg-primaria-hover hover:shadow active:bg-primaria-active",
         secondary:
           "bg-secundaria text-texto-escuro hover:bg-secundaria-hover active:bg-secundaria-clara",
         outline:
