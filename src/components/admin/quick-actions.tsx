@@ -76,12 +76,12 @@ export function QuickActions() {
           </span>
         </div>
         <span className="text-[10px] text-texto-claro/80 font-medium hidden sm:inline">
-          Atalhos operacionais
+          Atalhos operacionais da loja
         </span>
       </div>
 
-      {/* Grid Responsivo de 6 Atalhos: 2 colunas no mobile, 3 no sm/desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {/* Grid Responsivo de 6 Atalhos: 1 coluna em celulares estreitos, 2 em telas médias, 3 no desktop */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
         {ACTIONS.map((item) => {
           const Icon = item.icon;
 
@@ -89,15 +89,14 @@ export function QuickActions() {
             <Link
               key={item.label}
               href={item.href}
-              className={`p-2 sm:px-2.5 sm:py-2 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/50 ${item.hoverBorder} transition-all duration-150 group flex items-center gap-2 text-left shadow-2xs min-h-[38px] sm:min-h-[40px]`}
-              title={item.label}
+              className={`px-3 py-2 sm:py-2.5 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/60 ${item.hoverBorder} transition-all duration-150 group flex items-center gap-2.5 text-left shadow-2xs min-h-[42px]`}
             >
               <div
-                className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
+                className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
               >
-                <Icon className="w-3 h-3" />
+                <Icon className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[11px] font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-tight truncate">
+              <span className="text-xs font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-snug whitespace-nowrap">
                 {item.label}
               </span>
             </Link>
