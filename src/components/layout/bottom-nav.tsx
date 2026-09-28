@@ -8,16 +8,9 @@ import { useCart } from "@/features/cart/context/cart-context";
 
 export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
   const pathname = usePathname();
+  const cart = useCart();
 
-  let cartCtx: ReturnType<typeof useCart> | null = null;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    cartCtx = useCart();
-  } catch {
-    cartCtx = null;
-  }
-
-  const totalCartCount = cartCount > 0 ? cartCount : (cartCtx?.itemsCount ?? 0);
+  const totalCartCount = cartCount > 0 ? cartCount : (cart?.itemsCount ?? 0);
 
   const links = [
     { label: "Início", href: "/", icon: Home },
@@ -47,7 +40,10 @@ export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
               <div className="relative">
                 <Icon className={cn("w-5 h-5", isActive ? "stroke-[2.2]" : "stroke-[1.6]")} />
                 {Boolean(link.badge && link.badge > 0) && (
-                  <span className="absolute -top-1.5 -right-2 h-4 w-4 rounded-full bg-primaria text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                  <span
+                    key={link.badge}
+                    className="absolute -top-1.5 -right-2 h-4 w-4 rounded-full bg-primaria text-white text-[9px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50 duration-200"
+                  >
                     {link.badge}
                   </span>
                 )}

@@ -8,7 +8,16 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
-- Conclusão da **Fase 10 — Painel Admin**:
+- Conclusão da **Fase 11 — Motion / UX**:
+  - Implementação de sistema global de notificações Toast em `src/components/ui/toast-context.tsx` (`ToastProvider`, hook `useToast`, suporte a variantes `success`, `error`, `info`, auto-dismiss e animação fluida).
+  - Microinterações táteis nos cards de produto `src/components/commerce/product-card.tsx` e botões de ação `src/components/commerce/product-actions.tsx` (elevação 3D suave, scale sutil de imagem com aceleração por hardware `will-change-transform`, feedback visual de confirmação "Adicionado!" e toast dinâmico).
+  - Badges reativos com microanimação de pulso/zoom ao adicionar itens no carrinho em `src/components/layout/bottom-nav.tsx` e `src/components/layout/header.tsx`.
+  - Route Skeletons (`loading.tsx`) implementados com efeito shimmer/pulsante em rotas-chave: raiz `/loading.tsx`, catálogo `/produtos/loading.tsx`, detalhe `/produtos/[slug]/loading.tsx`, carrinho `/carrinho/loading.tsx`, conta `/conta/loading.tsx` e painel admin `/admin/loading.tsx`.
+  - Configuração de animações 60FPS em `src/app/globals.css` baseadas exclusivamente em `transform` e `opacity` com aceleração por GPU (`.gpu-accelerate`, `.animate-fade-in`, `.animate-slide-up`, `.animate-scale-subtle`).
+  - Suporte e conformidade obrigatória com `@media (prefers-reduced-motion: reduce)` em `globals.css` desabilitando animações e transições quando solicitado pelo sistema do usuário (Acessibilidade WCAG 2.1).
+  - Suite de testes automatizados do Gate 11 em `src/features/ui/__tests__/motion-ux.test.ts` validando toasts, estados de loading, aceleração por GPU e acessibilidade motion.
+  - Aprovação no **Gate 11**: 60FPS preservado, feedback tátil em todos os botões de ação, loading states estruturados e prefers-reduced-motion estritamente respeitado.
+
   - Implementação de schemas Zod em `src/schemas/admin.ts` para categorias, ajuste de estoque, status de produto, status de pedido e papéis de usuário.
   - Criação de Server Actions administrativas em `src/features/admin/actions.ts` com validação de perfil `admin` e gravação de logs em `admin_audit_logs` (`updateProductStockAction`, `updateProductStatusAction`, `archiveProductAction`, `createCategoryAction`, `deleteCategoryAction`, `updateOrderStatusAction`, `updateUserRoleAction`).
   - Implementação de barra de navegação em abas `AdminNav` em `src/components/admin/admin-nav.tsx` conectada ao layout principal.

@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 10 Concluída
+> **Status Geral:** Em andamento — Fase 11 Concluída
 
 ---
 
@@ -21,8 +21,8 @@
 | **08** | **Checkout** | **CONCLUÍDA** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
 | **09** | **Mercado Pago** | **CONCLUÍDA** | Gateway adapter + Webhooks server-side + Idempotência OK |
 | **10** | **Painel Admin** | **CONCLUÍDA** | Gestão produtos/pedidos/estoque + auditoria OK |
-| **11** | **Motion / UX** | **A INICIAR** | Microinterações + feedback + reduced-motion OK |
-| **12** | **Responsividade** | Pendente | 320px a 1920px sem overflow crítico OK |
+| **11** | **Motion / UX** | **CONCLUÍDA** | Microinterações + feedback + reduced-motion OK |
+| **12** | **Responsividade** | **A INICIAR** | 320px a 1920px sem overflow crítico OK |
 | **13** | **Segurança** | Pendente | Zero secrets expostos + RLS auditado + sanitização OK |
 | **14** | **Performance** | Pendente | Core Web Vitals + bundle + queries otimizadas OK |
 | **15** | **Testes** | Pendente | Unitários + Integração + E2E fluxos críticos OK |
@@ -271,6 +271,35 @@
   * Lint (`eslint`): OK (0 erros, 0 avisos)
   * Testes unitários do Gate 10: OK (100% aprovados)
   * Todas as operações administrativas críticas funcionando: OK
+
+### Fase 11 — Motion / UX
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Provedor e Hook global de notificações animadas [src/components/ui/toast-context.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/ui/toast-context.tsx) integrado em [src/app/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/layout.tsx) com variantes `success`, `error`, `warning` e `info`, auto-dismiss e animação fluida acelerada por GPU (`slide-in-from-bottom-4` + `fade-in`).
+  * Microinterações táteis nos cards de produtos [src/components/commerce/product-card.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-card.tsx):
+    * Efeito de elevação suave em hover (`hover:-translate-y-1 hover:shadow-md will-change-transform`).
+    * Feedback dinâmico no botão com transição de ícone/texto ("Adicionado!" com checkmark verde) e disparo de toast contextual.
+    * Animação de zoom suave da fotografia em hover (`group-hover:scale-105 duration-500`).
+    * Feedback no botão de favoritos (Wishlist) com toast de confirmação.
+  * Microinterações na página de detalhes do produto [src/components/commerce/product-actions.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-actions.tsx) com disparo integrado de toast e feedback de adição à sacola.
+  * Animação do badge numérico do carrinho no Header [src/components/layout/header.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/header.tsx) e na barra móvel [src/components/layout/bottom-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/bottom-nav.tsx) acionando zoom-in a cada novo item adicionado.
+  * Estados de carregamento e Skeletons otimizados (Next.js `loading.tsx`) para todas as rotas críticas:
+    * Raiz: [src/app/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/loading.tsx)
+    * Catálogo: [src/app/produtos/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/produtos/loading.tsx)
+    * Detalhe do Produto: [src/app/produtos/[slug]/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/produtos/%5Bslug%5D/loading.tsx)
+    * Carrinho: [src/app/carrinho/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/carrinho/loading.tsx)
+    * Área do Cliente: [src/app/conta/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/conta/loading.tsx)
+    * Painel Admin: [src/app/admin/loading.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/loading.tsx)
+  * Keyframes 60FPS de alta performance e suporte obrigatório à acessibilidade vestibular com `@media (prefers-reduced-motion: reduce)` em [src/app/globals.css](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/globals.css).
+  * Suite de testes unitários do Gate 11 em [src/features/ui/__tests__/motion-ux.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/ui/__tests__/motion-ux.test.ts) validando gestão da fila de toasts, microinterações transitórias, propriedades 60FPS (transform/opacity) e redução de movimento.
+* **Gate 11:**
+  * Build (`next build` Turbopack): OK (27 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Testes unitários do Gate 11: OK (100% aprovados)
+  * Nenhuma animação prejudica usabilidade ou performance (60FPS auditado): OK
+
 
 
 

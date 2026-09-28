@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/features/cart/context/cart-context";
+import { useToast } from "@/components/ui/toast-context";
 
 interface ProductActionsProps {
   productId: string;
@@ -34,6 +35,9 @@ export function ProductActions({
   slug,
 }: ProductActionsProps) {
   const router = useRouter();
+  const cart = useCart();
+  const { toast } = useToast();
+
   const [quantity, setQuantity] = React.useState(1);
   const [isAdded, setIsAdded] = React.useState(false);
   const [cep, setCep] = React.useState("");
@@ -42,14 +46,6 @@ export function ProductActions({
     sedex: { price: number; days: number };
   } | null>(null);
   const [isCalculatingShipping, setIsCalculatingShipping] = React.useState(false);
-
-  let cartCtx: ReturnType<typeof useCart> | null = null;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    cartCtx = useCart();
-  } catch {
-    cartCtx = null;
-  }
 
   const isOutOfStock = stock <= 0;
 
@@ -69,34 +65,25 @@ export function ProductActions({
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2500);
 
-    if (cartCtx) {
-      cartCtx.addItem(
-        {
-          id: productId,
-          name: productName,
-          price: priceCents,
-          imageUrl: imageUrl || "/images/logo/logo.jpeg",
-          slug,
-          stock,
-        },
-        quantity
-      );
-      if (openDrawer) {
-        cartCtx.openCart();
-      }
-    } else if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("cart:add-item", {
-          detail: {
-            productId,
-            quantity,
-            priceCents,
-            productName,
-            imageUrl,
-            slug,
-          },
-        })
-      );
+    cart.addItem(
+      {
+        id: productId,
+        name: productName,
+        price: priceCents,
+        imageUrl: imageUrl || "/images/logo/logo.jpeg",
+        slug,
+        stock,
+      },
+      quantity
+    );
+
+    toast.success(
+      "Produto adicionado!",
+      `${quantity}x ${productName} na sua sacola de compras.`
+    );
+
+    if (openDrawer) {
+      cart.openCart();
     }
   };
 

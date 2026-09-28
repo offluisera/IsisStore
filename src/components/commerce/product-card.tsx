@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/toast-context";
 
 export interface ProductCardProps {
   id: string;
@@ -43,6 +44,8 @@ export function ProductCard({
   className,
 }: ProductCardProps) {
   const [wishlist, setWishlist] = React.useState(isWishlisted);
+  const [justAdded, setJustAdded] = React.useState(false);
+  const { toast } = useToast();
 
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
@@ -54,14 +57,18 @@ export function ProductCard({
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setWishlist(!wishlist);
+    const next = !wishlist;
+    setWishlist(next);
     onToggleWishlist?.(id);
+    if (next) {
+      toast.success("Adicionado aos favoritos", `${name} foi salvo na sua lista.`);
+    }
   };
 
   return (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-borda bg-fundo-card p-4 transition-all duration-300 hover:border-primaria-border hover:shadow-md",
+        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-borda bg-fundo-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primaria-border hover:shadow-md will-change-transform",
         className
       )}
     >
@@ -163,6 +170,13 @@ export function ProductCard({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              setJustAdded(true);
+              setTimeout(() => setJustAdded(false), 1800);
+              toast.success(
+                "Produto adicionado ao carrinho!",
+                `${name} já está na sua sacola.`
+              );
+
               if (onAddToCart) {
                 onAddToCart(id);
               } else if (typeof window !== "undefined") {
@@ -179,11 +193,25 @@ export function ProductCard({
                 );
               }
             }}
-            variant="default"
-            className="w-full text-xs font-semibold h-10 gap-2 shadow-xs group-hover:bg-primaria-hover"
+            variant={justAdded ? "default" : "default"}
+            className={cn(
+              "w-full text-xs font-semibold h-10 gap-2 shadow-xs transition-all duration-200",
+              justAdded
+                ? "bg-emerald-600 hover:bg-emerald-600 text-white"
+                : "group-hover:bg-primaria-hover"
+            )}
           >
-            <ShoppingBag className="h-3.5 w-3.5" />
-            Adicionar ao carrinho
+            {justAdded ? (
+              <>
+                <Check className="h-3.5 w-3.5" />
+                <span>Adicionado!</span>
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="h-3.5 w-3.5" />
+                <span>Adicionar ao carrinho</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
