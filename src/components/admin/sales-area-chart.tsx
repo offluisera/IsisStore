@@ -292,6 +292,20 @@ export function SalesAreaChart({
             </div>
           </div>
         )}
+
+        {/* Overlay elegante quando não houver vendas registradas no período */}
+        {highestValue === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-6">
+            <div className="bg-white/95 backdrop-blur-xs border border-[#F0E5E7] px-4 py-2.5 rounded-xl text-center shadow-xs">
+              <p className="text-xs font-semibold text-texto-escuro">
+                Ainda não existem dados suficientes para gerar este gráfico
+              </p>
+              <p className="text-[10px] text-texto-claro mt-0.5">
+                Novas vendas registradas no período serão projetadas automaticamente.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

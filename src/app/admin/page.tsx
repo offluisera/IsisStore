@@ -62,6 +62,26 @@ export default async function AdminDashboardPage() {
         .single()
     : { data: null };
 
+  // Auditoria automática de acesso administrativo ao painel
+  if (user) {
+    (async () => {
+      try {
+        await supabase.from("admin_audit_logs").insert({
+          actor_id: user.id,
+          action: "access_dashboard",
+          entity: "dashboard",
+          entity_id: "overview",
+          metadata: {
+            path: "/admin",
+            at: new Date().toISOString(),
+          },
+        });
+      } catch (err) {
+        console.warn("Aviso: log de auditoria de acesso não registrado:", err);
+      }
+    })();
+  }
+
   // Buscar métricas agregadas em paralelo
   const [
     { count: productsCount },

@@ -34,9 +34,9 @@
 - [x] Implementar card visual `DailyTipCard` com assinatura estética Isis Store.
 
 ### Etapa 6: Estados, Resiliência & Auditoria
-- [ ] Criar skeletons completos para carregamento suave (`loading.tsx`).
-- [ ] Implementar empty states com chamadas para ação claras quando não houver dados no período.
-- [ ] Garantir registro automático de cada acesso ou alteração em `admin_audit_logs`.
+- [x] Criar skeletons completos para carregamento suave (`loading.tsx`).
+- [x] Implementar empty states com chamadas para ação claras quando não houver dados no período.
+- [x] Garantir registro automático de cada acesso ou alteração em `admin_audit_logs`.
 
 ### Etapa 7: Validação, Acessibilidade & Gates
 - [ ] Testar navegação por teclado (`Tab`, `Esc`, `⌘ K`) e contraste WCAG AAA.
