@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { Package, Plus, CheckCircle2, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { Package, Plus, CheckCircle2, ArrowLeft, ExternalLink } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { QuickProductEditor } from "@/components/admin/quick-product-editor";
 
 interface AdminProdutosProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -17,7 +18,7 @@ export default async function AdminProdutosPage({
 
   const { data: products } = await supabase
     .from("products")
-    .select("*, categories(name)")
+    .select("*, categories(name), product_images(public_url)")
     .order("created_at", { ascending: false });
 
   const formatPrice = (cents: number) => {
@@ -91,63 +92,70 @@ export default async function AdminProdutosPage({
                 <th className="px-5 py-3.5">Produto</th>
                 <th className="px-5 py-3.5">Categoria</th>
                 <th className="px-5 py-3.5">Preço</th>
-                <th className="px-5 py-3.5">Estoque</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5 text-right">Ação</th>
+                <th className="px-5 py-3.5">Gestão de Estoque &amp; Status</th>
+                <th className="px-5 py-3.5 text-right">Loja</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda/60 text-texto-escuro">
               {products && products.length > 0 ? (
-                products.map((item) => (
-                  <tr key={item.id} className="hover:bg-fundo/30 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
-                          <Package className="w-5 h-5" />
+                products.map((item) => {
+                  const thumb = item.product_images?.[0]?.public_url;
+                  return (
+                    <tr key={item.id} className="hover:bg-fundo/30 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-fundo border border-borda shrink-0 relative flex items-center justify-center">
+                            {thumb ? (
+                              <Image
+                                src={thumb}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                              />
+                            ) : (
+                              <Package className="w-5 h-5 text-primaria" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-texto-escuro">{item.name}</p>
+                            <p className="text-[11px] text-texto-claro font-mono">
+                              SKU: {item.sku}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-semibold text-texto-escuro">{item.name}</p>
-                          <p className="text-[11px] text-texto-claro">SKU: {item.sku}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-texto-medio">
-                      {item.categories?.name || "Sem categoria"}
-                    </td>
-                    <td className="px-5 py-4 font-semibold text-primaria">
-                      {formatPrice(item.price_cents)}
-                    </td>
-                    <td className="px-5 py-4">
-                      <span
-                        className={`font-semibold ${
-                          item.stock <= 5 ? "text-erro" : "text-sucesso"
-                        }`}
-                      >
-                        {item.stock} un.
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <Badge
-                        variant={item.status === "published" ? "default" : "secondary"}
-                        className="text-[10px]"
-                      >
-                        {item.status === "published" ? "Publicado" : item.status}
-                      </Badge>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/produtos/${item.slug}`}
-                        target="_blank"
-                        className="text-primaria hover:underline font-semibold text-[11px]"
-                      >
-                        Ver na Loja &rarr;
-                      </Link>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-5 py-4 text-texto-medio">
+                        {item.categories?.name || "Sem categoria"}
+                      </td>
+                      <td className="px-5 py-4 font-semibold text-primaria">
+                        {formatPrice(item.price_cents)}
+                      </td>
+                      <td className="px-5 py-4">
+                        <QuickProductEditor
+                          productId={item.id}
+                          initialStock={item.stock}
+                          initialStatus={
+                            (item.status as "published" | "draft" | "archived") ||
+                            "published"
+                          }
+                        />
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <Link
+                          href={`/produtos/${item.slug}`}
+                          target="_blank"
+                          className="inline-flex items-center gap-1 text-primaria hover:underline font-semibold text-[11px]"
+                        >
+                          <span>Ver</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro">
+                  <td colSpan={5} className="px-5 py-12 text-center text-texto-claro">
                     Nenhum produto cadastrado no catálogo.
                   </td>
                 </tr>

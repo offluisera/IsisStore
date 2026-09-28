@@ -4,6 +4,7 @@ import {
   getPaymentDetails,
   verifyWebhookSignature,
 } from "@/lib/payments/mercadopago";
+import { Json } from "@/types/database";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,20 +15,25 @@ export async function POST(req: NextRequest) {
     const xSignature = req.headers.get("x-signature");
     const xRequestId = req.headers.get("x-request-id");
 
-    let body: any = {};
+    let body: Record<string, unknown> = {};
     try {
-      body = await req.json();
+      body = (await req.json()) as Record<string, unknown>;
     } catch {
       body = {};
     }
 
     // Extrair ID do pagamento e tipo do evento
+    const bodyData = body?.data as Record<string, unknown> | undefined;
     const paymentId =
-      body?.data?.id ||
+      bodyData?.id ||
       searchParams.get("data.id") ||
       searchParams.get("id");
 
-    const eventType = body?.type || searchParams.get("type") || searchParams.get("topic") || "payment";
+    const eventType =
+      (body?.type as string) ||
+      searchParams.get("type") ||
+      searchParams.get("topic") ||
+      "payment";
 
     if (!paymentId) {
       return NextResponse.json(
@@ -62,7 +68,10 @@ export async function POST(req: NextRequest) {
         event_id: eventUniqueId,
         gateway: "mercadopago",
         event_type: eventType,
-        payload: { body, searchParams: Object.fromEntries(searchParams.entries()) },
+        payload: {
+          body,
+          searchParams: Object.fromEntries(searchParams.entries()),
+        } as unknown as Json,
       });
 
     if (idempotencyError && idempotencyError.code === "23505") {
@@ -178,8 +187,8 @@ export async function POST(req: NextRequest) {
         entity: "orders",
         entity_id: orderId,
         metadata: {
-          gateway_payment_id: paymentId,
-          mp_status: mpStatus,
+          gateway_payment_id: String(paymentId),
+          mp_status: String(mpStatus),
           order_status: orderStatus,
         },
       });

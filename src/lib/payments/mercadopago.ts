@@ -185,7 +185,7 @@ export async function createPreference({
             failure: `${APP_URL}/checkout?error=payment_failed`,
           },
           auto_return: "approved",
-          statement_descriptor: "ISIS STORE",
+          statement_descriptor: `ISIS ${orderNumber.replace(/[^a-zA-Z0-9]/g, "").slice(-8)}`,
           external_reference: orderId,
           notification_url: `${APP_URL}/api/webhooks/mercadopago`,
         }),

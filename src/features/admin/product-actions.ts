@@ -124,6 +124,20 @@ export async function createProductAction(
     });
   }
 
+  // Gravar auditoria administrativa
+  await supabase.from("admin_audit_logs").insert({
+    actor_id: user.id,
+    action: "create_product",
+    entity: "products",
+    entity_id: newProduct.id,
+    metadata: {
+      name: newProduct.name,
+      sku: newProduct.sku,
+      price_cents: priceCents,
+      stock,
+    },
+  });
+
   revalidatePath("/", "layout");
   revalidatePath("/produtos");
   revalidatePath("/admin/produtos");

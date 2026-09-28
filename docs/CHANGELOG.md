@@ -8,6 +8,18 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 10 — Painel Admin**:
+  - Implementação de schemas Zod em `src/schemas/admin.ts` para categorias, ajuste de estoque, status de produto, status de pedido e papéis de usuário.
+  - Criação de Server Actions administrativas em `src/features/admin/actions.ts` com validação de perfil `admin` e gravação de logs em `admin_audit_logs` (`updateProductStockAction`, `updateProductStatusAction`, `archiveProductAction`, `createCategoryAction`, `deleteCategoryAction`, `updateOrderStatusAction`, `updateUserRoleAction`).
+  - Implementação de barra de navegação em abas `AdminNav` em `src/components/admin/admin-nav.tsx` conectada ao layout principal.
+  - Dashboard gerencial consolidado em `src/app/admin/page.tsx` com métricas em tempo real de faturamento aprovado, despachos pendentes, estoque crítico (≤5), contagem de clientes e listas dos últimos pedidos e auditoria.
+  - Módulo de produtos `/admin/produtos` enriquecido com miniaturas fotográficas e componente cliente de alteração rápida de estoque e status `QuickProductEditor`.
+  - Módulo de categorias `/admin/categorias` com formulário interativo de criação e exclusão com proteção `CategoryManager`.
+  - Módulo de pedidos `/admin/pedidos` com filtros por status e página de detalhes `/admin/pedidos/[id]` com gestão operacional de despacho e código de rastreamento `OrderStatusManager`.
+  - Módulo de clientes `/admin/clientes` com controle e alternância de permissões `UserRoleManager` com proteção anti-autorebaixamento.
+  - Trilha de auditoria `/admin/auditoria` com histórico detalhado e metadados das ações administrativas.
+  - Suite de testes do Gate 10 em `src/features/admin/__tests__/admin-management.test.ts`.
+  - Aprovação no **Gate 10**: Todas as operações administrativas funcionando com 27 rotas compiladas no build de produção, 0 erros no typecheck e 0 erros no lint.
 - Conclusão da **Fase 09 — Mercado Pago**:
   - Implementação do Gateway Adapter oficial em `src/lib/payments/mercadopago.ts` com funções `createPixPayment`, `createPreference`, `getPaymentDetails` e `verifyWebhookSignature` (validação HMAC SHA-256 e fallback para Sandbox Simulator local).
   - Criação do endpoint oficial de Webhook em `src/app/api/webhooks/mercadopago/route.ts` com idempotência financeira na tabela `payment_events`, mapeamento de status (`approved` -> `paid`, `cancelled` -> `cancelled`), reversão de estoque em caso de cancelamento e auditoria em `admin_audit_logs`.

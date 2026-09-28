@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-27  
-> **Status Geral:** Em andamento — Fase 09 Concluída
+> **Status Geral:** Em andamento — Fase 10 Concluída
 
 ---
 
@@ -20,8 +20,8 @@
 | **07** | **Área do Cliente** | **CONCLUÍDA** | Dashboard + Pedidos + Endereços + RLS isolado OK |
 | **08** | **Checkout** | **CONCLUÍDA** | Snapshot de itens + cálculo server-side + concorrência estoque OK |
 | **09** | **Mercado Pago** | **CONCLUÍDA** | Gateway adapter + Webhooks server-side + Idempotência OK |
-| **10** | **Painel Admin** | **A INICIAR** | Gestão produtos/pedidos/estoque + auditoria OK |
-| **11** | **Motion / UX** | Pendente | Microinterações + feedback + reduced-motion OK |
+| **10** | **Painel Admin** | **CONCLUÍDA** | Gestão produtos/pedidos/estoque + auditoria OK |
+| **11** | **Motion / UX** | **A INICIAR** | Microinterações + feedback + reduced-motion OK |
 | **12** | **Responsividade** | Pendente | 320px a 1920px sem overflow crítico OK |
 | **13** | **Segurança** | Pendente | Zero secrets expostos + RLS auditado + sanitização OK |
 | **14** | **Performance** | Pendente | Core Web Vitals + bundle + queries otimizadas OK |
@@ -243,6 +243,35 @@
   * Typecheck (`tsc --noEmit`): OK (0 erros)
   * Testes unitários do Gateway e Idempotência: OK (100% aprovados)
   * Ambiente Sandbox / Produção desacoplado e seguro: OK
+
+### Fase 10 — Painel Admin
+* **Data de Conclusão:** 2026-09-27
+* **Status:** Concluída
+* **Entregáveis:**
+  * Schemas Zod em [src/schemas/admin.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/schemas/admin.ts) para validação estrita de categorias (`categorySchema`), estoque (`updateStockSchema`), status de produto (`updateProductStatusSchema`), status de pedido (`updateOrderStatusSchema`) e permissões (`updateUserRoleSchema`).
+  * Server Actions administrativas seguras em [src/features/admin/actions.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/admin/actions.ts) com verificação de privilégio `role === 'admin'` e gravação automática em `admin_audit_logs`:
+    * `updateProductStockAction`: ajuste rápido de estoque com recálculo e auditoria.
+    * `updateProductStatusAction`: alternância entre `published`, `draft` e `archived`.
+    * `archiveProductAction`: arquivamento com preservação de integridade referencial.
+    * `createCategoryAction`: criação de categoria com validação de unicidade de slug.
+    * `deleteCategoryAction`: exclusão protegida contra categorias com produtos vinculados.
+    * `updateOrderStatusAction`: transições operacionais (`pending_payment`, `paid`, `processing`, `shipped`, `delivered`, `cancelled`, `refunded`), anotação de rastreamento e reversão de estoque em caso de cancelamento.
+    * `updateUserRoleAction`: controle de acesso com proteção contra auto-rebaixamento.
+  * Barra de navegação em abas do backoffice [src/components/admin/admin-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/admin-nav.tsx) integrada em [src/app/admin/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/layout.tsx).
+  * Dashboard Executivo em [src/app/admin/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/page.tsx) com faturamento total aprovado, contadores de pedidos para envio imediato, estoque crítico (≤5), clientes, tabela dos últimos pedidos e últimos logs de auditoria.
+  * Módulo de Produtos em [src/app/admin/produtos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/produtos/page.tsx) com editor rápido de estoque e status inline [src/components/admin/quick-product-editor.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/quick-product-editor.tsx).
+  * Módulo de Categorias em [src/app/admin/categorias/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/categorias/page.tsx) com formulário interativo [src/components/admin/category-manager.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/category-manager.tsx).
+  * Módulo de Pedidos em [src/app/admin/pedidos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/pedidos/page.tsx) com filtro por abas de status e página de detalhes [src/app/admin/pedidos/[id]/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/pedidos/%5Bid%5D/page.tsx) com componente [src/components/admin/order-status-manager.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/order-status-manager.tsx).
+  * Módulo de Clientes em [src/app/admin/clientes/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/clientes/page.tsx) com seletor de permissão [src/components/admin/user-role-manager.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/user-role-manager.tsx).
+  * Trilha de Auditoria em [src/app/admin/auditoria/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/admin/auditoria/page.tsx) exibindo ator, ação, entidade, ID e metadados.
+  * Suite de testes unitários do Gate 10 em [src/features/admin/__tests__/admin-management.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/admin/__tests__/admin-management.test.ts).
+* **Gate 10:**
+  * Build (`next build` Turbopack): OK (27 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Testes unitários do Gate 10: OK (100% aprovados)
+  * Todas as operações administrativas críticas funcionando: OK
+
 
 
 

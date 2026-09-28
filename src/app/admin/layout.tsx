@@ -6,6 +6,8 @@ import { LogOut, ArrowLeft, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+import { AdminNav } from "@/components/admin/admin-nav";
+
 export default async function AdminLayout({
   children,
 }: {
@@ -84,6 +86,7 @@ export default async function AdminLayout({
 
       {/* Admin Shell */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full flex-1">
+        <AdminNav />
         {children}
       </div>
 
