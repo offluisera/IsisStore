@@ -64,7 +64,7 @@ const ACTIONS: ActionItem[] = [
 
 export function QuickActions() {
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-3 sm:p-3.5 shadow-xs select-none w-full">
+    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-3 sm:p-4 shadow-xs select-none w-full min-w-0">
       {/* Cabeçalho sutil e limpo */}
       <div className="flex items-center justify-between px-1 pb-2 mb-2 border-b border-[#F7EFF1]">
         <div className="flex items-center gap-1.5">
@@ -75,13 +75,13 @@ export function QuickActions() {
             Ações Rápidas
           </span>
         </div>
-        <span className="text-[10px] text-texto-claro/80 font-medium hidden sm:inline">
+        <span className="text-[10px] text-texto-claro/80 font-medium">
           Atalhos operacionais da loja
         </span>
       </div>
 
-      {/* Grid Responsivo de 6 Atalhos: 1 coluna em celulares estreitos, 2 em telas médias, 3 no desktop */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
+      {/* Grid Responsivo de 6 Atalhos: 1 coluna em telas muito estreitas, 2 colunas em mobile/tablet e 3 colunas em desktop */}
+      <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
         {ACTIONS.map((item) => {
           const Icon = item.icon;
 
@@ -89,14 +89,15 @@ export function QuickActions() {
             <Link
               key={item.label}
               href={item.href}
-              className={`px-3 py-2 sm:py-2.5 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/60 ${item.hoverBorder} transition-all duration-150 group flex items-center gap-2.5 text-left shadow-2xs min-h-[42px]`}
+              className={`px-3 py-2 sm:py-2.5 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/60 ${item.hoverBorder} transition-all duration-150 group flex items-center gap-2.5 text-left shadow-2xs min-h-[44px] min-w-0`}
+              title={item.label}
             >
               <div
-                className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
+                className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
               >
                 <Icon className="w-3.5 h-3.5" />
               </div>
-              <span className="text-xs font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-snug whitespace-nowrap">
+              <span className="text-xs font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-snug break-words">
                 {item.label}
               </span>
             </Link>

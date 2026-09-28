@@ -4,19 +4,19 @@ export default function AdminLoading() {
   return (
     <div className="flex flex-col gap-8 animate-in fade-in duration-300 select-none">
       {/* 1. Cabeçalho Oficial Isis Store Skeleton com Ações Rápidas no topo */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-4 border-b border-[#F0E5E7]/70">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 pb-4 border-b border-[#F0E5E7]/70 min-w-0 w-full">
         <div className="space-y-2 shrink-0">
           <Skeleton className="h-8 w-64 sm:w-72 rounded-xl" />
           <Skeleton className="h-4 w-80 max-w-full rounded-md opacity-70" />
         </div>
 
         {/* Ações Rápidas Skeleton à Direita */}
-        <div className="w-full lg:max-w-2xl xl:max-w-3xl bg-white border border-[#F0E5E7] rounded-2xl p-3 sm:p-3.5 shadow-xs space-y-2">
+        <div className="w-full xl:flex-1 xl:max-w-2xl 2xl:max-w-3xl min-w-0 bg-white border border-[#F0E5E7] rounded-2xl p-3 sm:p-3.5 shadow-xs space-y-2">
           <div className="flex items-center justify-between pb-1 border-b border-[#F7EFF1]">
             <Skeleton className="h-3.5 w-24 rounded-md" />
             <Skeleton className="h-2.5 w-20 rounded-md opacity-60" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-10 w-full rounded-xl" />
             ))}

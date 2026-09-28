@@ -14,10 +14,10 @@ export function DashboardHeader({
   const firstName = adminName ? adminName.split(" ")[0] : "Fernanda";
 
   return (
-    <div className="flex flex-col gap-4 pb-6 border-b border-[#F0E5E7]/70">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+    <div className="flex flex-col gap-4 pb-6 border-b border-[#F0E5E7]/70 min-w-0 w-full">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 min-w-0 w-full">
         {/* Lado Esquerdo: Saudação e Título Principal */}
-        <div className="space-y-1 shrink-0">
+        <div className="space-y-1 shrink-0 max-w-md">
           <div className="inline-flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-primaria bg-primaria/10 px-2.5 py-0.5 rounded-full">
               Painel de Controle
@@ -37,9 +37,9 @@ export function DashboardHeader({
           </p>
         </div>
 
-        {/* Lado Direito: Ações Rápidas com espaço amplo sem truncamento */}
+        {/* Lado Direito: Ações Rápidas - 100% responsivo sem estourar margem */}
         {actions && (
-          <div className="w-full lg:max-w-2xl xl:max-w-3xl lg:shrink-0">
+          <div className="w-full xl:flex-1 xl:max-w-2xl 2xl:max-w-3xl min-w-0">
             {actions}
           </div>
         )}
