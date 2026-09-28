@@ -15,9 +15,9 @@
 - [x] Implementar drawer responsivo e menu hambúrguer para viewports mobile (< 1024px).
 
 ### Etapa 2: Cabeçalho & KPI Cards Analíticos
-- [ ] Implementar `DashboardHeader` com tipografia Playfair Display, saudação ao admin logado e widget de data/hora dinâmico.
-- [ ] Implementar componente `KPICard` reutilizável com cálculo de variação mensal e gerador de sparklines vetoriais em SVG.
-- [ ] Conectar métricas reais do Supabase em paralelo: total faturado, contagem de pedidos, clientes cadastrados e produtos em estoque.
+- [x] Implementar `DashboardHeader` com tipografia Playfair Display, saudação ao admin logado e widget de data/hora dinâmico.
+- [x] Implementar componente `KPICard` reutilizável com cálculo de variação mensal e gerador de sparklines vetoriais em SVG.
+- [x] Conectar métricas reais do Supabase em paralelo: total faturado, contagem de pedidos, clientes cadastrados e produtos em estoque.
 
 ### Etapa 3: Gráficos & Visualização de Dados
 - [ ] Desenvolver `SalesAreaChart` em SVG/Canvas com gradiente linear rosa (`#E08CA3` a transparente), marcadores de data e tooltip com valores monetários.

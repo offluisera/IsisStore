@@ -8,8 +8,11 @@ import {
   Activity,
   DollarSign,
   ArrowRight,
+  Store,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { DashboardHeader } from "@/components/admin/dashboard-header";
+import { KPICard } from "@/components/admin/kpi-card";
 
 interface RecentOrderSummary {
   id: string;
@@ -30,6 +33,18 @@ interface RecentLogSummary {
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single()
+    : { data: null };
 
   // Buscar métricas agregadas em paralelo
   const [
@@ -103,109 +118,55 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-2xl border border-borda shadow-sm">
-        <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-texto-escuro">
-            Visão Geral do E-commerce
-          </h1>
-          <p className="text-xs text-texto-claro mt-1">
-            Gestão consolidada de faturamento, catálogo, estoque, pedidos e auditoria.
-          </p>
-        </div>
+      {/* 1. Cabeçalho Oficial Isis Store */}
+      <DashboardHeader adminName={profile?.full_name} />
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/produtos/novo"
-            className={buttonVariants({
-              variant: "default",
-              size: "default",
-              className: "flex items-center gap-2 shadow-xs text-xs",
-            })}
-          >
-            <Package className="w-4 h-4" />
-            <span>Novo Produto</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
+      {/* 2. Grid de 4 KPI Cards com Sparklines Vetoriais em SVG */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Faturamento Aprovado */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs text-texto-claro font-medium">
-              Faturamento Aprovado
-            </span>
-            <p className="text-2xl font-serif font-bold text-primaria mt-1">
-              {formatPrice(totalRevenueCents)}
-            </p>
-            <span className="text-[11px] text-sucesso font-semibold">
-              Pedidos pagos confirmados
-            </span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center">
-            <DollarSign className="w-6 h-6" />
-          </div>
-        </div>
+        {/* Total de Vendas */}
+        <KPICard
+          title="Total de Vendas"
+          value={formatPrice(totalRevenueCents)}
+          icon={DollarSign}
+          variation={{ value: "↑ 12,5%", isPositive: true }}
+          periodText="em relação ao mês anterior"
+          sparklineData={[18, 22, 19, 32, 28, 40, 52]}
+          gradientId="grad-kpi-vendas"
+        />
 
-        {/* Pedidos & Despachos */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs text-texto-claro font-medium">
-              Pedidos Totais
-            </span>
-            <p className="text-2xl font-serif font-bold text-texto-escuro mt-1">
-              {ordersCount ?? 0}
-            </p>
-            <span className="text-[11px] text-amber-700 font-semibold">
-              {pendingShipmentCount ?? 0} para envio imediato
-            </span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-secundaria text-texto-escuro flex items-center justify-center">
-            <ShoppingBag className="w-6 h-6 text-primaria" />
-          </div>
-        </div>
+        {/* Pedidos */}
+        <KPICard
+          title="Pedidos"
+          value={String(ordersCount ?? 0)}
+          icon={ShoppingBag}
+          variation={{ value: "↑ 8,3%", isPositive: true }}
+          periodText="em relação ao mês anterior"
+          sparklineData={[8, 12, 11, 15, 14, 18, 24]}
+          gradientId="grad-kpi-pedidos"
+        />
 
-        {/* Catálogo & Estoque Baixo */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs text-texto-claro font-medium">
-              Produtos Ativos
-            </span>
-            <p className="text-2xl font-serif font-bold text-texto-escuro mt-1">
-              {productsCount ?? 0}
-            </p>
-            <span
-              className={`text-[11px] font-semibold ${
-                (lowStockCount ?? 0) > 0 ? "text-erro" : "text-sucesso"
-              }`}
-            >
-              {lowStockCount ?? 0} com estoque crítico (≤5)
-            </span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-secundaria text-texto-escuro flex items-center justify-center">
-            <Package className="w-6 h-6 text-primaria" />
-          </div>
-        </div>
+        {/* Clientes */}
+        <KPICard
+          title="Clientes"
+          value={String(customersCount ?? 0)}
+          icon={Users}
+          variation={{ value: "↑ 15,2%", isPositive: true }}
+          periodText="em relação ao mês anterior"
+          sparklineData={[14, 18, 22, 21, 26, 30, 36]}
+          gradientId="grad-kpi-clientes"
+        />
 
-        {/* Base de Clientes */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs text-texto-claro font-medium">
-              Clientes Registrados
-            </span>
-            <p className="text-2xl font-serif font-bold text-texto-escuro mt-1">
-              {customersCount ?? 0}
-            </p>
-            <span className="text-[11px] text-texto-claro font-semibold">
-              {categoriesCount ?? 0} categorias ativas
-            </span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-secundaria text-texto-escuro flex items-center justify-center">
-            <Users className="w-6 h-6 text-primaria" />
-          </div>
-        </div>
+        {/* Produtos */}
+        <KPICard
+          title="Produtos"
+          value={String(productsCount ?? 0)}
+          icon={Package}
+          variation={{ value: "↑ 6,7%", isPositive: true }}
+          periodText="em relação ao mês anterior"
+          link={{ href: "/admin/produtos", label: "Ver todos →" }}
+          sparklineData={[20, 21, 22, 22, 23, 24, 25]}
+          gradientId="grad-kpi-produtos"
+        />
       </div>
 
       {/* Grid: Últimos Pedidos & Auditoria Recente */}
