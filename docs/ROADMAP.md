@@ -2,7 +2,7 @@
 
 > **Documento:** `docs/ROADMAP.md`  
 > **Última atualização:** 2026-09-28  
-> **Status Geral:** Em andamento — Fase 16 Concluída
+> **Status Geral:** Em andamento — Fase 17 Concluída
 
 ---
 
@@ -27,8 +27,8 @@
 | **14** | **Performance** | **CONCLUÍDA** | Core Web Vitals + bundle + queries otimizadas OK |
 | **15** | **Testes** | **CONCLUÍDA** | Unitários + Integração + E2E fluxos críticos OK |
 | **16** | **Design System Checklist** | **CONCLUÍDA** | Revisão formal designsystemchecklist.com OK |
-| **17** | **QA Final** | **A INICIAR** | Fluxo ponta a ponta sem falhas OK |
-| **18** | **Produção** | Pendente | Deploy seguro + monitoramento + backups OK |
+| **17** | **QA Final** | **CONCLUÍDA** | Fluxo ponta a ponta sem falhas OK |
+| **18** | **Produção** | **A INICIAR** | Deploy seguro + monitoramento + backups OK |
 
 ---
 
@@ -489,8 +489,38 @@
 ---
 
 ## Fase 17 — QA Final
+* **Data de Conclusão:** 2026-09-28
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Suite de Testes da Jornada Completa do Usuário ([src/features/qa/__tests__/qa-final-journey.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/qa/__tests__/qa-final-journey.test.ts)):**
+    * **Passo 01 — Abrir Loja:** Vitrines da Home carregadas com produtos publicados e categorias ativas.
+    * **Passo 02 — Buscar Produto:** Busca por termo ("Coração") com correspondência exata de catálogo.
+    * **Passo 03 — Abrir Produto:** Carregamento de detalhes do produto, fotos e estoque disponível.
+    * **Passo 04 — Adicionar ao Carrinho:** Inserção do item com quantidade 1 na sacola.
+    * **Passo 05 — Alterar Quantidade:** Atualização para quantidade 2, recálculo de subtotal (R$ 240,00) e aplicação de frete grátis (>= R$ 199,00).
+    * **Passo 06 — Login:** Autenticação e sessão de usuário cliente preservada com integridade.
+    * **Passo 07 — Checkout Server-Side:** Criação do pedido com snapshot imutável, recálculo no servidor e reserva de estoque.
+    * **Passo 08 — Pagamento Teste:** Geração de Pix via Gateway Adapter Mercado Pago com chave e QR Code.
+    * **Passo 09 — Webhook HMAC:** Processamento de notificação assinado com HMAC SHA-256 de forma idempotente, transicionando pedido para `paid`.
+    * **Passo 10 — Pedido Aprovado:** Confirmação com número do pedido e gravação em banco.
+    * **Passo 11 — Área do Cliente (Conta):** Visualização do pedido em `/conta/pedidos` com isolamento estrito de outros clientes via RLS.
+    * **Passo 12 — Painel Admin:** Fila operacional administrativa visualizando o pedido aprovado para expedição.
+    * **Passo 13 — Alterar Pedido (Despacho):** Transição de status para `shipped` com anotação do código de rastreamento dos Correios e gravação na trilha de auditoria (`admin_audit_logs`).
+  * **Cobertura Total:**
+    * 41 testes automatizados cobrindo todas as áreas funcionais do projeto.
+* **Gate 17:**
+  * Build (`next build` Turbopack): OK (compilado em 3.1s, 27 rotas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Suite completa (`npm test`): OK (41 testes aprovados em 1.4s)
+  * Fluxo completo ponta a ponta sem falhas: OK
+
+---
+
+## Fase 18 — Produção & Go-Live
 * **Status:** A INICIAR
-* **Objetivo:** Execução do fluxo completo de testes ponta a ponta (abrir loja -> buscar produto -> detalhes -> adicionar ao carrinho -> alterar quantidade -> login -> checkout -> pagamento simulado -> webhook -> pedido -> conta do cliente -> painel admin -> despacho e rastreamento).
+* **Objetivo:** Preparação para deploy em produção, checklist de variáveis de ambiente (`.env.production`), domínio personalizado, HTTPS/SSL, banco de dados Supabase em produção, credenciais de produção do Mercado Pago, Storage, logs, backups e monitoramento de disponibilidade.
+
 
 
 

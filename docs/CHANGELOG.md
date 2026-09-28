@@ -8,6 +8,25 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 17 — QA Final**:
+  - Implementação e execução automatizada da suite de testes de jornada completa em `src/features/qa/__tests__/qa-final-journey.test.ts`.
+  - Validação sequencial dos 13 passos do fluxo ponta a ponta sem falhas:
+    1. Abertura da loja com catálogo e vitrines.
+    2. Busca e filtragem por termo com correspondência de slug.
+    3. Exibição de detalhes de produto, preço e disponibilidade.
+    4. Adição de item ao carrinho.
+    5. Alteração de quantidades com recálculo em centavos e frete grátis (>= R$ 199,00).
+    6. Autenticação e sessão segura do cliente.
+    7. Checkout server-side com snapshot imutável e reserva atômica de estoque.
+    8. Geração de Pix via Gateway Adapter Mercado Pago.
+    9. Processamento de Webhook com assinatura criptográfica HMAC SHA-256 e idempotência.
+    10. Aprovação e gravação do pedido com integridade de dados.
+    11. Visualização na Área do Cliente com isolamento estrito via RLS.
+    12. Fila operacional no Painel Administrativo.
+    13. Despacho com código de rastreamento dos Correios e registro na trilha de auditoria (`admin_audit_logs`).
+  - Total de 41 testes automatizados consolidados em 9 suites.
+  - Aprovação no **Gate 17**: 100% de sucesso nos testes, 27 rotas no build de produção, 0 erros no typecheck e 0 erros no lint.
+
 - Conclusão da **Fase 16 — Design System Checklist**:
   - Auditoria formal e estruturação de evidências de 100% dos critérios do `designsystemchecklist.com` em `docs/DESIGN-SYSTEM-CHECKLIST.md`.
   - Validação matemática de contraste de cores conforme especificações W3C WCAG 2.1: texto escuro (`#574240`) sobre fundo (`#FFF5F6`) atinge 8.55:1 e sobre card branco atinge 8.92:1 (superando o critério AAA de 7.0:1).
