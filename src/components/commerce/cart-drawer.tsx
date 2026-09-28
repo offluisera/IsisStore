@@ -100,7 +100,7 @@ export function CartDrawer(props: CartDrawerProps) {
         aria-hidden="true"
       />
 
-      <div className="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
+      <div className="fixed inset-y-0 right-0 flex max-w-full pl-4 sm:pl-10 pointer-events-none">
         <div
           className={cn(
             "w-screen max-w-md bg-fundo-card border-l border-borda shadow-2xl flex flex-col justify-between pointer-events-auto transform transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",

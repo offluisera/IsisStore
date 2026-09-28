@@ -68,7 +68,7 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-borda bg-fundo-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primaria-border hover:shadow-md will-change-transform",
+        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-borda bg-fundo-card p-3.5 sm:p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primaria-border hover:shadow-md will-change-transform",
         className
       )}
     >
@@ -195,7 +195,7 @@ export function ProductCard({
             }}
             variant={justAdded ? "default" : "default"}
             className={cn(
-              "w-full text-xs font-semibold h-10 gap-2 shadow-xs transition-all duration-200",
+              "w-full text-xs font-semibold h-10 gap-1.5 sm:gap-2 shadow-xs transition-all duration-200 touch-manipulation",
               justAdded
                 ? "bg-emerald-600 hover:bg-emerald-600 text-white"
                 : "group-hover:bg-primaria-hover"
@@ -203,13 +203,15 @@ export function ProductCard({
           >
             {justAdded ? (
               <>
-                <Check className="h-3.5 w-3.5" />
+                <Check className="h-3.5 w-3.5 shrink-0" />
                 <span>Adicionado!</span>
               </>
             ) : (
               <>
-                <ShoppingBag className="h-3.5 w-3.5" />
-                <span>Adicionar ao carrinho</span>
+                <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">
+                  Adicionar<span className="hidden min-[380px]:inline"> ao carrinho</span>
+                </span>
               </>
             )}
           </Button>

@@ -191,7 +191,7 @@ export default function CarrinhoPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-borda/60">
+                    <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-borda/60">
                       {/* Seletor de Quantidade */}
                       <div className="flex items-center rounded-xl border border-borda bg-white">
                         <button
@@ -199,18 +199,18 @@ export default function CarrinhoPage() {
                           onClick={() =>
                             updateQuantity(item.id, Math.max(1, item.quantity - 1))
                           }
-                          className="p-2 text-texto-medio hover:text-primaria transition-colors"
+                          className="p-2 text-texto-medio hover:text-primaria transition-colors touch-manipulation"
                           aria-label="Diminuir quantidade"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="w-8 text-center text-xs font-semibold text-texto-escuro">
+                        <span className="w-7 sm:w-8 text-center text-xs font-semibold text-texto-escuro">
                           {item.quantity}
                         </span>
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-2 text-texto-medio hover:text-primaria transition-colors"
+                          className="p-2 text-texto-medio hover:text-primaria transition-colors touch-manipulation"
                           aria-label="Aumentar quantidade"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -218,7 +218,7 @@ export default function CarrinhoPage() {
                       </div>
 
                       {/* Subtotal do Item */}
-                      <span className="font-serif text-base font-bold text-primaria min-w-[80px] text-right">
+                      <span className="font-serif text-sm sm:text-base font-bold text-primaria min-w-[65px] sm:min-w-[80px] text-right">
                         {formatPrice(item.price * item.quantity)}
                       </span>
 
@@ -226,7 +226,7 @@ export default function CarrinhoPage() {
                       <button
                         type="button"
                         onClick={() => removeItem(item.id)}
-                        className="text-texto-claro hover:text-erro p-2 transition-colors cursor-pointer"
+                        className="text-texto-claro hover:text-erro p-2 transition-colors cursor-pointer touch-manipulation"
                         aria-label="Remover produto"
                       >
                         <Trash2 className="w-4 h-4" />

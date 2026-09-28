@@ -8,6 +8,19 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- Conclusão da **Fase 12 — Responsividade**:
+  - Exportação oficial de objeto `Viewport` em `src/app/layout.tsx` garantindo `device-width` e escala adaptativa para todos os dispositivos.
+  - Adição de contenção global de overflow horizontal (`overflow-x-hidden w-full max-w-full`) no body.
+  - Conformidade estrita com WCAG 2.1 garantindo touch targets de no mínimo 44x44px em todos os botões de ação e navegação (`Header`, `BottomNav`, `ProductCard`, `CartDrawer`).
+  - Implementação de utilitários no `src/app/globals.css`: `.safe-area-bottom` para compatibilidade com iPhone home bar, `.touch-manipulation` para eliminar atraso de 300ms de toque, `.no-scrollbar` e regra de quebra segura de palavras `overflow-wrap: break-word`.
+  - Refatoração responsiva da Home `src/app/page.tsx`: Hero banner com padding adaptativo e tipografia fluida para telas de 320px a 1920px; grid de benefícios dinâmico de 1 coluna em 320px até 4 colunas em desktop.
+  - Otimização do `ProductCard` `src/components/commerce/product-card.tsx` com padding compacto e botão de adicionar que contrai rótulos em viewports estreitas sem quebra visual.
+  - Controles de quantidade e subtotal na página de carrinho `src/app/carrinho/page.tsx` adaptados para caber confortavelmente em 320px.
+  - Gaveta do carrinho `CartDrawer` `src/components/commerce/cart-drawer.tsx` com recuo lateral responsivo (`pl-4 sm:pl-10`).
+  - Contenção e scroll horizontal suave com `overflow-x-auto` e `whitespace-nowrap` em todas as tabelas administrativas (`/admin/produtos`, `/admin/pedidos`, `/admin/clientes`, `/admin/auditoria`) e barras de abas (`AdminNav` e `AccountNav`).
+  - Suite de testes do Gate 12 em `src/features/ui/__tests__/responsiveness-audit.test.ts` cobrindo a matriz dos 9 breakpoints: 320px, 375px, 390px, 430px, 768px, 1024px, 1280px, 1440px e 1920px.
+  - Aprovação no **Gate 12**: Zero overflow crítico detectado, touch targets acessíveis, 27 rotas compiladas no build de produção, 0 erros no lint e 0 erros no typecheck.
+
 - Conclusão da **Fase 11 — Motion / UX**:
   - Implementação de sistema global de notificações Toast em `src/components/ui/toast-context.tsx` (`ToastProvider`, hook `useToast`, suporte a variantes `success`, `error`, `info`, auto-dismiss e animação fluida).
   - Microinterações táteis nos cards de produto `src/components/commerce/product-card.tsx` e botões de ação `src/components/commerce/product-actions.tsx` (elevação 3D suave, scale sutil de imagem com aceleração por hardware `will-change-transform`, feedback visual de confirmação "Adicionado!" e toast dinâmico).

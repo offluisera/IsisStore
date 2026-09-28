@@ -20,7 +20,7 @@ export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-borda-suave px-6 py-2 shadow-lg safe-area-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-borda-suave px-2 min-[360px]:px-4 sm:px-6 py-1.5 shadow-lg safe-area-bottom">
       <div className="flex items-center justify-around max-w-md mx-auto">
         {links.map((link) => {
           const Icon = link.icon;
@@ -31,7 +31,7 @@ export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
               key={link.href}
               href={link.href}
               className={cn(
-                "flex flex-col items-center gap-1 py-1 px-3 text-[11px] font-medium transition-colors relative",
+                "flex flex-col items-center justify-center gap-1 py-1 px-2 sm:px-3 min-h-[44px] min-w-[44px] text-[10px] min-[360px]:text-[11px] font-medium transition-colors relative touch-manipulation",
                 isActive
                   ? "text-primaria font-bold"
                   : "text-texto-claro hover:text-texto-escuro"

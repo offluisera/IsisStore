@@ -143,7 +143,7 @@ export default function Home() {
         {/* Hero Banner Oficial (tela.png e banner-rosto.jpeg) */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 py-6">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-secundaria-clara/60 via-fundo-card to-secundaria/40 border border-primaria-border/40 shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-8 sm:p-12 lg:p-14">
+            <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-5 sm:p-12 lg:p-14">
               {/* Lado Esquerdo: Conteúdo Editorial */}
               <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 border border-primaria-border text-primaria text-xs font-semibold uppercase tracking-wider mb-4 shadow-xs">
@@ -151,30 +151,30 @@ export default function Home() {
                   Coleção Especial
                 </div>
 
-                <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal text-texto-escuro tracking-tight leading-[1.12]">
+                <h1 className="font-serif text-2xl min-[360px]:text-3xl sm:text-5xl lg:text-6xl font-normal text-texto-escuro tracking-tight leading-[1.15]">
                   Produtos que fazem{" "}
                   <span className="italic font-bold text-primaria">você sorrir! ♡</span>
                 </h1>
 
-                <p className="mt-5 text-sm sm:text-base text-texto-medio max-w-lg leading-relaxed font-normal">
+                <p className="mt-4 sm:mt-5 text-xs sm:text-base text-texto-medio max-w-lg leading-relaxed font-normal">
                   Beleza, estilo, conforto e muito afeto para o seu dia a dia. Conheça nossa seleção de mimos pensados com amor em cada detalhe.
                 </p>
 
-                <div className="mt-8 flex flex-wrap items-center gap-4">
+                <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4 w-full sm:w-auto">
                   <Button
                     size="lg"
                     onClick={() => {
                       const el = document.getElementById("produtos-destaque");
                       el?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="gap-2 shadow-sm font-semibold"
+                    className="gap-2 shadow-sm font-semibold flex-1 min-[420px]:flex-initial touch-manipulation"
                   >
                     Ver Coleção
                     <ArrowRight className="w-4 h-4" />
                   </Button>
 
-                  <Link href="/sobre">
-                    <Button variant="outline" size="lg" className="font-semibold">
+                  <Link href="/sobre" className="flex-1 min-[420px]:flex-initial">
+                    <Button variant="outline" size="lg" className="font-semibold w-full touch-manipulation">
                       Nossa História
                     </Button>
                   </Link>
@@ -197,8 +197,8 @@ export default function Home() {
 
         {/* Barra de 4 Benefícios Oficiais (tela.png) */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 py-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-borda flex items-center gap-3.5 shadow-xs">
+          <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-borda flex items-center gap-3.5 shadow-xs">
               <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria-border">
                 <Truck className="w-5 h-5" />
               </div>

@@ -44,15 +44,15 @@ export function Header({
     <>
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-borda-suave shadow-xs">
         {/* Top Announcement Bar */}
-        <div className="bg-fundo border-b border-borda-suave text-xs text-texto-medio py-1.5 px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-1.5 font-medium">
-              <Truck className="w-3.5 h-3.5 text-primaria" />
-              <span>
-                Frete Grátis para todo o Brasil em compras acima de <strong>R$ 199,00</strong>
+        <div className="bg-fundo border-b border-borda-suave text-xs text-texto-medio py-1.5 px-3 sm:px-8">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs min-w-0">
+              <Truck className="w-3.5 h-3.5 text-primaria shrink-0" />
+              <span className="truncate sm:overflow-visible">
+                Frete Grátis para todo o Brasil acima de <strong>R$ 199,00</strong>
               </span>
             </div>
-            <div className="hidden md:flex items-center gap-5 text-texto-claro text-[11px]">
+            <div className="hidden md:flex items-center gap-5 text-texto-claro text-[11px] shrink-0">
               <Link href="/rastreio" className="hover:text-primaria transition-colors">
                 Rastrear Pedido
               </Link>
@@ -69,19 +69,19 @@ export function Header({
         </div>
 
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-4">
           {/* Mobile Menu Button + Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-texto-escuro hover:text-primaria rounded-lg"
+              className="lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-texto-escuro hover:text-primaria rounded-xl touch-manipulation cursor-pointer"
               aria-label="Abrir menu"
             >
               <Menu className="w-6 h-6" />
             </button>
 
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="relative h-11 w-11 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-primaria-border shadow-xs transition-transform duration-300 group-hover:scale-105">
+            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group min-w-0">
+              <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-primaria-border shadow-xs transition-transform duration-300 group-hover:scale-105 shrink-0">
                 <Image
                   src="/images/logo/logo.jpeg"
                   alt="Isis Store Logo"
@@ -140,16 +140,16 @@ export function Header({
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
             {/* Wishlist */}
             <Link
               href="/favoritos"
-              className="relative p-2.5 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors"
+              className="relative min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors touch-manipulation"
               aria-label="Meus favoritos"
             >
               <Heart className="w-5 h-5 stroke-[1.8]" />
               {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 h-4 w-4 rounded-full bg-primaria text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute top-1.5 right-1.5 h-4 w-4 rounded-full bg-primaria text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
                   {wishlistCount}
                 </span>
               )}
@@ -158,7 +158,7 @@ export function Header({
             {/* Minha Conta */}
             <Link
               href="/conta"
-              className="p-2.5 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors touch-manipulation"
               aria-label="Minha conta"
             >
               <User className="w-5 h-5 stroke-[1.8]" />
@@ -167,12 +167,12 @@ export function Header({
             {/* Carrinho */}
             <button
               onClick={handleOpenCart}
-              className="relative p-2.5 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors"
+              className="relative min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors touch-manipulation cursor-pointer"
               aria-label="Abrir carrinho"
             >
               <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
               {totalCartItems > 0 && (
-                <span className="absolute top-1 right-1 h-4.5 w-4.5 rounded-full bg-primaria text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50">
+                <span className="absolute top-1.5 right-1.5 h-4.5 w-4.5 rounded-full bg-primaria text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50">
                   {totalCartItems}
                 </span>
               )}

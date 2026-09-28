@@ -300,6 +300,35 @@
   * Testes unitários do Gate 11: OK (100% aprovados)
   * Nenhuma animação prejudica usabilidade ou performance (60FPS auditado): OK
 
+---
+
+## Fase 12 — Responsividade & Viewports (320px a 1920px)
+* **Status:** CONCLUÍDA
+* **Entregas:**
+  * Configuração oficial de `Viewport` do Next.js exportada em [src/app/layout.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/layout.tsx) com `device-width` e escala inicial.
+  * Contenção global de overflow horizontal (`overflow-x-hidden w-full max-w-full`) na raiz da aplicação.
+  * Otimização de touch targets para acessibilidade (WCAG 2.1 mínimo de 44x44px) nos botões de ação e navegação do [src/components/layout/header.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/header.tsx) e [src/components/layout/bottom-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/bottom-nav.tsx).
+  * Suporte a Safe Area do iOS (`.safe-area-bottom`) com `env(safe-area-inset-bottom)` e remoção de delay de toque mobile com `.touch-manipulation` em [src/app/globals.css](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/globals.css).
+  * Prevenção de quebra de layout por palavras longas com `overflow-wrap: break-word`.
+  * Grid responsivo adaptativo com padding compacto no [src/components/commerce/product-card.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/product-card.tsx) e Hero/Benefícios da Home em [src/app/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/page.tsx).
+  * Controles de quantidade e subtotal adaptados para telas estreitas (320px) em [src/app/carrinho/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/carrinho/page.tsx).
+  * Recuo flexível do [src/components/commerce/cart-drawer.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/cart-drawer.tsx) (`pl-4 sm:pl-10`).
+  * Contenção de tabelas com scroll horizontal suave (`overflow-x-auto`) em todos os módulos administrativos e abas com `whitespace-nowrap` em [src/components/admin/admin-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/admin/admin-nav.tsx) e [src/components/account/account-nav.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/account/account-nav.tsx).
+  * Suite de testes de auditoria do Gate 12 em [src/features/ui/__tests__/responsiveness-audit.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/ui/__tests__/responsiveness-audit.test.ts) cobrindo todos os 9 breakpoints (320px, 375px, 390px, 430px, 768px, 1024px, 1280px, 1440px, 1920px).
+* **Gate 12:**
+  * Build (`next build` Turbopack): OK (27 rotas compiladas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros, 0 avisos)
+  * Teste do Gate 12: OK (100% aprovado)
+  * Sem overflow crítico em todos os 9 breakpoints: OK
+
+---
+
+## Fase 13 — Segurança & Auditoria
+* **Status:** A INICIAR
+* **Objetivo:** Auditar e blindar RLS, autenticação, permissões de roles, sanitização de inputs, proteção de webhooks, secrets e logs.
+
+
 
 
 
