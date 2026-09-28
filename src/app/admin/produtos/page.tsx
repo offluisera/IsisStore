@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Package, Plus, CheckCircle2, ArrowLeft, ExternalLink } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { QuickProductEditor } from "@/components/admin/quick-product-editor";
+import { ProductImageManager } from "@/components/admin/product-image-manager";
 
 interface AdminProdutosProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,7 +19,7 @@ export default async function AdminProdutosPage({
 
   const { data: products } = await supabase
     .from("products")
-    .select("*, categories(name), product_images(public_url)")
+    .select("*, categories(name), product_images(id, public_url, is_primary, sort_order, storage_path)")
     .order("created_at", { ascending: false });
 
   const formatPrice = (cents: number) => {
@@ -93,13 +94,17 @@ export default async function AdminProdutosPage({
                 <th className="px-5 py-3.5">Categoria</th>
                 <th className="px-5 py-3.5">Preço</th>
                 <th className="px-5 py-3.5">Gestão de Estoque &amp; Status</th>
+                <th className="px-5 py-3.5">Fotos &amp; Galeria (.webp)</th>
                 <th className="px-5 py-3.5 text-right">Loja</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda/60 text-texto-escuro">
               {products && products.length > 0 ? (
                 products.map((item) => {
-                  const thumb = item.product_images?.[0]?.public_url;
+                  const primaryImg =
+                    item.product_images?.find((img) => img.is_primary) ||
+                    item.product_images?.[0];
+                  const thumb = primaryImg?.public_url;
                   return (
                     <tr key={item.id} className="hover:bg-fundo/30 transition-colors">
                       <td className="px-5 py-4">
@@ -140,6 +145,14 @@ export default async function AdminProdutosPage({
                           }
                         />
                       </td>
+                      <td className="px-5 py-4">
+                        <ProductImageManager
+                          productId={item.id}
+                          productName={item.name}
+                          productSlug={item.slug}
+                          initialImages={item.product_images || []}
+                        />
+                      </td>
                       <td className="px-5 py-4 text-right">
                         <Link
                           href={`/produtos/${item.slug}`}
@@ -155,7 +168,7 @@ export default async function AdminProdutosPage({
                 })
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-texto-claro">
+                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro">
                     Nenhum produto cadastrado no catálogo.
                   </td>
                 </tr>

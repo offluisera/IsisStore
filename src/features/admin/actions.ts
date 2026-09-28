@@ -499,3 +499,244 @@ export async function updateUserRoleAction(
     message: `Permissões de "${targetProfile?.full_name || "usuário"}" alteradas para ${parsed.data.role}.`,
   };
 }
+
+// 8. Upload e Vinculação de Imagens de Produtos (.webp)
+export async function uploadProductImagesAction(
+  formData: FormData
+): Promise<AdminActionResult & { uploadedUrls?: string[] }> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  const productId = formData.get("productId") as string;
+  if (!productId) {
+    return { success: false, message: "ID do produto não informado." };
+  }
+
+  const rawFiles = formData.getAll("files");
+  const files: File[] = [];
+
+  for (const item of rawFiles) {
+    if (item instanceof File && item.size > 0) {
+      files.push(item);
+    }
+  }
+
+  if (files.length === 0) {
+    return { success: false, message: "Nenhum arquivo de imagem válido foi enviado." };
+  }
+
+  // Verifica produto
+  const { data: product, error: prodErr } = await auth.supabase
+    .from("products")
+    .select("id, name, slug")
+    .eq("id", productId)
+    .single();
+
+  if (prodErr || !product) {
+    return { success: false, message: "Produto não encontrado para upload." };
+  }
+
+  // Conta quantas imagens o produto já possui
+  const { count: existingCount } = await auth.supabase
+    .from("product_images")
+    .select("*", { count: "exact", head: true })
+    .eq("product_id", productId);
+
+  const initialSortOrder = existingCount || 0;
+  const uploadedUrls: string[] = [];
+  const errors: string[] = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const storagePath = `${productId}/${timestamp}-${randomSuffix}.webp`;
+
+    try {
+      const buffer = Buffer.from(await file.arrayBuffer());
+
+      const { error: uploadError } = await auth.supabase.storage
+        .from("products")
+        .upload(storagePath, buffer, {
+          contentType: "image/webp",
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.error("Erro no upload para storage:", uploadError);
+        errors.push(`Falha ao subir ${file.name}: ${uploadError.message}`);
+        continue;
+      }
+
+      const { data: urlData } = auth.supabase.storage
+        .from("products")
+        .getPublicUrl(storagePath);
+
+      const publicUrl = urlData.publicUrl;
+      const isPrimary = initialSortOrder === 0 && i === 0;
+
+      const { error: insertError } = await auth.supabase
+        .from("product_images")
+        .insert({
+          product_id: productId,
+          storage_path: storagePath,
+          public_url: publicUrl,
+          alt_text: product.name,
+          is_primary: isPrimary,
+          sort_order: initialSortOrder + i,
+        });
+
+      if (insertError) {
+        console.error("Erro ao registrar product_image:", insertError);
+        errors.push(`Falha ao vincular ${file.name} no banco.`);
+      } else {
+        uploadedUrls.push(publicUrl);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      errors.push(`Erro ao processar ${file.name}: ${msg}`);
+    }
+  }
+
+  await logAdminAudit(
+    auth.supabase,
+    auth.user.id,
+    "upload_product_images",
+    "products",
+    productId,
+    {
+      product_name: product.name,
+      uploaded_count: uploadedUrls.length,
+      errors_count: errors.length,
+    }
+  );
+
+  // Revalidação em cascata das páginas afetadas
+  revalidatePath("/admin/produtos");
+  revalidatePath("/produtos");
+  revalidatePath(`/produtos/${product.slug}`);
+  revalidatePath("/");
+
+  if (uploadedUrls.length === 0) {
+    return {
+      success: false,
+      message: `Nenhuma imagem pôde ser salva: ${errors.join("; ")}`,
+    };
+  }
+
+  return {
+    success: true,
+    message: `${uploadedUrls.length} imagem(ns) adicionada(s) com sucesso em formato .webp!`,
+    uploadedUrls,
+  };
+}
+
+// 9. Excluir Imagem de Produto
+export async function deleteProductImageAction(
+  imageId: string,
+  productId: string
+): Promise<AdminActionResult> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  const { data: image, error: findErr } = await auth.supabase
+    .from("product_images")
+    .select("id, storage_path, is_primary, product_id, products(slug)")
+    .eq("id", imageId)
+    .eq("product_id", productId)
+    .single();
+
+  if (findErr || !image) {
+    return { success: false, message: "Imagem não encontrada." };
+  }
+
+  // Deleta do bucket se houver storage_path
+  if (image.storage_path) {
+    try {
+      await auth.supabase.storage.from("products").remove([image.storage_path]);
+    } catch (err) {
+      console.warn("Aviso ao remover do storage:", err);
+    }
+  }
+
+  // Deleta da tabela
+  const { error: delErr } = await auth.supabase
+    .from("product_images")
+    .delete()
+    .eq("id", imageId);
+
+  if (delErr) {
+    return { success: false, message: "Falha ao remover imagem do banco." };
+  }
+
+  // Se a imagem excluída era a principal, promove outra como principal
+  if (image.is_primary) {
+    const { data: nextImages } = await auth.supabase
+      .from("product_images")
+      .select("id")
+      .eq("product_id", productId)
+      .order("sort_order", { ascending: true })
+      .limit(1);
+
+    if (nextImages && nextImages.length > 0) {
+      await auth.supabase
+        .from("product_images")
+        .update({ is_primary: true })
+        .eq("id", nextImages[0].id);
+    }
+  }
+
+  const slug = (image.products as { slug?: string } | null)?.slug;
+  revalidatePath("/admin/produtos");
+  revalidatePath("/produtos");
+  if (slug) revalidatePath(`/produtos/${slug}`);
+  revalidatePath("/");
+
+  return { success: true, message: "Imagem removida com sucesso." };
+}
+
+// 10. Definir Imagem Principal
+export async function setPrimaryProductImageAction(
+  imageId: string,
+  productId: string
+): Promise<AdminActionResult> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  // Remove primary de todas as imagens do produto
+  await auth.supabase
+    .from("product_images")
+    .update({ is_primary: false })
+    .eq("product_id", productId);
+
+  // Define a selecionada como primary
+  const { error } = await auth.supabase
+    .from("product_images")
+    .update({ is_primary: true })
+    .eq("id", imageId)
+    .eq("product_id", productId);
+
+  if (error) {
+    return { success: false, message: "Falha ao atualizar imagem principal." };
+  }
+
+  const { data: prod } = await auth.supabase
+    .from("products")
+    .select("slug")
+    .eq("id", productId)
+    .single();
+
+  revalidatePath("/admin/produtos");
+  revalidatePath("/produtos");
+  if (prod?.slug) revalidatePath(`/produtos/${prod.slug}`);
+  revalidatePath("/");
+
+  return { success: true, message: "Imagem principal definida com sucesso!" };
+}
+

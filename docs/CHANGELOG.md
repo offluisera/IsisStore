@@ -8,6 +8,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 ## 2026-09-27
 
 ### Added
+- **Upload de Imagens do PC com Conversão Automática para .webp**:
+  - Implementação de conversor client-side de imagens para `.webp` de alta eficiência em `src/lib/images/convert-to-webp.ts` (`convertFileToWebP`, `convertBatchToWebP`).
+  - Criação de Server Actions administrativas em `src/features/admin/actions.ts`: `uploadProductImagesAction`, `deleteProductImageAction` e `setPrimaryProductImageAction` com gravação na tabela `product_images` e bucket `products` do Supabase Storage.
+  - Criação do componente `ProductImageManager` em `src/components/admin/product-image-manager.tsx` com botão rápido de seleção múltipla do computador, modal com galeria de miniaturas, marcação de capa/imagem principal, exclusão e status visual em tempo real.
+  - Integração do gerenciador na tabela do painel administrativo em `src/app/admin/produtos/page.tsx` com revalidação automática das páginas de catálogo e detalhes dos produtos.
+  - Correção do erro de hostname do Next.js Image configurando `remotePatterns` em `next.config.ts` (`i.imgur.com`, `imgur.com`, `**.supabase.co`, `images.unsplash.com`).
+  - Suite de testes automatizados em `src/features/admin/__tests__/product-image-upload.test.ts` (100% aprovada).
+
 - Conclusão da **Fase 12 — Responsividade**:
   - Exportação oficial de objeto `Viewport` em `src/app/layout.tsx` garantindo `device-width` e escala adaptativa para todos os dispositivos.
   - Adição de contenção global de overflow horizontal (`overflow-x-hidden w-full max-w-full`) no body.
