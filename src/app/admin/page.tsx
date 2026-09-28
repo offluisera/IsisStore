@@ -153,6 +153,14 @@ export default async function AdminDashboardPage() {
       allOrdersData?.filter((o) => o.status === "pending_payment").length || 0,
     cancelled:
       allOrdersData?.filter((o) => o.status === "cancelled").length || 0,
+    refunded:
+      allOrdersData?.filter((o) => o.status === "refunded").length || 0,
+  };
+
+  const getPercentage = (count: number) => {
+    if (totalOrdersCalc <= 0 || count <= 0) return 0;
+    if (totalOrdersCalc === 1 && count === 1) return 100;
+    return Math.round((count / totalOrdersCalc) * 100);
   };
 
   const distributionItems = [
@@ -160,41 +168,36 @@ export default async function AdminDashboardPage() {
       status: "paid",
       label: "Pago / Enviado",
       count: statusCounts.paid,
-      percentage:
-        totalOrdersCalc > 0
-          ? Math.round((statusCounts.paid / totalOrdersCalc) * 100)
-          : 0,
+      percentage: getPercentage(statusCounts.paid),
       color: "#E08CA3",
     },
     {
       status: "pending",
       label: "Pendente",
       count: statusCounts.pending,
-      percentage:
-        totalOrdersCalc > 0
-          ? Math.round((statusCounts.pending / totalOrdersCalc) * 100)
-          : 0,
+      percentage: getPercentage(statusCounts.pending),
       color: "#F59E0B",
     },
     {
       status: "processing",
       label: "Processando",
       count: statusCounts.processing,
-      percentage:
-        totalOrdersCalc > 0
-          ? Math.round((statusCounts.processing / totalOrdersCalc) * 100)
-          : 0,
+      percentage: getPercentage(statusCounts.processing),
       color: "#3B82F6",
     },
     {
       status: "cancelled",
       label: "Cancelado",
       count: statusCounts.cancelled,
-      percentage:
-        totalOrdersCalc > 0
-          ? Math.round((statusCounts.cancelled / totalOrdersCalc) * 100)
-          : 0,
+      percentage: getPercentage(statusCounts.cancelled),
       color: "#EF4444",
+    },
+    {
+      status: "refunded",
+      label: "Reembolso",
+      count: statusCounts.refunded,
+      percentage: getPercentage(statusCounts.refunded),
+      color: "#9333EA",
     },
   ];
 
