@@ -51,9 +51,13 @@ export function SalesAreaChart({
   const innerWidth = width - paddingLeft - paddingRight;
   const innerHeight = height - paddingTop - paddingBottom;
 
-  const maxVal = Math.max(...chartData.map((d) => d.amountCents), 400000);
+  const highestValue = Math.max(...chartData.map((d) => d.amountCents), 0);
+  const maxVal =
+    highestValue > 0
+      ? Math.max(Math.ceil((highestValue * 1.25) / 5000) * 5000, 40000)
+      : 100000;
   const minVal = 0;
-  const range = maxVal - minVal;
+  const range = maxVal - minVal || 1;
 
   // Gerar coordenadas (x, y) para cada ponto
   const points = chartData.map((d, index) => {
@@ -81,8 +85,14 @@ export function SalesAreaChart({
   const firstPoint = points[0];
   const areaD = `${pathD} L ${lastPoint.x} ${paddingTop + innerHeight} L ${firstPoint.x} ${paddingTop + innerHeight} Z`;
 
-  // Linhas guia do eixo Y
-  const yTicks = [400000, 300000, 200000, 100000, 0];
+  // Linhas guia do eixo Y dinâmicas
+  const yTicks = [maxVal, maxVal * 0.75, maxVal * 0.5, maxVal * 0.25, 0];
+
+  const formatYTick = (cents: number) => {
+    if (cents === 0) return "R$ 0";
+    if (cents >= 100000) return `R$ ${(cents / 100000).toFixed(0)}.000`;
+    return `R$ ${(cents / 100).toFixed(0)}`;
+  };
 
   const totalPeriodRevenue = chartData.reduce((acc, curr) => acc + curr.amountCents, 0);
 
@@ -165,7 +175,7 @@ export function SalesAreaChart({
                   fill="#9E8C90"
                   fontFamily="var(--font-inter), sans-serif"
                 >
-                  {val === 0 ? "R$ 0" : `R$ ${(val / 100000).toFixed(0)}.000`}
+                  {formatYTick(val)}
                 </text>
               </g>
             );

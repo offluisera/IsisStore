@@ -98,59 +98,105 @@ export default async function AdminDashboardPage() {
       .limit(5),
   ]);
 
-  // Faturamento Aprovado
-  const paidOrders = allOrdersData?.filter((o) => o.status === "paid") || [];
+  // Faturamento Aprovado (Pedidos pagos, em separação ou despachados)
+  const paidOrders =
+    allOrdersData?.filter((o) =>
+      ["paid", "processing", "shipped", "delivered"].includes(o.status)
+    ) || [];
+
   const totalRevenueCents =
     paidOrders.reduce((acc, order) => acc + (order.total_cents || 0), 0) || 0;
 
-  // Distribuição de status dos pedidos
+  // Evolução diária de vendas dos últimos 7 dias (Dados reais da loja)
+  const now = new Date();
+  const realLast7DaysData = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(now.getDate() - (6 - i));
+    const dateFormatted = d.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+    const dayName = d.toLocaleDateString("pt-BR", { weekday: "short" });
+
+    const dayOrders = paidOrders.filter((ord) => {
+      if (!ord.created_at) return false;
+      const ordDate = new Date(ord.created_at);
+      return (
+        ordDate.getDate() === d.getDate() &&
+        ordDate.getMonth() === d.getMonth() &&
+        ordDate.getFullYear() === d.getFullYear()
+      );
+    });
+
+    const amountCents = dayOrders.reduce(
+      (sum, ord) => sum + (ord.total_cents || 0),
+      0
+    );
+
+    return {
+      date: dateFormatted,
+      dayName,
+      amountCents,
+    };
+  });
+
+  // Distribuição de status dos pedidos da loja
   const totalOrdersCalc = allOrdersData?.length || ordersCount || 0;
   const statusCounts = {
-    paid: allOrdersData?.filter((o) => o.status === "paid").length || 0,
-    pending:
-      allOrdersData?.filter((o) => o.status === "pending_payment").length || 0,
+    paid:
+      allOrdersData?.filter((o) =>
+        ["paid", "shipped", "delivered"].includes(o.status)
+      ).length || 0,
     processing:
       allOrdersData?.filter((o) => o.status === "processing").length || 0,
-    canceled:
+    pending:
+      allOrdersData?.filter((o) => o.status === "pending_payment").length || 0,
+    cancelled:
       allOrdersData?.filter((o) => o.status === "cancelled").length || 0,
   };
 
-  const distributionItems =
-    totalOrdersCalc > 0
-      ? [
-          {
-            status: "paid",
-            label: "Pago",
-            count: statusCounts.paid,
-            percentage: Math.round((statusCounts.paid / totalOrdersCalc) * 100) || 0,
-            color: "#E08CA3",
-          },
-          {
-            status: "pending",
-            label: "Pendente",
-            count: statusCounts.pending,
-            percentage:
-              Math.round((statusCounts.pending / totalOrdersCalc) * 100) || 0,
-            color: "#F59E0B",
-          },
-          {
-            status: "processing",
-            label: "Processando",
-            count: statusCounts.processing,
-            percentage:
-              Math.round((statusCounts.processing / totalOrdersCalc) * 100) || 0,
-            color: "#3B82F6",
-          },
-          {
-            status: "cancelled",
-            label: "Cancelado",
-            count: statusCounts.canceled,
-            percentage:
-              Math.round((statusCounts.canceled / totalOrdersCalc) * 100) || 0,
-            color: "#EF4444",
-          },
-        ]
-      : undefined;
+  const distributionItems = [
+    {
+      status: "paid",
+      label: "Pago / Enviado",
+      count: statusCounts.paid,
+      percentage:
+        totalOrdersCalc > 0
+          ? Math.round((statusCounts.paid / totalOrdersCalc) * 100)
+          : 0,
+      color: "#E08CA3",
+    },
+    {
+      status: "pending",
+      label: "Pendente",
+      count: statusCounts.pending,
+      percentage:
+        totalOrdersCalc > 0
+          ? Math.round((statusCounts.pending / totalOrdersCalc) * 100)
+          : 0,
+      color: "#F59E0B",
+    },
+    {
+      status: "processing",
+      label: "Processando",
+      count: statusCounts.processing,
+      percentage:
+        totalOrdersCalc > 0
+          ? Math.round((statusCounts.processing / totalOrdersCalc) * 100)
+          : 0,
+      color: "#3B82F6",
+    },
+    {
+      status: "cancelled",
+      label: "Cancelado",
+      count: statusCounts.cancelled,
+      percentage:
+        totalOrdersCalc > 0
+          ? Math.round((statusCounts.cancelled / totalOrdersCalc) * 100)
+          : 0,
+      color: "#EF4444",
+    },
+  ];
 
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
@@ -223,10 +269,10 @@ export default async function AdminDashboardPage() {
 
       {/* 3. Seção Visual: Gráfico de Vendas 7 Dias (8 cols) & Distribuição de Pedidos Donut (4 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <div className="lg:col-span-8 flex flex-col">
-          <SalesAreaChart />
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col">
+          <SalesAreaChart data={realLast7DaysData} />
         </div>
-        <div className="lg:col-span-4 flex flex-col">
+        <div className="lg:col-span-5 xl:col-span-4 flex flex-col">
           <OrdersDistributionDonut
             items={distributionItems}
             totalOrders={totalOrdersCalc}

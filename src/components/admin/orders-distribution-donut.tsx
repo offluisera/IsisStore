@@ -17,10 +17,10 @@ interface OrdersDistributionDonutProps {
 }
 
 const DEFAULT_DISTRIBUTION: StatusDistributionItem[] = [
-  { status: "paid", label: "Pago", count: 87, percentage: 68, color: "#E08CA3" },
+  { status: "paid", label: "Pago / Enviado", count: 87, percentage: 68, color: "#E08CA3" },
   { status: "pending", label: "Pendente", count: 15, percentage: 12, color: "#F59E0B" },
   { status: "processing", label: "Processando", count: 10, percentage: 8, color: "#3B82F6" },
-  { status: "canceled", label: "Cancelado", count: 8, percentage: 6, color: "#EF4444" },
+  { status: "cancelled", label: "Cancelado", count: 8, percentage: 6, color: "#EF4444" },
   { status: "refunded", label: "Reembolso", count: 8, percentage: 6, color: "#9333EA" },
 ];
 
@@ -34,28 +34,32 @@ export function OrdersDistributionDonut({
   const calculatedTotal = totalOrders ?? dataItems.reduce((acc, curr) => acc + curr.count, 0);
 
   // Geometria do Donut SVG
-  const size = 180;
-  const strokeWidth = 20;
+  const size = 160;
+  const strokeWidth = 18;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // Calcular offsets cumulativos
+  // Calcular offsets cumulativos apenas para itens com percentage > 0
   let cumulativePercentage = 0;
-  const slices = dataItems.map((item) => {
-    const strokeDasharray = `${(item.percentage / 100) * circumference} ${circumference}`;
-    const strokeDashoffset = -((cumulativePercentage / 100) * circumference);
-    cumulativePercentage += item.percentage;
-    return {
-      ...item,
-      strokeDasharray,
-      strokeDashoffset,
-    };
-  });
+  const slices = dataItems
+    .filter((item) => item.percentage > 0)
+    .map((item) => {
+      const strokeDasharray = `${(item.percentage / 100) * circumference} ${circumference}`;
+      const strokeDashoffset = -((cumulativePercentage / 100) * circumference);
+      cumulativePercentage += item.percentage;
+      return {
+        ...item,
+        strokeDasharray,
+        strokeDashoffset,
+      };
+    });
+
+  const hasAnyData = calculatedTotal > 0 && slices.length > 0;
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-6 shadow-xs flex flex-col justify-between select-none">
+    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
       {/* Cabeçalho */}
-      <div className="pb-4 border-b border-[#F7EFF1]">
+      <div className="pb-3 border-b border-[#F7EFF1]">
         <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
           Distribuição de Pedidos
         </h2>
@@ -64,14 +68,14 @@ export function OrdersDistributionDonut({
         </p>
       </div>
 
-      {/* Donut Chart Central */}
-      <div className="py-6 flex flex-col sm:flex-row items-center justify-around gap-6">
-        <div className="relative w-44 h-44 flex items-center justify-center flex-shrink-0">
+      {/* Donut Chart Central - Layout vertical empilhado e responsivo */}
+      <div className="py-4 flex flex-col items-center justify-center gap-5 flex-1">
+        <div className="relative w-36 h-36 sm:w-40 sm:h-40 flex items-center justify-center flex-shrink-0">
           <svg
             width={size}
             height={size}
             viewBox={`0 0 ${size} ${size}`}
-            className="transform -rotate-90 overflow-visible"
+            className="w-full h-full transform -rotate-90 overflow-visible"
           >
             {/* Círculo base de fundo */}
             <circle
@@ -83,27 +87,27 @@ export function OrdersDistributionDonut({
               strokeWidth={strokeWidth}
             />
 
-            {/* Slices com cores da marca */}
-            {slices.map((slice) => {
-              const isHovered = hoveredStatus === slice.status;
-              return (
-                <circle
-                  key={slice.status}
-                  cx={size / 2}
-                  cy={size / 2}
-                  r={radius}
-                  fill="transparent"
-                  stroke={slice.color}
-                  strokeWidth={isHovered ? strokeWidth + 4 : strokeWidth}
-                  strokeDasharray={slice.strokeDasharray}
-                  strokeDashoffset={slice.strokeDashoffset}
-                  strokeLinecap="round"
-                  className="transition-all duration-200 cursor-pointer"
-                  onMouseEnter={() => setHoveredStatus(slice.status)}
-                  onMouseLeave={() => setHoveredStatus(null)}
-                />
-              );
-            })}
+            {/* Slices com dados reais (somente se percentual > 0) */}
+            {hasAnyData &&
+              slices.map((slice) => {
+                const isHovered = hoveredStatus === slice.status;
+                return (
+                  <circle
+                    key={slice.status}
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    fill="transparent"
+                    stroke={slice.color}
+                    strokeWidth={isHovered ? strokeWidth + 3 : strokeWidth}
+                    strokeDasharray={slice.strokeDasharray}
+                    strokeDashoffset={slice.strokeDashoffset}
+                    className="transition-all duration-200 cursor-pointer"
+                    onMouseEnter={() => setHoveredStatus(slice.status)}
+                    onMouseLeave={() => setHoveredStatus(null)}
+                  />
+                );
+              })}
           </svg>
 
           {/* Núcleo Central com Total de Pedidos */}
@@ -111,14 +115,14 @@ export function OrdersDistributionDonut({
             <span className="font-serif font-bold text-2xl sm:text-3xl text-texto-escuro leading-none">
               {calculatedTotal}
             </span>
-            <span className="text-[11px] font-semibold text-texto-claro uppercase tracking-wider mt-1">
-              pedidos
+            <span className="text-[10px] sm:text-[11px] font-semibold text-texto-claro uppercase tracking-wider mt-1">
+              {calculatedTotal === 1 ? "pedido" : "pedidos"}
             </span>
           </div>
         </div>
 
-        {/* Legenda Lateral com Percentuais */}
-        <div className="flex-1 w-full space-y-2">
+        {/* Legenda Lateral com Percentuais - Colunas separadas para evitar colisão */}
+        <div className="w-full space-y-1 pt-1">
           {dataItems.map((item) => {
             const isHovered = hoveredStatus === item.status;
             return (
@@ -127,18 +131,19 @@ export function OrdersDistributionDonut({
                 onMouseEnter={() => setHoveredStatus(item.status)}
                 onMouseLeave={() => setHoveredStatus(null)}
                 className={cn(
-                  "flex items-center justify-between p-2 rounded-xl text-xs transition-colors cursor-pointer",
+                  "flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-colors cursor-pointer",
                   isHovered ? "bg-[#FDF2F4]" : "hover:bg-[#FAF7F8]"
                 )}
               >
-                <div className="flex items-center gap-2.5">
+                {/* Lado Esquerdo: Indicador colorido + Nome */}
+                <div className="flex items-center gap-2 min-w-0 pr-2">
                   <span
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: item.color }}
                   />
                   <span
                     className={cn(
-                      "font-medium",
+                      "font-medium truncate",
                       isHovered ? "text-primaria font-semibold" : "text-texto-escuro"
                     )}
                   >
@@ -146,13 +151,14 @@ export function OrdersDistributionDonut({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-texto-claro">
+                {/* Lado Direito: Unidades + Percentual */}
+                <div className="flex items-center gap-2.5 flex-shrink-0 text-right">
+                  <span className="text-[11px] text-texto-claro font-mono">
                     {item.count} un
                   </span>
                   <span
                     className={cn(
-                      "font-bold",
+                      "font-bold text-xs font-mono min-w-[34px] text-right",
                       isHovered ? "text-primaria" : "text-texto-escuro"
                     )}
                   >
