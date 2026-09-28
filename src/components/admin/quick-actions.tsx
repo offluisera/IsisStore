@@ -64,24 +64,24 @@ const ACTIONS: ActionItem[] = [
 
 export function QuickActions() {
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none">
-      {/* Cabeçalho */}
-      <div className="flex items-center gap-2.5 pb-4 border-b border-[#F7EFF1]">
-        <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center flex-shrink-0">
-          <Zap className="w-4 h-4" />
-        </div>
-        <div>
-          <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
+    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-3 sm:p-3.5 shadow-xs select-none w-full">
+      {/* Cabeçalho sutil e limpo */}
+      <div className="flex items-center justify-between px-1 pb-2 mb-2 border-b border-[#F7EFF1]">
+        <div className="flex items-center gap-1.5">
+          <div className="w-5 h-5 rounded-md bg-primaria/10 text-primaria flex items-center justify-center flex-shrink-0">
+            <Zap className="w-3 h-3" />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-texto-escuro">
             Ações Rápidas
-          </h2>
-          <p className="text-xs text-texto-claro">
-            Atalhos operacionais diretos para o fluxo diário
-          </p>
+          </span>
         </div>
+        <span className="text-[10px] text-texto-claro/80 font-medium hidden sm:inline">
+          Atalhos operacionais
+        </span>
       </div>
 
-      {/* Grid de 6 Atalhos Funcionais */}
-      <div className="grid grid-cols-2 gap-2.5 pt-4">
+      {/* Grid Responsivo de 6 Atalhos: 2 colunas no mobile, 3 no sm/desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {ACTIONS.map((item) => {
           const Icon = item.icon;
 
@@ -89,14 +89,15 @@ export function QuickActions() {
             <Link
               key={item.label}
               href={item.href}
-              className={`p-3 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/40 ${item.hoverBorder} transition-all duration-200 group flex items-center gap-2.5 text-left shadow-2xs`}
+              className={`p-2 sm:px-2.5 sm:py-2 rounded-xl border border-[#F0E5E7] bg-white hover:bg-[#FFF5F6]/50 ${item.hoverBorder} transition-all duration-150 group flex items-center gap-2 text-left shadow-2xs min-h-[38px] sm:min-h-[40px]`}
+              title={item.label}
             >
               <div
-                className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
+                className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 border group-hover:scale-105 transition-transform ${item.colorClass}`}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className="w-3 h-3" />
               </div>
-              <span className="text-xs font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-tight line-clamp-2">
+              <span className="text-[11px] font-semibold text-texto-escuro group-hover:text-primaria transition-colors leading-tight truncate">
                 {item.label}
               </span>
             </Link>

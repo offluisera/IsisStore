@@ -537,8 +537,11 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* 1. Cabeçalho Oficial Isis Store */}
-      <DashboardHeader adminName={profile?.full_name} />
+      {/* 1. Cabeçalho Oficial Isis Store com Ações Rápidas no topo */}
+      <DashboardHeader
+        adminName={profile?.full_name}
+        actions={<QuickActions />}
+      />
 
       {/* 2. Grid de 4 KPI Cards com Sparklines Vetoriais em SVG */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -617,13 +620,12 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* 5. Seção Visual: Produtos Mais Vendidos (8 cols) & Ações Rápidas + Dica do Dia (4 cols) */}
+      {/* 5. Seção Visual: Produtos Mais Vendidos (8 cols) & Dica do Dia Editorial (4 cols) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
         <div className="xl:col-span-8 flex flex-col">
           <TopSellingProducts products={finalTopSelling} />
         </div>
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          <QuickActions />
+        <div className="xl:col-span-4 flex flex-col">
           <DailyTipCard />
         </div>
       </div>

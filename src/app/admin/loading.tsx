@@ -3,15 +3,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function AdminLoading() {
   return (
     <div className="flex flex-col gap-8 animate-in fade-in duration-300 select-none">
-      {/* 1. Cabeçalho Oficial Isis Store Skeleton */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-72 rounded-xl" />
-          <Skeleton className="h-4 w-96 max-w-full rounded-md opacity-70" />
+      {/* 1. Cabeçalho Oficial Isis Store Skeleton com Ações Rápidas no topo */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 lg:gap-5 pb-4 border-b border-[#F0E5E7]/70">
+        <div className="space-y-2 shrink-0">
+          <Skeleton className="h-8 w-64 sm:w-72 rounded-xl" />
+          <Skeleton className="h-4 w-80 max-w-full rounded-md opacity-70" />
+        </div>
+
+        {/* Ações Rápidas Skeleton no Centro */}
+        <div className="w-full xl:flex-1 xl:max-w-xl 2xl:max-w-2xl bg-white border border-[#F0E5E7] rounded-2xl p-3 shadow-xs space-y-2">
+          <div className="flex items-center justify-between pb-1 border-b border-[#F7EFF1]">
+            <Skeleton className="h-3.5 w-24 rounded-md" />
+            <Skeleton className="h-2.5 w-20 rounded-md opacity-60" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-9 w-full rounded-xl" />
+            ))}
+          </div>
         </div>
 
         {/* Card de Calendário / Data Skeleton */}
-        <div className="bg-white border border-[#F0E5E7] rounded-2xl p-4 shadow-xs flex items-center gap-3 self-start md:self-auto w-64">
+        <div className="bg-white border border-[#F0E5E7] rounded-2xl p-3.5 sm:px-4 sm:py-3 shadow-xs flex items-center gap-3 shrink-0 self-start xl:self-center w-60">
           <Skeleton className="w-10 h-10 rounded-xl" />
           <div className="space-y-1.5 flex-1">
             <Skeleton className="h-3.5 w-28 rounded-md" />
@@ -126,7 +139,7 @@ export default function AdminLoading() {
         </div>
       </div>
 
-      {/* 5. Seção Visual: Mais Vendidos (8 cols) & Ações Rápidas + Dica do Dia (4 cols) */}
+      {/* 5. Seção Visual: Mais Vendidos (8 cols) & Dica do Dia (4 cols) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
         {/* Mais Vendidos Skeleton */}
         <div className="xl:col-span-8 bg-white border border-[#F0E5E7] rounded-2xl p-6 shadow-xs space-y-4">
@@ -152,25 +165,22 @@ export default function AdminLoading() {
           </div>
         </div>
 
-        {/* Ações Rápidas & Dica do Dia Skeleton */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          <div className="bg-white border border-[#F0E5E7] rounded-2xl p-6 shadow-xs space-y-4">
-            <div className="space-y-1.5 pb-3 border-b border-[#F7EFF1]">
-              <Skeleton className="h-5 w-32 rounded-md" />
-              <Skeleton className="h-3 w-48 rounded-md opacity-60" />
+        {/* Dica do Dia Skeleton */}
+        <div className="xl:col-span-4 bg-[#FFF5F6] border border-[#F9C7D4]/60 rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-24 rounded-full" />
+              <Skeleton className="h-3 w-28 rounded-md opacity-60" />
             </div>
-            <div className="grid grid-cols-2 gap-2.5 pt-1">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full rounded-xl" />
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-[#FFF5F6] border border-[#F9C7D4]/60 rounded-2xl p-6 shadow-xs space-y-3">
-            <Skeleton className="h-5 w-24 rounded-full" />
-            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-6 w-full rounded-md" />
             <Skeleton className="h-3 w-4/5 rounded-md opacity-70" />
+            <div className="pt-3 space-y-2">
+              <Skeleton className="h-3 w-full rounded-md opacity-50" />
+              <Skeleton className="h-3 w-5/6 rounded-md opacity-50" />
+              <Skeleton className="h-3 w-4/6 rounded-md opacity-50" />
+            </div>
           </div>
+          <Skeleton className="h-3 w-36 rounded-md opacity-60" />
         </div>
       </div>
     </div>
