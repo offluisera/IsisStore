@@ -34,3 +34,7 @@ pnpm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# Secrets & Local credentials notes
+caktus.md
+
