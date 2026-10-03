@@ -51,7 +51,7 @@ export default function AuthLayout({
           </div>
 
           {/* Form Box */}
-          <div className="bg-white rounded-2xl border border-borda shadow-sm p-6 sm:p-8 backdrop-blur-sm">
+          <div className="bg-fundo-card rounded-2xl border border-borda shadow-sm p-6 sm:p-8 backdrop-blur-sm transition-colors">
             {children}
           </div>
         </div>

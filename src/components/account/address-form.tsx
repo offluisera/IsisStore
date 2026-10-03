@@ -105,13 +105,13 @@ export function AddressForm() {
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-primaria/30 p-6 sm:p-8 shadow-sm animate-in fade-in duration-300 mb-6">
-      <div className="flex items-center justify-between pb-4 border-b border-borda/60 mb-6">
+    <div className="bg-fundo-card dark:bg-[#1E1518] rounded-3xl border border-primaria/30 dark:border-primaria/40 p-6 sm:p-8 shadow-sm animate-in fade-in duration-300 mb-6 transition-colors">
+      <div className="flex items-center justify-between pb-4 border-b border-[#F0E5E7] dark:border-[#332228] mb-6">
         <div>
-          <h2 className="font-serif text-lg font-bold text-texto-escuro">
+          <h2 className="font-serif text-lg font-bold text-texto-escuro dark:text-[#F8EFF1]">
             Cadastrar Novo Endereço
           </h2>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#A89299] mt-0.5">
             Preencha os dados de entrega. O CEP preenche automaticamente a rua e bairro.
           </p>
         </div>
@@ -119,7 +119,7 @@ export function AddressForm() {
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="text-xs text-texto-claro hover:text-texto-escuro font-semibold"
+          className="text-xs text-texto-claro dark:text-[#A89299] hover:text-texto-escuro dark:hover:text-[#F8EFF1] font-semibold"
         >
           Cancelar
         </button>
@@ -134,7 +134,7 @@ export function AddressForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Destinatário */}
         <div>
-          <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+          <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
             Nome do Destinatário *
           </label>
           <input
@@ -143,14 +143,14 @@ export function AddressForm() {
             placeholder="Ex: Isis Lima"
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
-            className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+            className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
           />
         </div>
 
         {/* CEP com busca automática */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-1">
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               CEP *
             </label>
             <div className="relative">
@@ -162,9 +162,9 @@ export function AddressForm() {
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
                 onBlur={handleCepBlur}
-                className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+                className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#8C767D]">
                 {isSearchingCep ? (
                   <Loader2 className="w-4 h-4 animate-spin text-primaria" />
                 ) : (
@@ -178,7 +178,7 @@ export function AddressForm() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Rua / Logradouro *
             </label>
             <input
@@ -187,7 +187,7 @@ export function AddressForm() {
               placeholder="Ex: Rua das Flores"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
             />
           </div>
         </div>
@@ -195,7 +195,7 @@ export function AddressForm() {
         {/* Número e Complemento */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Número *
             </label>
             <input
@@ -204,12 +204,12 @@ export function AddressForm() {
               placeholder="123"
               value={number}
               onChange={(e) => setNumber(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Complemento (Opcional)
             </label>
             <input
@@ -217,7 +217,7 @@ export function AddressForm() {
               placeholder="Apto 42, Bloco B"
               value={complement}
               onChange={(e) => setComplement(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
             />
           </div>
         </div>
@@ -225,7 +225,7 @@ export function AddressForm() {
         {/* Bairro, Cidade e UF */}
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Bairro *
             </label>
             <input
@@ -234,12 +234,12 @@ export function AddressForm() {
               placeholder="Centro"
               value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Cidade *
             </label>
             <input
@@ -248,12 +248,12 @@ export function AddressForm() {
               placeholder="São Paulo"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria bg-fundo/30"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               UF *
             </label>
             <input
@@ -263,7 +263,7 @@ export function AddressForm() {
               placeholder="SP"
               value={state}
               onChange={(e) => setState(e.target.value.toUpperCase())}
-              className="w-full h-11 px-3.5 rounded-xl border border-borda text-xs outline-none focus:border-primaria uppercase bg-fundo/30 text-center"
+              className="w-full h-11 px-3.5 rounded-xl border border-borda dark:border-[#38262C] text-xs outline-none focus:border-primaria uppercase bg-input-fundo dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#8C767D] focus:bg-fundo-card text-center transition-all"
             />
           </div>
         </div>
@@ -275,21 +275,21 @@ export function AddressForm() {
             id="isDefaultCheck"
             checked={isDefault}
             onChange={(e) => setIsDefault(e.target.checked)}
-            className="w-4 h-4 rounded border-borda text-primaria focus:ring-primaria"
+            className="w-4 h-4 rounded border-[#F0E5E7] dark:border-[#38262C] text-primaria focus:ring-primaria"
           />
-          <label htmlFor="isDefaultCheck" className="text-xs text-texto-medio cursor-pointer">
+          <label htmlFor="isDefaultCheck" className="text-xs text-texto-medio dark:text-[#D1C0C5] cursor-pointer">
             Definir como meu endereço principal de entrega
           </label>
         </div>
 
         {/* Botões de Ação */}
-        <div className="pt-4 flex items-center justify-end gap-3 border-t border-borda/60">
+        <div className="pt-4 flex items-center justify-end gap-3 border-t border-[#F0E5E7] dark:border-[#332228]">
           <Button
             type="button"
             onClick={() => setIsOpen(false)}
             variant="ghost"
             size="sm"
-            className="text-xs"
+            className="text-xs text-texto-claro dark:text-[#A89299] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
           >
             Cancelar
           </Button>

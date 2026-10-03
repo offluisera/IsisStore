@@ -35,13 +35,21 @@ export default async function CheckoutPage() {
     .order("is_default", { ascending: false })
     .order("created_at", { ascending: false });
 
+  // 3. Buscar Gateways de Pagamento Ativos
+  const { data: gateways } = await supabase
+    .from("payment_gateways")
+    .select("name, is_active")
+    .eq("is_active", true);
+
+  const activeGateways = gateways?.map((g) => g.name) || [];
+
   const displayName =
     profile?.full_name || user.email?.split("@")[0] || "Cliente";
 
   return (
     <div className="min-h-screen bg-fundo text-texto-escuro flex flex-col justify-between selection:bg-primaria-soft selection:text-primaria">
       {/* Top Header Simplificado de Checkout Seguro */}
-      <header className="bg-white border-b border-borda sticky top-0 z-30 shadow-xs">
+      <header className="bg-fundo-card border-b border-borda sticky top-0 z-30 shadow-xs transition-colors">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-xl overflow-hidden border border-primaria/20 shadow-xs transition-transform group-hover:scale-105">
@@ -85,11 +93,12 @@ export default async function CheckoutPage() {
           addresses={addresses || []}
           userEmail={user.email || ""}
           userName={displayName}
+          activeGateways={activeGateways}
         />
       </main>
 
       {/* Footer Minimalista de Checkout */}
-      <footer className="w-full py-6 text-center text-xs text-texto-claro border-t border-borda/60 bg-white">
+      <footer className="w-full py-6 text-center text-xs text-texto-claro border-t border-borda/60 bg-fundo-card transition-colors">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-texto-medio">
             <ShieldCheck className="w-4 h-4 text-sucesso" />

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ProductCard } from "@/components/commerce/product-card";
 import { CatalogFilters } from "@/components/commerce/catalog-filters";
@@ -14,6 +15,7 @@ import {
 import { PackageX, ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
 
 interface ProdutosPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -44,6 +46,21 @@ export async function generateMetadata({
 export default async function ProdutosPage({ searchParams }: ProdutosPageProps) {
   const resolved = await searchParams;
   const categorySlug = typeof resolved.categoria === "string" ? resolved.categoria : undefined;
+
+  // Registrar acesso real da categoria no banco de dados
+  if (categorySlug) {
+    (async () => {
+      try {
+        const supabase = await createClient();
+        await supabase.rpc("increment_category_access", {
+          category_slug: categorySlug,
+        });
+      } catch {
+        // Falha não-bloqueante de telemetria
+      }
+    })();
+  }
+
   const search = typeof resolved.busca === "string" ? resolved.busca : undefined;
   const sort =
     typeof resolved.ordem === "string"
@@ -108,13 +125,13 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
         </div>
 
         {/* Filters and Controls */}
-        <Suspense fallback={<div className="h-24 bg-white rounded-2xl animate-pulse" />}>
+        <Suspense fallback={<div className="h-24 bg-fundo-card rounded-2xl animate-pulse" />}>
           <CatalogFilters categories={categories} totalProducts={total} />
         </Suspense>
 
         {/* Product Grid or Empty State */}
         {products.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-borda p-12 text-center flex flex-col items-center justify-center my-8 shadow-xs">
+          <div className="bg-fundo-card rounded-2xl border border-borda p-12 text-center flex flex-col items-center justify-center my-8 shadow-xs">
             <div className="w-16 h-16 rounded-2xl bg-fundo text-texto-claro flex items-center justify-center mb-4">
               <PackageX className="w-8 h-8" />
             </div>
@@ -160,6 +177,7 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
                     <ProductCard
                       id={product.id}
                       name={product.name}
+                      slug={product.slug}
                       category={product.categories?.name}
                       price={product.sale_price_cents || product.price_cents}
                       originalPrice={
@@ -184,9 +202,7 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-8 text-center text-xs text-texto-claro border-t border-borda/60 bg-white">
-        <p>&copy; {new Date().getFullYear()} Isis Store. Todos os direitos reservados.</p>
-      </footer>
+      <Footer />
 
       <BottomNav />
     </div>

@@ -60,10 +60,10 @@ export function KPICard({
   };
 
   return (
-    <div className="relative bg-white border border-[#F0E5E7] rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group overflow-hidden">
+    <div className="relative bg-white dark:bg-[#1E1518] border border-[#F0E5E7] dark:border-[#332228] rounded-2xl p-5 shadow-xs hover:shadow-md dark:hover:border-primaria/30 transition-all duration-200 flex flex-col justify-between group overflow-hidden">
       {/* Topo do Card: Ícone e Link Opcional */}
       <div className="flex items-center justify-between pb-3">
-        <div className="w-11 h-11 rounded-xl bg-[#FDF2F4] text-primaria flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200 border border-primaria/10">
+        <div className="w-11 h-11 rounded-xl bg-[#FDF2F4] dark:bg-[#2C1A20] text-primaria flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200 border border-primaria/10 dark:border-primaria/25">
           {renderIcon()}
         </div>
 
@@ -80,16 +80,16 @@ export function KPICard({
 
       {/* Conteúdo Central: Título e Grande Número */}
       <div className="space-y-1">
-        <span className="text-xs font-medium text-texto-claro block">
+        <span className="text-xs font-medium text-texto-claro dark:text-[#A89299] block">
           {title}
         </span>
-        <div className="text-2xl sm:text-3xl font-serif font-bold text-texto-escuro tracking-tight">
+        <div className="text-2xl sm:text-3xl font-serif font-bold text-texto-escuro dark:text-[#F8EFF1] tracking-tight">
           {value}
         </div>
       </div>
 
       {/* Rodapé do Card: Comparativo e Mini Gráfico Sparkline */}
-      <div className="pt-4 mt-2 border-t border-[#F7EFF1] flex items-end justify-between gap-3">
+      <div className="pt-4 mt-2 border-t border-[#F7EFF1] dark:border-[#2C1D23] flex items-end justify-between gap-3">
         <div className="flex flex-col">
           {variation && (
             <div className="flex items-center gap-1">
@@ -108,7 +108,7 @@ export function KPICard({
               </span>
             </div>
           )}
-          <span className="text-[10px] text-texto-claro/80 mt-0.5 leading-tight">
+          <span className="text-[10px] text-texto-claro/80 dark:text-[#A89299] mt-0.5 leading-tight">
             {periodText}
           </span>
         </div>

@@ -57,13 +57,13 @@ export function OrdersDistributionDonut({
   const hasAnyData = calculatedTotal > 0 && slices.length > 0;
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
+    <div className="bg-white dark:bg-[#1E1518] border border-[#F0E5E7] dark:border-[#332228] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
       {/* Cabeçalho */}
-      <div className="pb-3 border-b border-[#F7EFF1]">
-        <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
+      <div className="pb-3 border-b border-[#F7EFF1] dark:border-[#2C1D23]">
+        <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro dark:text-[#F8EFF1]">
           Distribuição de Pedidos
         </h2>
-        <p className="text-xs text-texto-claro mt-0.5">
+        <p className="text-xs text-texto-claro dark:text-[#A89299] mt-0.5">
           Divisão percentual por status de faturamento e logística.
         </p>
       </div>
@@ -83,7 +83,8 @@ export function OrdersDistributionDonut({
               cy={size / 2}
               r={radius}
               fill="transparent"
-              stroke="#F7EFF1"
+              stroke="currentColor"
+              className="text-[#F7EFF1] dark:text-[#2E2025]"
               strokeWidth={strokeWidth}
             />
 
@@ -112,10 +113,10 @@ export function OrdersDistributionDonut({
 
           {/* Núcleo Central com Total de Pedidos */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-            <span className="font-serif font-bold text-2xl sm:text-3xl text-texto-escuro leading-none">
+            <span className="font-serif font-bold text-2xl sm:text-3xl text-texto-escuro dark:text-[#F8EFF1] leading-none">
               {calculatedTotal}
             </span>
-            <span className="text-[10px] sm:text-[11px] font-semibold text-texto-claro uppercase tracking-wider mt-1">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-texto-claro dark:text-[#A89299] uppercase tracking-wider mt-1">
               {calculatedTotal === 1 ? "pedido" : "pedidos"}
             </span>
           </div>
@@ -132,7 +133,9 @@ export function OrdersDistributionDonut({
                 onMouseLeave={() => setHoveredStatus(null)}
                 className={cn(
                   "flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-colors cursor-pointer",
-                  isHovered ? "bg-[#FDF2F4]" : "hover:bg-[#FAF7F8]"
+                  isHovered
+                    ? "bg-[#FDF2F4] dark:bg-[#2C1A20]"
+                    : "hover:bg-[#FAF7F8] dark:hover:bg-[#251A1E]"
                 )}
               >
                 {/* Lado Esquerdo: Indicador colorido + Nome */}
@@ -144,7 +147,9 @@ export function OrdersDistributionDonut({
                   <span
                     className={cn(
                       "font-medium truncate",
-                      isHovered ? "text-primaria font-semibold" : "text-texto-escuro"
+                      isHovered
+                        ? "text-primaria font-semibold"
+                        : "text-texto-escuro dark:text-[#F8EFF1]"
                     )}
                   >
                     {item.label}
@@ -153,13 +158,13 @@ export function OrdersDistributionDonut({
 
                 {/* Lado Direito: Unidades + Percentual */}
                 <div className="flex items-center gap-2.5 flex-shrink-0 text-right">
-                  <span className="text-[11px] text-texto-claro font-mono">
+                  <span className="text-[11px] text-texto-claro dark:text-[#A89299] font-mono">
                     {item.count} un
                   </span>
                   <span
                     className={cn(
                       "font-bold text-xs font-mono min-w-[34px] text-right",
-                      isHovered ? "text-primaria" : "text-texto-escuro"
+                      isHovered ? "text-primaria" : "text-texto-escuro dark:text-[#F8EFF1]"
                     )}
                   >
                     {item.percentage}%

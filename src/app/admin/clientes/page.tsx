@@ -1,8 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Users, UserPlus, Search } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { UserRoleManager } from "@/components/admin/user-role-manager";
+import { CustomersListView, CustomerData } from "@/components/admin/customers-list-view";
+
+export const metadata = {
+  title: "Gestão de Clientes — Isis Store Admin",
+  description: "Visualize, filtre e gerencie todos os clientes cadastrados na Isis Store.",
+};
 
 export default async function AdminClientesPage() {
   const supabase = await createClient();
@@ -10,37 +15,76 @@ export default async function AdminClientesPage() {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
 
+  // 1. Buscar todos os perfis cadastrados
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, full_name, email, phone, role, created_at")
+    .select("id, full_name, email, phone, cpf, role, created_at")
     .order("created_at", { ascending: false });
 
-  // Buscar contagem de pedidos por cliente
+  // 2. Buscar pedidos para agregar métricas reais por cliente
   const { data: orders } = await supabase
     .from("orders")
-    .select("customer_id");
+    .select("id, customer_id, total_cents, status, created_at")
+    .order("created_at", { ascending: false });
 
+  // 3. Buscar endereços padrão
+  const { data: addresses } = await supabase
+    .from("addresses")
+    .select("profile_id, city, state, is_default");
+
+  // Agregações em Maps
   const orderCountMap = new Map<string, number>();
+  const totalSpentMap = new Map<string, number>();
+  const lastOrderDateMap = new Map<string, string>();
+
   orders?.forEach((o) => {
-    if (o.customer_id) {
-      orderCountMap.set(
+    if (!o.customer_id) return;
+
+    // Contagem
+    orderCountMap.set(o.customer_id, (orderCountMap.get(o.customer_id) || 0) + 1);
+
+    // Soma de faturamento (pedidos que não foram cancelados)
+    if (o.status !== "cancelled") {
+      totalSpentMap.set(
         o.customer_id,
-        (orderCountMap.get(o.customer_id) || 0) + 1
+        (totalSpentMap.get(o.customer_id) || 0) + (o.total_cents || 0)
       );
+    }
+
+    // Último pedido
+    if (!lastOrderDateMap.has(o.customer_id) && o.created_at) {
+      lastOrderDateMap.set(o.customer_id, o.created_at);
     }
   });
 
-  const formatDate = (iso: string) => {
-    return new Date(iso).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  const addressMap = new Map<string, { city: string; state: string }>();
+  addresses?.forEach((addr) => {
+    if (!addressMap.has(addr.profile_id) || addr.is_default) {
+      addressMap.set(addr.profile_id, { city: addr.city, state: addr.state });
+    }
+  });
+
+  const customers: CustomerData[] = (profiles || []).map((p) => {
+    const addr = addressMap.get(p.id);
+    return {
+      id: p.id,
+      full_name: p.full_name || "Sem Nome",
+      email: p.email || "",
+      phone: p.phone,
+      cpf: p.cpf,
+      role: (p.role as "customer" | "admin") || "customer",
+      created_at: p.created_at,
+      orderCount: orderCountMap.get(p.id) || 0,
+      totalSpentCents: totalSpentMap.get(p.id) || 0,
+      lastOrderDate: lastOrderDateMap.get(p.id) || null,
+      city: addr ? addr.city : null,
+      state: addr ? addr.state : null,
+    };
+  });
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
+      {/* Header com Navegação e Ações */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
         <div>
           <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
@@ -50,104 +94,54 @@ export default async function AdminClientesPage() {
             <span>&gt;</span>
             <span className="text-texto-escuro font-medium">Clientes</span>
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
-            Gerenciamento de Clientes
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro flex items-center gap-2.5">
+            <Users className="w-6 h-6 text-primaria" />
+            <span>Gerenciamento de Clientes</span>
           </h1>
           <p className="text-xs text-texto-claro mt-0.5">
-            Visualize as contas cadastradas e controle privilégios de acesso.
+            Visualize as contas cadastradas, histórico de pedidos e controle privilégios.
           </p>
         </div>
 
-        <div>
+        <div className="flex items-center gap-2.5 flex-wrap">
           <Link
             href="/admin"
             className={buttonVariants({ variant: "white", size: "sm" })}
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            <span>Voltar ao Painel</span>
+            <span>Painel</span>
+          </Link>
+          <Link
+            href="/admin/clientes/busca"
+            className={buttonVariants({
+              variant: "white",
+              size: "sm",
+              className: "flex items-center gap-1.5",
+            })}
+          >
+            <Search className="w-3.5 h-3.5 text-primaria" />
+            <span>Busca Avançada</span>
+          </Link>
+          <Link
+            href="/admin/clientes/novo"
+            className={buttonVariants({
+              variant: "default",
+              size: "sm",
+              className: "flex items-center gap-1.5",
+            })}
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>Registrar Cliente</span>
           </Link>
         </div>
       </div>
 
-      {/* Tabela de Clientes */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
-              <tr>
-                <th className="px-5 py-3.5">Cliente</th>
-                <th className="px-5 py-3.5">Contato</th>
-                <th className="px-5 py-3.5">Pedidos Realizados</th>
-                <th className="px-5 py-3.5">Cadastro</th>
-                <th className="px-5 py-3.5 text-right">Permissão (Role)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
-              {profiles && profiles.length > 0 ? (
-                profiles.map((p) => {
-                  const ordersCount = orderCountMap.get(p.id) || 0;
-                  return (
-                    <tr
-                      key={p.id}
-                      className="hover:bg-fundo/30 transition-colors"
-                    >
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20 font-bold uppercase text-xs">
-                            {p.full_name?.charAt(0) || "U"}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-texto-escuro">
-                              {p.full_name || "Sem Nome"}
-                            </p>
-                            <p className="text-[11px] text-texto-claro font-mono truncate max-w-xs">
-                              {p.id}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="px-5 py-4">
-                        <p className="text-texto-medio">{p.email || "Sem e-mail"}</p>
-                        {p.phone && (
-                          <p className="text-[11px] text-texto-claro">{p.phone}</p>
-                        )}
-                      </td>
-
-                      <td className="px-5 py-4">
-                        <span className="font-semibold text-texto-escuro">
-                          {ordersCount} {ordersCount === 1 ? "pedido" : "pedidos"}
-                        </span>
-                      </td>
-
-                      <td className="px-5 py-4 text-texto-claro font-mono text-[11px]">
-                        {formatDate(p.created_at)}
-                      </td>
-
-                      <td className="px-5 py-4 text-right">
-                        <div className="flex justify-end">
-                          <UserRoleManager
-                            userId={p.id}
-                            currentRole={
-                              (p.role as "customer" | "admin") || "customer"
-                            }
-                            currentUserId={currentUser?.id || ""}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-texto-claro">
-                    Nenhum cliente cadastrado na base.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      {/* Visualização de Clientes com Filtros e Métricas (tabela interna com container overflow-x-auto) */}
+      <div className="w-full min-w-0">
+        <CustomersListView
+          customers={customers}
+          currentUserId={currentUser?.id || ""}
+        />
       </div>
     </div>
   );

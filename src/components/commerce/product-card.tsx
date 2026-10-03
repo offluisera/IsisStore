@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/toast-context";
+import { useCart } from "@/features/cart/context/cart-context";
 
 export interface ProductCardProps {
   id: string;
   name: string;
+  slug?: string;
   category?: string;
   price: number; // Em centavos (R$ 199,90 = 19990)
   originalPrice?: number; // Preço antigo em centavos
@@ -29,6 +31,7 @@ export interface ProductCardProps {
 export function ProductCard({
   id,
   name,
+  slug,
   category,
   price,
   originalPrice,
@@ -46,6 +49,14 @@ export function ProductCard({
   const [wishlist, setWishlist] = React.useState(isWishlisted);
   const [justAdded, setJustAdded] = React.useState(false);
   const { toast } = useToast();
+
+  let cartCtx: ReturnType<typeof useCart> | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    cartCtx = useCart();
+  } catch {
+    cartCtx = null;
+  }
 
   const formatPrice = (cents: number) => {
     return (cents / 100).toLocaleString("pt-BR", {
@@ -106,7 +117,7 @@ export function ProductCard({
         <button
           onClick={handleWishlist}
           aria-label={wishlist ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-          className="absolute right-2.5 top-2.5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-xs text-texto-escuro shadow-xs transition-transform duration-200 hover:scale-110 hover:bg-white active:scale-95"
+          className="absolute right-2.5 top-2.5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-fundo-card/90 border border-borda backdrop-blur-xs text-texto-escuro shadow-xs transition-transform duration-200 hover:scale-110 hover:bg-fundo-card active:scale-95"
         >
           <Heart
             className={cn(
@@ -167,18 +178,26 @@ export function ProductCard({
           </div>
 
           <Button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setJustAdded(true);
               setTimeout(() => setJustAdded(false), 1800);
-              toast.success(
-                "Produto adicionado ao carrinho!",
-                `${name} já está na sua sacola.`
-              );
 
-              if (onAddToCart) {
-                onAddToCart(id);
+              // 1. Sempre adiciona ao CartContext real e abre a gaveta do carrinho
+              if (cartCtx) {
+                cartCtx.addItem(
+                  {
+                    id,
+                    name,
+                    price,
+                    imageUrl: imageUrl || "/images/logo/logo.jpeg",
+                    slug,
+                  },
+                  1
+                );
+                cartCtx.openCart();
               } else if (typeof window !== "undefined") {
                 window.dispatchEvent(
                   new CustomEvent("cart:add-item", {
@@ -187,10 +206,20 @@ export function ProductCard({
                       productName: name,
                       priceCents: price,
                       imageUrl: imageUrl,
+                      slug,
                       quantity: 1,
                     },
                   })
                 );
+              }
+
+              toast.success(
+                "Produto adicionado ao carrinho!",
+                `${name} já está na sua sacola.`
+              );
+
+              if (onAddToCart) {
+                onAddToCart(id);
               }
             }}
             variant={justAdded ? "default" : "default"}

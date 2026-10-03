@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link:
           "text-primaria underline-offset-4 hover:underline p-0 h-auto font-medium",
         white:
-          "bg-white text-texto-escuro border border-borda hover:bg-fundo hover:border-primaria-border shadow-sm",
+          "bg-fundo-card text-texto-escuro border border-borda hover:bg-fundo hover:border-primaria-border shadow-sm",
         destructive:
           "bg-erro text-white hover:bg-red-700 shadow-sm",
       },

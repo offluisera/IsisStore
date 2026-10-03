@@ -631,16 +631,16 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Security Status Box */}
-      <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#332228] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-xl bg-sucesso/10 text-sucesso flex items-center justify-center shrink-0">
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-texto-escuro">
+            <h3 className="text-sm font-semibold text-texto-escuro dark:text-[#F8EFF1]">
               Sistema de Autenticação e RBAC Operacional
             </h3>
-            <p className="text-xs text-texto-claro mt-0.5">
+            <p className="text-xs text-texto-claro dark:text-[#A89299] mt-0.5">
               Políticas de Row Level Security (RLS), dupla checagem de privilégios de administrador e logs de auditoria imutáveis ativos.
             </p>
           </div>

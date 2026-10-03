@@ -20,7 +20,7 @@ export function BottomNav({ cartCount = 0 }: { cartCount?: number }) {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-borda-suave px-2 min-[360px]:px-4 sm:px-6 py-1.5 shadow-lg safe-area-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-fundo-card/95 backdrop-blur-md border-t border-borda-suave px-2 min-[360px]:px-4 sm:px-6 py-1.5 shadow-lg safe-area-bottom transition-colors">
       <div className="flex items-center justify-around max-w-md mx-auto">
         {links.map((link) => {
           const Icon = link.icon;

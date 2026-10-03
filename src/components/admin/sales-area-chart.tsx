@@ -102,12 +102,12 @@ export function SalesAreaChart({
   const totalPeriodRevenue = chartData.reduce((acc, curr) => acc + curr.amountCents, 0);
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
+    <div className="bg-white dark:bg-[#1E1518] border border-[#F0E5E7] dark:border-[#332228] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between select-none h-full">
       {/* Cabeçalho do Gráfico */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F7EFF1]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F7EFF1] dark:border-[#2C1D23]">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
+            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro dark:text-[#F8EFF1]">
               Vendas dos últimos 7 dias
             </h2>
 
@@ -117,7 +117,7 @@ export function SalesAreaChart({
                 className={cn(
                   "inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-colors",
                   growth.percentage === 0
-                    ? "text-texto-claro bg-[#FAF7F8] border border-[#F0E5E7]"
+                    ? "text-texto-claro dark:text-[#A89299] bg-[#FAF7F8] dark:bg-[#251A1E] border border-[#F0E5E7] dark:border-[#332228]"
                     : growth.isPositive
                     ? "text-sucesso bg-sucesso/10"
                     : "text-erro bg-erro/10"
@@ -138,7 +138,7 @@ export function SalesAreaChart({
             )}
           </div>
 
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#A89299] mt-0.5">
             Evolução diária de faturamento confirmado &bull; Total:{" "}
             <span className="font-bold text-primaria">
               {formatBrl(totalPeriodRevenue)}
@@ -151,13 +151,13 @@ export function SalesAreaChart({
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value as "7d" | "30d" | "month")}
-            className="appearance-none bg-[#FAF7F8] hover:bg-[#F5EFF1] text-xs font-semibold text-texto-escuro border border-[#F0E5E7] rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-primaria/20 cursor-pointer transition-colors"
+            className="appearance-none bg-[#FAF7F8] dark:bg-[#251A1E] hover:bg-[#F5EFF1] dark:hover:bg-[#2C1E23] text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] border border-[#F0E5E7] dark:border-[#332228] rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-primaria/20 cursor-pointer transition-colors"
           >
             <option value="7d">Últimos 7 dias</option>
             <option value="30d">Últimos 30 dias</option>
             <option value="month">Este mês</option>
           </select>
-          <ChevronDown className="w-3.5 h-3.5 text-[#8E787C] absolute right-2.5 pointer-events-none" />
+          <ChevronDown className="w-3.5 h-3.5 text-[#8E787C] dark:text-[#A89299] absolute right-2.5 pointer-events-none" />
         </div>
       </div>
 
@@ -170,8 +170,8 @@ export function SalesAreaChart({
           <defs>
             <linearGradient id="salesGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#E08CA3" stopOpacity={0.4} />
-              <stop offset="60%" stopColor="#F9C7D4" stopOpacity={0.15} />
-              <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.0} />
+              <stop offset="60%" stopColor="#F9C7D4" stopOpacity={0.12} />
+              <stop offset="100%" stopColor="#E08CA3" stopOpacity={0.0} />
             </linearGradient>
             <filter id="pointGlow" x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#E08CA3" floodOpacity="0.5" />
@@ -191,7 +191,8 @@ export function SalesAreaChart({
                   y1={y}
                   x2={width - paddingRight}
                   y2={y}
-                  stroke="#F3E9EB"
+                  stroke="currentColor"
+                  className="text-[#F3E9EB] dark:text-[#2E2025]"
                   strokeDasharray="3 3"
                   strokeWidth="1"
                 />
@@ -200,7 +201,7 @@ export function SalesAreaChart({
                   y={y + 3.5}
                   textAnchor="end"
                   fontSize="10"
-                  fill="#9E8C90"
+                  className="fill-[#9E8C90] dark:fill-[#A89299]"
                   fontFamily="var(--font-inter), sans-serif"
                 >
                   {formatYTick(val)}
@@ -251,11 +252,10 @@ export function SalesAreaChart({
                   cx={p.x}
                   cy={p.y}
                   r={isHovered ? 6 : 4}
-                  fill="#FFFFFF"
+                  className="fill-white dark:fill-[#1E1518] transition-all duration-150"
                   stroke="#E08CA3"
                   strokeWidth={isHovered ? 3 : 2}
                   filter={isHovered ? "url(#pointGlow)" : undefined}
-                  className="transition-all duration-150"
                 />
 
                 {/* Rótulo de Data no Eixo X */}
@@ -265,7 +265,12 @@ export function SalesAreaChart({
                   textAnchor="middle"
                   fontSize="11"
                   fontWeight={isHovered ? "600" : "400"}
-                  fill={isHovered ? "#E08CA3" : "#786467"}
+                  className={cn(
+                    "transition-colors",
+                    isHovered
+                      ? "fill-[#E08CA3]"
+                      : "fill-[#786467] dark:fill-[#C2B0B4]"
+                  )}
                   fontFamily="var(--font-inter), sans-serif"
                 >
                   {p.date}
@@ -278,7 +283,7 @@ export function SalesAreaChart({
         {/* Tooltip flutuante posicionado acima do ponto para não colidir com o cabeçalho */}
         {hoveredIndex !== null && points[hoveredIndex] && (
           <div
-            className="absolute transform -translate-x-1/2 bg-texto-escuro text-white text-[11px] rounded-xl px-3 py-1.5 shadow-xl pointer-events-none z-20 whitespace-nowrap animate-in fade-in duration-150"
+            className="absolute transform -translate-x-1/2 bg-texto-escuro dark:bg-[#2A1C22] text-white text-[11px] rounded-xl px-3 py-1.5 shadow-xl border border-transparent dark:border-[#422C36] pointer-events-none z-20 whitespace-nowrap animate-in fade-in duration-150"
             style={{
               left: `${Math.min(Math.max((points[hoveredIndex].x / width) * 100, 15), 85)}%`,
               top: `${Math.max(points[hoveredIndex].y - 48, 4)}px`,
@@ -296,11 +301,11 @@ export function SalesAreaChart({
         {/* Overlay elegante quando não houver vendas registradas no período */}
         {highestValue === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none pb-6">
-            <div className="bg-white/95 backdrop-blur-xs border border-[#F0E5E7] px-4 py-2.5 rounded-xl text-center shadow-xs">
-              <p className="text-xs font-semibold text-texto-escuro">
+            <div className="bg-white/95 dark:bg-[#1E1518]/95 backdrop-blur-xs border border-[#F0E5E7] dark:border-[#332228] px-4 py-2.5 rounded-xl text-center shadow-xs">
+              <p className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Ainda não existem dados suficientes para gerar este gráfico
               </p>
-              <p className="text-[10px] text-texto-claro mt-0.5">
+              <p className="text-[10px] text-texto-claro dark:text-[#A89299] mt-0.5">
                 Novas vendas registradas no período serão projetadas automaticamente.
               </p>
             </div>

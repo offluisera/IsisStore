@@ -10,7 +10,7 @@ export default function CarrinhoLoading() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Itens Skeleton */}
-        <div className="lg:col-span-8 bg-white p-6 rounded-3xl border border-borda space-y-4">
+        <div className="lg:col-span-8 bg-fundo-card p-6 rounded-3xl border border-borda space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 py-3 border-b border-borda/60 last:border-0">
               <Skeleton className="w-16 h-16 rounded-xl shrink-0" />
@@ -24,7 +24,7 @@ export default function CarrinhoLoading() {
         </div>
 
         {/* Resumo Skeleton */}
-        <div className="lg:col-span-4 bg-white p-6 rounded-3xl border border-borda space-y-4">
+        <div className="lg:col-span-4 bg-fundo-card p-6 rounded-3xl border border-borda space-y-4">
           <Skeleton className="h-5 w-36 rounded-md" />
           <div className="space-y-2">
             <Skeleton className="h-4 w-full rounded-md" />

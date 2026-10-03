@@ -43,7 +43,7 @@ export function AdminShell({
   }, [isMobileOpen]);
 
   return (
-    <div className="min-h-screen flex bg-[#FFF5F6]/40 text-texto-escuro selection:bg-secundaria selection:text-texto-escuro">
+    <div className="min-h-screen flex bg-[#FFF5F6]/40 dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] selection:bg-secundaria selection:text-texto-escuro transition-colors">
       {/* 1. Sidebar Fixa Desktop (≥ 1024px) */}
       <div className="hidden lg:block h-screen sticky top-0 flex-shrink-0 z-30 shadow-xs">
         <AdminSidebar />
@@ -55,7 +55,7 @@ export function AdminShell({
           {/* Backdrop Overlay */}
           <div
             onClick={() => setIsMobileOpen(false)}
-            className="fixed inset-0 bg-texto-escuro/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-texto-escuro/40 dark:bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             aria-hidden="true"
           />
 
@@ -84,9 +84,9 @@ export function AdminShell({
         </main>
 
         {/* Rodapé Oficial da Administração */}
-        <footer className="w-full py-4 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#F0E5E7] text-xs text-[#8E787C] flex flex-col sm:flex-row items-center justify-between gap-2">
+        <footer className="w-full py-4 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#1A1316] border-t border-[#F0E5E7] dark:border-[#38262C] text-xs text-[#8E787C] dark:text-[#A0888F] flex flex-col sm:flex-row items-center justify-between gap-2 transition-colors">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-texto-escuro">Isis Store</span>
+            <span className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">Isis Store</span>
             <span>&bull;</span>
             <span>Painel Administrativo</span>
             <span>&bull;</span>

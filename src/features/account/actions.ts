@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { profileUpdateSchema, addressSchema } from "@/schemas/account";
+import { profileUpdateSchema, addressSchema, passwordChangeSchema } from "@/schemas/account";
 
 export type ActionState<T = unknown> = {
   success?: boolean;
@@ -11,7 +11,7 @@ export type ActionState<T = unknown> = {
   data?: T;
 };
 
-// 1. Atualizar Perfil do Cliente
+// 1. Atualizar Perfil do Cliente (com suporte a CPF e Telefone)
 export async function updateProfileAction(
   _prevState: ActionState | null,
   formData: FormData
@@ -29,6 +29,7 @@ export async function updateProfileAction(
     const rawData = {
       fullName: formData.get("fullName") as string,
       phone: formData.get("phone") as string,
+      cpf: formData.get("cpf") as string,
     };
 
     const parsed = profileUpdateSchema.safeParse(rawData);
@@ -45,6 +46,7 @@ export async function updateProfileAction(
       .update({
         full_name: parsed.data.fullName,
         phone: parsed.data.phone || null,
+        cpf: parsed.data.cpf || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", user.id);
@@ -60,6 +62,126 @@ export async function updateProfileAction(
   } catch (err) {
     console.error("Erro inesperado em updateProfileAction:", err);
     return { success: false, message: "Erro no servidor ao processar atualização." };
+  }
+}
+
+// 1.1 Alterar Senha de Acesso
+export async function updatePasswordAction(
+  _prevState: ActionState | null,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, message: "Sessão expirada. Faça login novamente." };
+    }
+
+    const rawData = {
+      password: formData.get("password") as string,
+      confirmPassword: formData.get("confirmPassword") as string,
+    };
+
+    const parsed = passwordChangeSchema.safeParse(rawData);
+    if (!parsed.success) {
+      return {
+        success: false,
+        message: "Por favor, revise os requisitos da senha.",
+        errors: parsed.error.flatten().fieldErrors,
+      };
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: parsed.data.password,
+    });
+
+    if (error) {
+      console.error("Erro ao alterar senha:", error);
+      return {
+        success: false,
+        message: error.message || "Não foi possível alterar sua senha. Tente novamente.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Sua senha foi alterada com sucesso! Utilize a nova senha no próximo acesso.",
+    };
+  } catch (err) {
+    console.error("Erro inesperado em updatePasswordAction:", err);
+    return { success: false, message: "Erro ao processar alteração de senha." };
+  }
+}
+
+// 1.2 Exportar Dados Cadastrais (LGPD)
+export async function exportUserDataAction(): Promise<ActionState<string>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, message: "Sessão expirada. Faça login novamente." };
+    }
+
+    // Buscar Perfil
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    // Buscar Endereços
+    const { data: addresses } = await supabase
+      .from("addresses")
+      .select("*")
+      .eq("profile_id", user.id);
+
+    // Buscar Pedidos
+    const { data: orders } = await supabase
+      .from("orders")
+      .select(`
+        id,
+        order_number,
+        status,
+        subtotal_cents,
+        shipping_cents,
+        discount_cents,
+        total_cents,
+        created_at,
+        order_items (
+          product_name,
+          quantity,
+          unit_price_cents,
+          subtotal_cents
+        )
+      `)
+      .eq("customer_id", user.id);
+
+    const exportPayload = {
+      exportedAt: new Date().toISOString(),
+      user: {
+        id: user.id,
+        email: user.email,
+        createdAt: user.created_at,
+      },
+      profile: profile || null,
+      addresses: addresses || [],
+      orders: orders || [],
+    };
+
+    return {
+      success: true,
+      data: JSON.stringify(exportPayload, null, 2),
+      message: "Dados exportados com sucesso!",
+    };
+  } catch (err) {
+    console.error("Erro ao exportar dados LGPD:", err);
+    return { success: false, message: "Erro ao gerar arquivo com seus dados." };
   }
 }
 

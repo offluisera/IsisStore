@@ -22,31 +22,31 @@ const STATUS_MAP: Record<
 > = {
   paid: {
     label: "Pago",
-    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
+    badgeClass: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200/60 dark:border-emerald-800/50",
   },
   shipped: {
     label: "Enviado",
-    badgeClass: "bg-sky-50 text-sky-700 border-sky-200/60",
+    badgeClass: "bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200/60 dark:border-sky-800/50",
   },
   delivered: {
     label: "Entregue",
-    badgeClass: "bg-teal-50 text-teal-700 border-teal-200/60",
+    badgeClass: "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border-teal-200/60 dark:border-teal-800/50",
   },
   processing: {
     label: "Processando",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200/60",
+    badgeClass: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200/60 dark:border-blue-800/50",
   },
   pending_payment: {
     label: "Pendente",
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200/60",
+    badgeClass: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/50",
   },
   cancelled: {
     label: "Cancelado",
-    badgeClass: "bg-rose-50 text-rose-700 border-rose-200/60",
+    badgeClass: "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200/60 dark:border-rose-800/50",
   },
   refunded: {
     label: "Reembolsado",
-    badgeClass: "bg-purple-50 text-purple-700 border-purple-200/60",
+    badgeClass: "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200/60 dark:border-purple-800/50",
   },
 };
 
@@ -91,18 +91,18 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   };
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full select-none">
+    <div className="bg-white dark:bg-[#1E1518] border border-[#F0E5E7] dark:border-[#332228] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full select-none">
       {/* Cabeçalho */}
-      <div className="flex items-center justify-between pb-4 border-b border-[#F7EFF1]">
+      <div className="flex items-center justify-between pb-4 border-b border-[#F7EFF1] dark:border-[#2C1D23]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center flex-shrink-0">
             <ShoppingBag className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
+            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro dark:text-[#F8EFF1]">
               Pedidos Recentes
             </h2>
-            <p className="text-xs text-texto-claro">
+            <p className="text-xs text-texto-claro dark:text-[#A89299]">
               Últimas transações registradas no fluxo comercial
             </p>
           </div>
@@ -120,9 +120,9 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
       {/* Tabela Responsiva com Scroll Suave */}
       <div className="overflow-x-auto w-full pt-3">
         {orders.length === 0 ? (
-          <div className="py-12 text-center text-xs text-texto-claro space-y-1">
+          <div className="py-12 text-center text-xs text-texto-claro dark:text-[#A89299] space-y-1">
             <ShoppingBag className="w-8 h-8 text-primaria/30 mx-auto" />
-            <p className="font-semibold text-texto-escuro">
+            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
               Nenhum pedido recente registrado
             </p>
             <p className="text-[11px]">
@@ -132,7 +132,7 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
         ) : (
           <table className="w-full text-left text-xs whitespace-nowrap">
             <thead>
-              <tr className="border-b border-[#F7EFF1] text-[11px] font-semibold text-texto-claro uppercase tracking-wider">
+              <tr className="border-b border-[#F7EFF1] dark:border-[#2C1D23] text-[11px] font-semibold text-texto-claro dark:text-[#A89299] uppercase tracking-wider">
                 <th className="pb-3 pl-1 font-semibold">ID do Pedido</th>
                 <th className="pb-3 px-3 font-semibold">Cliente</th>
                 <th className="pb-3 px-3 font-semibold">Data</th>
@@ -141,23 +141,23 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                 <th className="pb-3 pr-1 font-semibold text-center">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F7EFF1]">
+            <tbody className="divide-y divide-[#F7EFF1] dark:divide-[#2C1D23]">
               {orders.map((ord) => {
                 const statusMeta = STATUS_MAP[ord.status] || {
                   label: ord.status,
-                  badgeClass: "bg-gray-50 text-gray-700 border-gray-200",
+                  badgeClass: "bg-gray-50 dark:bg-gray-900/40 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800",
                 };
 
                 return (
                   <tr
                     key={ord.id}
-                    className="hover:bg-[#FFF5F6]/40 transition-colors group"
+                    className="hover:bg-[#FFF5F6]/40 dark:hover:bg-[#251A1E] transition-colors group"
                   >
                     {/* ID do Pedido */}
                     <td className="py-3 pl-1">
                       <Link
                         href={`/admin/pedidos/${ord.id}`}
-                        className="font-mono text-xs font-bold text-texto-escuro group-hover:text-primaria transition-colors"
+                        className="font-mono text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] group-hover:text-primaria transition-colors"
                       >
                         #{ord.order_number}
                       </Link>
@@ -169,14 +169,14 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-primaria/25 to-secundaria/35 text-primaria font-serif font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-primaria/20 shadow-2xs">
                           {getInitials(ord.customer_name)}
                         </div>
-                        <span className="font-medium text-texto-escuro truncate max-w-[130px]">
+                        <span className="font-medium text-texto-escuro dark:text-[#F8EFF1] truncate max-w-[130px]">
                           {ord.customer_name || "Cliente"}
                         </span>
                       </div>
                     </td>
 
                     {/* Data e Hora */}
-                    <td className="py-3 px-3 text-texto-claro text-[11px] font-mono">
+                    <td className="py-3 px-3 text-texto-claro dark:text-[#A89299] text-[11px] font-mono">
                       {formatDateTime(ord.created_at)}
                     </td>
 
@@ -193,7 +193,7 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                     </td>
 
                     {/* Valor em BRL */}
-                    <td className="py-3 px-3 text-right font-bold text-texto-escuro font-mono text-xs">
+                    <td className="py-3 px-3 text-right font-bold text-texto-escuro dark:text-[#F8EFF1] font-mono text-xs">
                       {formatBrl(ord.total_cents)}
                     </td>
 
@@ -201,7 +201,7 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                     <td className="py-3 pr-1 text-center">
                       <Link
                         href={`/admin/pedidos/${ord.id}`}
-                        className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-texto-claro hover:text-primaria hover:bg-primaria/10 transition-colors"
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-texto-claro dark:text-[#A89299] hover:text-primaria hover:bg-primaria/10 transition-colors"
                         title="Visualizar pedido"
                         aria-label={`Visualizar pedido #${ord.order_number}`}
                       >

@@ -4,9 +4,11 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Heart, User, ShoppingBag, Menu, X, Truck, HelpCircle, PhoneCall } from "lucide-react";
+import { Search, Heart, User, ShoppingBag, Menu, X, Truck, HelpCircle, PhoneCall, Sun, Moon } from "lucide-react";
 import { CartDrawer, type CartItemData } from "@/components/commerce/cart-drawer";
 import { useCart } from "@/features/cart/context/cart-context";
+import { useStoreSettings } from "@/lib/settings/store-settings-context";
+import { useTheme } from "@/lib/theme/theme-context";
 
 export function Header({
   cartCount = 0,
@@ -18,6 +20,8 @@ export function Header({
   wishlistCount?: number;
 }) {
   const router = useRouter();
+  const storeSettings = useStoreSettings();
+  const { theme, toggleTheme } = useTheme();
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -42,31 +46,33 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-borda-suave shadow-xs">
+      <header className="sticky top-0 z-40 w-full bg-fundo-card/95 backdrop-blur-md border-b border-borda-suave shadow-xs transition-colors">
         {/* Top Announcement Bar */}
-        <div className="bg-fundo border-b border-borda-suave text-xs text-texto-medio py-1.5 px-3 sm:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs min-w-0">
-              <Truck className="w-3.5 h-3.5 text-primaria shrink-0" />
-              <span className="truncate sm:overflow-visible">
-                Frete Grátis para todo o Brasil acima de <strong>R$ 199,00</strong>
-              </span>
-            </div>
-            <div className="hidden md:flex items-center gap-5 text-texto-claro text-[11px] shrink-0">
-              <Link href="/rastreio" className="hover:text-primaria transition-colors">
-                Rastrear Pedido
-              </Link>
-              <span className="text-borda">|</span>
-              <Link href="/ajuda" className="flex items-center gap-1 hover:text-primaria transition-colors">
-                <HelpCircle className="w-3 h-3" /> Ajuda
-              </Link>
-              <span className="text-borda">|</span>
-              <Link href="/contato" className="flex items-center gap-1 hover:text-primaria transition-colors">
-                <PhoneCall className="w-3 h-3" /> Fale Conosco
-              </Link>
+        {storeSettings.announcement_banner_active && (
+          <div className="bg-fundo border-b border-borda-suave text-xs text-texto-medio py-1.5 px-3 sm:px-8">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs min-w-0">
+                <Truck className="w-3.5 h-3.5 text-primaria shrink-0" />
+                <span className="truncate sm:overflow-visible">
+                  {storeSettings.announcement_banner_text || "Frete Grátis para todo o Brasil acima de R$ 199,00"}
+                </span>
+              </div>
+              <div className="hidden md:flex items-center gap-5 text-texto-claro text-[11px] shrink-0">
+                <Link href="/rastreio" className="hover:text-primaria transition-colors">
+                  Rastrear Pedido
+                </Link>
+                <span className="text-borda">|</span>
+                <Link href="/ajuda" className="flex items-center gap-1 hover:text-primaria transition-colors">
+                  <HelpCircle className="w-3 h-3" /> Ajuda
+                </Link>
+                <span className="text-borda">|</span>
+                <Link href="/contato" className="flex items-center gap-1 hover:text-primaria transition-colors">
+                  <PhoneCall className="w-3 h-3" /> Fale Conosco
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Main Navbar */}
         <div className="max-w-7xl mx-auto px-3 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-4">
@@ -83,19 +89,20 @@ export function Header({
             <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group min-w-0">
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-primaria-border shadow-xs transition-transform duration-300 group-hover:scale-105 shrink-0">
                 <Image
-                  src="/images/logo/logo.jpeg"
-                  alt="Isis Store Logo"
+                  src={storeSettings.logo_url || "/images/logo/logo.jpeg"}
+                  alt={storeSettings.store_name || "Isis Store Logo"}
                   fill
                   className="object-cover"
                   priority
+                  unoptimized
                 />
               </div>
               <div className="flex flex-col">
                 <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-texto-escuro group-hover:text-primaria transition-colors leading-none">
-                  Isis Store
+                  {storeSettings.store_name || "Isis Store"}
                 </span>
                 <span className="text-[10px] text-texto-claro tracking-widest uppercase mt-0.5">
-                  Tudo o que você ama
+                  {storeSettings.store_tagline || "Tudo o que você ama"}
                 </span>
               </div>
             </Link>
@@ -133,14 +140,28 @@ export function Header({
                 placeholder="O que você está procurando?"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-full border border-borda bg-fundo/50 text-xs text-texto-escuro placeholder:text-texto-claro transition-all outline-none focus:border-primaria focus:bg-white focus:ring-2 focus:ring-primaria/20"
+                className="w-full h-10 pl-10 pr-4 rounded-full border border-borda bg-fundo/50 text-xs text-texto-escuro placeholder:text-texto-claro transition-all outline-none focus:border-primaria focus:bg-fundo-card focus:ring-2 focus:ring-primaria/20"
               />
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-texto-claro" />
             </form>
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Mudar para modo claro" : "Mudar para modo noturno"}
+              title={theme === "dark" ? "Modo Claro" : "Modo Noturno"}
+              className="relative min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-full text-texto-escuro hover:bg-primaria-soft hover:text-primaria transition-colors touch-manipulation cursor-pointer"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 stroke-[1.8] text-amber-300 transition-transform hover:rotate-45" />
+              ) : (
+                <Moon className="w-5 h-5 stroke-[1.8] text-texto-escuro transition-transform hover:-rotate-12" />
+              )}
+            </button>
+
             {/* Wishlist */}
             <Link
               href="/favoritos"
@@ -187,7 +208,7 @@ export function Header({
               className="fixed inset-0 bg-texto-escuro/40 backdrop-blur-xs"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <div className="relative w-4/5 max-w-xs bg-white h-full p-6 shadow-xl flex flex-col justify-between animate-in slide-in-from-left">
+            <div className="relative w-4/5 max-w-xs bg-fundo-card border-r border-borda h-full p-6 shadow-xl flex flex-col justify-between animate-in slide-in-from-left transition-colors">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-borda-suave">
                   <span className="font-serif text-xl font-bold text-texto-escuro">
@@ -239,7 +260,17 @@ export function Header({
                 </nav>
               </div>
 
-              <div className="pt-4 border-t border-borda-suave text-xs text-texto-claro space-y-2">
+              <div className="pt-4 border-t border-borda-suave text-xs text-texto-claro space-y-3">
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center justify-between p-2.5 rounded-xl border border-borda bg-fundo text-texto-escuro font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    {theme === "dark" ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4" />}
+                    {theme === "dark" ? "Modo Claro" : "Modo Noturno"}
+                  </span>
+                  <span className="text-[11px] text-texto-claro">Alternar</span>
+                </button>
                 <p>Atendimento: Seg a Sex das 09h às 18h</p>
                 <p className="font-serif text-texto-medio font-semibold">Isis Store © 2026</p>
               </div>

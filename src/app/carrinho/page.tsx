@@ -16,9 +16,11 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
+import { useStoreSettings } from "@/lib/settings/store-settings-context";
 
 export default function CarrinhoPage() {
   const {
@@ -36,7 +38,8 @@ export default function CarrinhoPage() {
   );
   const [couponError, setCouponError] = React.useState<string | null>(null);
 
-  const freeShippingThreshold = 19900; // R$ 199,00
+  const storeSettings = useStoreSettings();
+  const freeShippingThreshold = storeSettings.free_shipping_threshold_cents || 19900;
   const isFreeShipping = subtotalCents >= freeShippingThreshold;
   const missingForFreeShipping = Math.max(
     0,
@@ -109,7 +112,7 @@ export default function CarrinhoPage() {
 
         {/* Estado Vazio ou Lista */}
         {items.length === 0 ? (
-          <div className="bg-white rounded-3xl border border-borda p-12 sm:p-16 text-center flex flex-col items-center justify-center shadow-xs my-8">
+          <div className="bg-fundo-card rounded-3xl border border-borda p-12 sm:p-16 text-center flex flex-col items-center justify-center shadow-xs my-8">
             <div className="w-20 h-20 rounded-full bg-primaria-soft text-primaria flex items-center justify-center mb-5 border border-primaria/20 shadow-xs">
               <ShoppingBag className="w-10 h-10 stroke-[1.5]" />
             </div>
@@ -117,7 +120,7 @@ export default function CarrinhoPage() {
               Seu carrinho está vazio
             </h2>
             <p className="text-xs sm:text-sm text-texto-claro max-w-md mt-2 mb-8 leading-relaxed">
-              Você ainda não adicionou nenhum item. Conheça nossos produtos e aproveite frete grátis em compras acima de R$ 199,00!
+              Você ainda não adicionou nenhum item. Conheça nossos produtos e aproveite frete grátis em compras acima de {formatPrice(freeShippingThreshold)}!
             </p>
             <Link
               href="/produtos"
@@ -136,7 +139,7 @@ export default function CarrinhoPage() {
             {/* Coluna Esquerda: Itens do Carrinho */}
             <div className="lg:col-span-8 flex flex-col gap-4">
               {/* Barra de Frete Grátis */}
-              <div className="p-4 rounded-2xl bg-white border border-borda shadow-xs text-xs">
+              <div className="p-4 rounded-2xl bg-fundo-card border border-borda shadow-xs text-xs">
                 {isFreeShipping ? (
                   <p className="font-semibold text-sucesso flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4" />
@@ -157,7 +160,7 @@ export default function CarrinhoPage() {
               </div>
 
               {/* Tabela de Produtos */}
-              <div className="bg-white rounded-2xl border border-borda shadow-xs divide-y divide-borda/60 overflow-hidden">
+              <div className="bg-fundo-card rounded-2xl border border-borda shadow-xs divide-y divide-borda/60 overflow-hidden">
                 {items.map((item) => (
                   <div
                     key={item.id}
@@ -193,7 +196,7 @@ export default function CarrinhoPage() {
 
                     <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-borda/60">
                       {/* Seletor de Quantidade */}
-                      <div className="flex items-center rounded-xl border border-borda bg-white">
+                      <div className="flex items-center rounded-xl border border-borda bg-input-fundo">
                         <button
                           type="button"
                           onClick={() =>
@@ -251,7 +254,7 @@ export default function CarrinhoPage() {
             {/* Coluna Direita: Resumo do Pedido */}
             <div className="lg:col-span-4 flex flex-col gap-5">
               {/* Card de Resumo */}
-              <div className="bg-white rounded-2xl border border-borda p-6 shadow-xs flex flex-col gap-4">
+              <div className="bg-fundo-card rounded-2xl border border-borda p-6 shadow-xs flex flex-col gap-4">
                 <h2 className="font-serif text-lg font-bold text-texto-escuro border-b border-borda pb-3">
                   Resumo do Pedido
                 </h2>
@@ -344,9 +347,7 @@ export default function CarrinhoPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-8 text-center text-xs text-texto-claro border-t border-borda/60 bg-white">
-        <p>&copy; {new Date().getFullYear()} Isis Store. Todos os direitos reservados.</p>
-      </footer>
+      <Footer />
 
       <BottomNav />
     </div>

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
+@custom-variant dark (&:is(.dark, .dark *), &:is([data-theme="dark"], [data-theme="dark"] *));
+
 @theme inline {
   --color-primaria: var(--cor-primaria);
   --color-primaria-hover: var(--cor-primaria-hover);
@@ -24,11 +26,16 @@
   --color-borda: var(--cor-borda);
   --color-borda-suave: var(--cor-borda-suave);
   --color-borda-destaque: var(--cor-borda-destaque);
+  --color-input-fundo: var(--cor-input-fundo);
 
   --color-sucesso: var(--cor-sucesso);
+  --color-sucesso-fundo: var(--cor-sucesso-fundo);
   --color-alerta: var(--cor-alerta);
+  --color-alerta-fundo: var(--cor-alerta-fundo);
   --color-erro: var(--cor-erro);
+  --color-erro-fundo: var(--cor-erro-fundo);
   --color-info: var(--cor-info);
+  --color-info-fundo: var(--cor-info-fundo);
 
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-playfair), Georgia, serif;

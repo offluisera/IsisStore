@@ -1,0 +1,512 @@
+import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import {
+  ShoppingBag,
+  ArrowLeft,
+  Layers,
+  Eye,
+  TrendingUp,
+  Tag,
+  Package,
+} from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+
+interface AdminPedidosCategoriasPageProps {
+  searchParams: Promise<{ categoria?: string }>;
+}
+
+interface OrderItemWithDetails {
+  id: string;
+  order_id: string;
+  product_id: string | null;
+  product_name: string;
+  quantity: number;
+  subtotal_cents: number;
+  unit_price_cents: number;
+  orders: {
+    id: string;
+    order_number: string;
+    status: string;
+    total_cents: number;
+    created_at: string;
+    profiles: {
+      full_name: string | null;
+      email: string | null;
+    } | null;
+  } | null;
+  products: {
+    id: string;
+    name: string;
+    category_id: string | null;
+  } | null;
+}
+
+const STATUS_MAP: Record<string, { label: string; badgeClass: string }> = {
+  pending_payment: {
+    label: "Aguardando Pagamento",
+    badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+  },
+  paid: {
+    label: "Pago",
+    badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  },
+  processing: {
+    label: "Em Separação",
+    badgeClass: "bg-blue-100 text-blue-800 border-blue-200",
+  },
+  shipped: {
+    label: "Enviado",
+    badgeClass: "bg-purple-100 text-purple-800 border-purple-200",
+  },
+  delivered: {
+    label: "Entregue",
+    badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-300",
+  },
+  cancelled: {
+    label: "Cancelado",
+    badgeClass: "bg-rose-100 text-rose-800 border-rose-200",
+  },
+  refunded: {
+    label: "Reembolsado",
+    badgeClass: "bg-neutral-100 text-neutral-800 border-neutral-200",
+  },
+};
+
+export default async function AdminPedidosCategoriasPage({
+  searchParams,
+}: AdminPedidosCategoriasPageProps) {
+  const { categoria: selectedCategorySlug } = await searchParams;
+  const supabase = await createClient();
+
+  // 1. Carrega todas as categorias cadastradas
+  const { data: rawCategories } = await supabase
+    .from("categories")
+    .select("id, name, slug")
+    .order("name", { ascending: true });
+
+  const categories = rawCategories || [];
+
+  // 2. Carrega todos os itens de pedidos com relação ao pedido e produto
+  const { data: rawOrderItems } = await supabase
+    .from("order_items")
+    .select(`
+      id,
+      order_id,
+      product_id,
+      product_name,
+      quantity,
+      subtotal_cents,
+      unit_price_cents,
+      orders (
+        id,
+        order_number,
+        status,
+        total_cents,
+        created_at,
+        profiles (
+          full_name,
+          email
+        )
+      ),
+      products (
+        id,
+        name,
+        category_id
+      )
+    `);
+
+  const orderItems = (rawOrderItems || []) as unknown as OrderItemWithDetails[];
+
+  // 3. Agrupa pedidos por categoria real
+  type CategoryGroup = {
+    id: string;
+    name: string;
+    slug: string;
+    totalOrders: number;
+    totalItems: number;
+    totalRevenueCents: number;
+    ordersMap: Map<
+      string,
+      {
+        orderId: string;
+        orderNumber: string;
+        status: string;
+        orderTotalCents: number;
+        createdAt: string;
+        customerName: string;
+        customerEmail: string;
+        categoryItems: Array<{
+          id: string;
+          name: string;
+          quantity: number;
+          subtotalCents: number;
+        }>;
+        categorySubtotalCents: number;
+      }
+    >;
+  };
+
+  const categoryGroups = new Map<string, CategoryGroup>();
+
+  for (const cat of categories) {
+    categoryGroups.set(cat.id, {
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      totalOrders: 0,
+      totalItems: 0,
+      totalRevenueCents: 0,
+      ordersMap: new Map(),
+    });
+  }
+
+  // Preenche dados reais
+  for (const item of orderItems) {
+    const order = item.orders;
+    if (!order) continue;
+
+    const catId = item.products?.category_id;
+    if (!catId || !categoryGroups.has(catId)) continue;
+
+    const group = categoryGroups.get(catId)!;
+    group.totalItems += item.quantity;
+    group.totalRevenueCents += item.subtotal_cents;
+
+    if (!group.ordersMap.has(order.id)) {
+      group.ordersMap.set(order.id, {
+        orderId: order.id,
+        orderNumber: order.order_number,
+        status: order.status,
+        orderTotalCents: order.total_cents,
+        createdAt: order.created_at,
+        customerName: order.profiles?.full_name || "Cliente Isis Store",
+        customerEmail: order.profiles?.email || "Sem e-mail",
+        categoryItems: [],
+        categorySubtotalCents: 0,
+      });
+    }
+
+    const orderEntry = group.ordersMap.get(order.id)!;
+    orderEntry.categoryItems.push({
+      id: item.id,
+      name: item.product_name,
+      quantity: item.quantity,
+      subtotalCents: item.subtotal_cents,
+    });
+    orderEntry.categorySubtotalCents += item.subtotal_cents;
+  }
+
+  // Atualiza total de pedidos únicos em cada categoria
+  for (const group of categoryGroups.values()) {
+    group.totalOrders = group.ordersMap.size;
+  }
+
+  const allGroups = Array.from(categoryGroups.values());
+
+  // Métricas de topo reais
+  const categoriesWithOrders = allGroups.filter((g) => g.totalOrders > 0);
+  const topCategoryByRevenue = [...allGroups].sort(
+    (a, b) => b.totalRevenueCents - a.totalRevenueCents
+  )[0];
+
+  const formatPrice = (cents: number) => {
+    return (cents / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
+  const formatDate = (iso: string) => {
+    return new Date(iso).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Filtragem se selecionada uma categoria específica via query param
+  const displayedGroups = selectedCategorySlug
+    ? allGroups.filter((g) => g.slug === selectedCategorySlug)
+    : allGroups;
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+        <div>
+          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+            <Link href="/admin" className="hover:text-primaria transition-colors">
+              Painel
+            </Link>
+            <span>&gt;</span>
+            <Link
+              href="/admin/pedidos"
+              className="hover:text-primaria transition-colors"
+            >
+              Pedidos
+            </Link>
+            <span>&gt;</span>
+            <span className="text-texto-escuro font-medium">Categorias</span>
+          </div>
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+            Pedidos por Categoria
+          </h1>
+          <p className="text-xs text-texto-claro mt-0.5">
+            Acompanhe o volume real de pedidos, itens vendidos e faturamento por categoria de produto.
+          </p>
+        </div>
+
+        <div>
+          <Link
+            href="/admin/pedidos"
+            className={buttonVariants({ variant: "white", size: "sm" })}
+          >
+            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+            <span>Ver Todos os Pedidos</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Cards de Métricas Reais */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
+            <Layers className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs text-texto-claro font-medium">Categorias com Vendas</p>
+            <p className="text-xl font-bold text-texto-escuro">
+              {categoriesWithOrders.length}{" "}
+              <span className="text-xs font-normal text-texto-claro">
+                de {categories.length} cadastradas
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-200">
+            <TrendingUp className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs text-texto-claro font-medium">Categoria Líder em Receita</p>
+            <p className="text-lg font-bold text-texto-escuro truncate max-w-[200px]">
+              {topCategoryByRevenue && topCategoryByRevenue.totalRevenueCents > 0
+                ? topCategoryByRevenue.name
+                : "Sem vendas"}
+            </p>
+            <p className="text-xs text-emerald-600 font-semibold">
+              {topCategoryByRevenue && topCategoryByRevenue.totalRevenueCents > 0
+                ? formatPrice(topCategoryByRevenue.totalRevenueCents)
+                : "R$ 0,00"}
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-200">
+            <Package className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs text-texto-claro font-medium">Itens Totais Despachados</p>
+            <p className="text-xl font-bold text-texto-escuro">
+              {allGroups.reduce((acc, g) => acc + g.totalItems, 0)}{" "}
+              <span className="text-xs font-normal text-texto-claro">unidades</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Filtros em Abas de Categorias */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs">
+        <Tag className="w-4 h-4 text-texto-claro shrink-0 ml-1 mr-1" />
+        <Link
+          href="/admin/pedidos/categorias"
+          className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-colors border ${
+            !selectedCategorySlug
+              ? "bg-primaria text-white border-primaria shadow-2xs"
+              : "bg-white text-texto-medio border-borda hover:border-primaria/40"
+          }`}
+        >
+          Todas as Categorias ({categories.length})
+        </Link>
+        {categories.map((cat) => {
+          const isActive = selectedCategorySlug === cat.slug;
+          const grp = categoryGroups.get(cat.id);
+          const orderCount = grp ? grp.totalOrders : 0;
+
+          return (
+            <Link
+              key={cat.id}
+              href={`/admin/pedidos/categorias?categoria=${cat.slug}`}
+              className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-colors border flex items-center gap-1.5 ${
+                isActive
+                  ? "bg-primaria text-white border-primaria shadow-2xs"
+                  : "bg-white text-texto-medio border-borda hover:border-primaria/40"
+              }`}
+            >
+              <span>{cat.name}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "bg-fundo text-texto-claro border border-borda"
+                }`}
+              >
+                {orderCount}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Listagem de Grupos por Categoria */}
+      <div className="flex flex-col gap-6">
+        {displayedGroups.map((group) => {
+          const ordersList = Array.from(group.ordersMap.values());
+
+          return (
+            <div
+              key={group.id}
+              className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden"
+            >
+              {/* Header do Grupo de Categoria */}
+              <div className="p-5 bg-fundo/40 border-b border-borda flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-borda flex items-center justify-center text-primaria shrink-0 shadow-2xs">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="font-serif text-base font-bold text-texto-escuro">
+                      {group.name}
+                    </h2>
+                    <p className="text-xs text-texto-claro">
+                      {group.totalOrders} {group.totalOrders === 1 ? "pedido registrado" : "pedidos registrados"} •{" "}
+                      {group.totalItems} {group.totalItems === 1 ? "unidade vendida" : "unidades vendidas"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="bg-white px-3 py-1.5 rounded-xl border border-borda">
+                    <span className="text-texto-claro mr-1.5">Receita da Categoria:</span>
+                    <span className="font-bold text-primaria">
+                      {formatPrice(group.totalRevenueCents)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabela de Pedidos da Categoria */}
+              {ordersList.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-fundo/20 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+                      <tr>
+                        <th className="px-5 py-3">Pedido</th>
+                        <th className="px-5 py-3">Cliente</th>
+                        <th className="px-5 py-3">Itens desta Categoria</th>
+                        <th className="px-5 py-3">Subtotal Categoria</th>
+                        <th className="px-5 py-3">Status do Pedido</th>
+                        <th className="px-5 py-3 text-right">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-borda/60 text-texto-escuro">
+                      {ordersList.map((ord) => {
+                        const statusInfo = STATUS_MAP[ord.status] || {
+                          label: ord.status,
+                          badgeClass:
+                            "bg-neutral-100 text-neutral-800 border-neutral-200",
+                        };
+
+                        return (
+                          <tr
+                            key={ord.orderId}
+                            className="hover:bg-fundo/30 transition-colors"
+                          >
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-lg bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
+                                  <ShoppingBag className="w-4 h-4" />
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-texto-escuro">
+                                    #{ord.orderNumber}
+                                  </p>
+                                  <p className="text-[11px] text-texto-claro font-mono">
+                                    {formatDate(ord.createdAt)}
+                                  </p>
+                                </div>
+                              </div>
+                            </td>
+
+                            <td className="px-5 py-3.5">
+                              <p className="font-semibold text-texto-escuro">
+                                {ord.customerName}
+                              </p>
+                              <p className="text-[11px] text-texto-claro">
+                                {ord.customerEmail}
+                              </p>
+                            </td>
+
+                            <td className="px-5 py-3.5">
+                              <div className="flex flex-col gap-1 max-w-xs">
+                                {ord.categoryItems.map((item) => (
+                                  <span
+                                    key={item.id}
+                                    className="text-xs text-texto-escuro font-medium"
+                                  >
+                                    • {item.name}{" "}
+                                    <span className="text-texto-claro font-normal">
+                                      ({item.quantity}x)
+                                    </span>
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+
+                            <td className="px-5 py-3.5 font-bold text-primaria">
+                              {formatPrice(ord.categorySubtotalCents)}
+                            </td>
+
+                            <td className="px-5 py-3.5">
+                              <span
+                                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${statusInfo.badgeClass}`}
+                              >
+                                {statusInfo.label}
+                              </span>
+                            </td>
+
+                            <td className="px-5 py-3.5 text-right">
+                              <Link
+                                href={`/admin/pedidos/${ord.orderId}`}
+                                className={buttonVariants({
+                                  variant: "outline",
+                                  size: "sm",
+                                  className: "text-[11px] h-8 px-3 gap-1",
+                                })}
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Detalhes</span>
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="p-8 text-center text-texto-claro text-xs">
+                  Nenhum pedido contendo produtos desta categoria registrado até o momento.
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

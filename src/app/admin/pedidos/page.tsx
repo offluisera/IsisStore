@@ -13,6 +13,7 @@ interface OrderListItem {
   status: string;
   total_cents: number;
   created_at: string;
+  label_generated?: boolean;
   profiles?: {
     full_name: string | null;
     email: string | null;
@@ -77,6 +78,7 @@ export default async function AdminPedidosPage({
       status,
       total_cents,
       created_at,
+      label_generated,
       profiles (
         full_name,
         email
@@ -218,6 +220,11 @@ export default async function AdminPedidosPage({
                             <p className="text-[11px] text-texto-claro font-mono">
                               {formatDate(ord.created_at)}
                             </p>
+                            {ord.label_generated && (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full mt-1">
+                                ✓ Etiqueta gerada
+                              </span>
+                            )}
                           </div>
                         </div>
                       </td>

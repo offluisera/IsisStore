@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { getCategories } from "@/services/catalog.service";
 import { createClient } from "@/lib/supabase/server";
@@ -87,10 +88,10 @@ export default async function CategoriasPage() {
               <Link
                 key={cat.id}
                 href={`/produtos?categoria=${cat.slug}`}
-                className="group bg-white rounded-2xl border border-borda p-6 sm:p-8 shadow-xs hover:border-primaria hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group bg-fundo-card rounded-2xl border border-borda p-6 sm:p-8 shadow-xs hover:border-primaria hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-14 h-14 rounded-2xl bg-secundaria flex items-center justify-center mb-5 group-hover:scale-105 group-hover:bg-primaria-soft transition-all duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-primaria-soft text-primaria border border-primaria-border/40 flex items-center justify-center mb-5 group-hover:scale-105 group-hover:border-primaria transition-all duration-300">
                     {icon}
                   </div>
 
@@ -119,9 +120,7 @@ export default async function CategoriasPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-8 text-center text-xs text-texto-claro border-t border-borda/60 bg-white">
-        <p>&copy; {new Date().getFullYear()} Isis Store. Todos os direitos reservados.</p>
-      </footer>
+      <Footer />
 
       <BottomNav />
     </div>

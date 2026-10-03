@@ -11,11 +11,14 @@ import {
   AlertCircle,
   Minus,
   Plus,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/features/cart/context/cart-context";
 import { useToast } from "@/components/ui/toast-context";
+import { useStoreSettings } from "@/lib/settings/store-settings-context";
+import { createQuickWhatsAppOrderAction } from "@/features/checkout/actions";
 
 interface ProductActionsProps {
   productId: string;
@@ -24,6 +27,8 @@ interface ProductActionsProps {
   stock: number;
   imageUrl?: string;
   slug?: string;
+  isMercadoPagoActive?: boolean;
+  isWhatsAppActive?: boolean;
 }
 
 export function ProductActions({
@@ -33,10 +38,13 @@ export function ProductActions({
   stock,
   imageUrl,
   slug,
+  isMercadoPagoActive = true,
+  isWhatsAppActive = true,
 }: ProductActionsProps) {
   const router = useRouter();
   const cart = useCart();
   const { toast } = useToast();
+  const storeSettings = useStoreSettings();
 
   const [quantity, setQuantity] = React.useState(1);
   const [isAdded, setIsAdded] = React.useState(false);
@@ -46,6 +54,7 @@ export function ProductActions({
     sedex: { price: number; days: number };
   } | null>(null);
   const [isCalculatingShipping, setIsCalculatingShipping] = React.useState(false);
+  const [isBuyingWhatsApp, setIsBuyingWhatsApp] = React.useState(false);
 
   const isOutOfStock = stock <= 0;
 
@@ -92,6 +101,34 @@ export function ProductActions({
     router.push("/checkout");
   };
 
+  const handleBuyWhatsApp = async () => {
+    if (isOutOfStock) return;
+    setIsBuyingWhatsApp(true);
+    try {
+      const res = await createQuickWhatsAppOrderAction({
+        productId,
+        quantity,
+      });
+
+      if (res.success && res.whatsappUrl) {
+        toast.success(
+          "Pedido registrado!",
+          `Pedido #${res.orderNumber} gerado. Redirecionando para o WhatsApp...`
+        );
+        window.open(res.whatsappUrl, "_blank", "noopener,noreferrer");
+        router.push(
+          `/checkout/sucesso?orderId=${res.orderId}&orderNumber=${res.orderNumber}&wa=1&waUrl=${encodeURIComponent(res.whatsappUrl)}`
+        );
+      } else {
+        toast.error("Erro ao registrar pedido", res.message || "Tente novamente.");
+      }
+    } catch {
+      toast.error("Erro inesperado", "Não foi possível conectar ao WhatsApp.");
+    } finally {
+      setIsBuyingWhatsApp(false);
+    }
+  };
+
   const handleCalculateShipping = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanCep = cep.replace(/\D/g, "");
@@ -100,8 +137,9 @@ export function ProductActions({
     setIsCalculatingShipping(true);
     setTimeout(() => {
       setIsCalculatingShipping(false);
+      const freeThreshold = storeSettings.free_shipping_threshold_cents || 19900;
       setShippingResult({
-        pac: { price: priceCents >= 19900 ? 0 : 1890, days: 5 },
+        pac: { price: priceCents >= freeThreshold ? 0 : 1890, days: 5 },
         sedex: { price: 2990, days: 2 },
       });
     }, 600);
@@ -131,7 +169,7 @@ export function ProductActions({
       {/* Seletor de Quantidade + Botão Adicionar */}
       <div className="flex flex-col sm:flex-row items-stretch gap-3">
         {/* Controle de Quantidade */}
-        <div className="flex items-center justify-between border border-borda rounded-xl bg-white px-3 py-2 w-full sm:w-36 h-12">
+        <div className="flex items-center justify-between border border-borda rounded-xl bg-input-fundo px-3 py-2 w-full sm:w-36 h-12">
           <button
             type="button"
             onClick={handleDecrease}
@@ -178,21 +216,48 @@ export function ProductActions({
         </Button>
       </div>
 
-      {/* Botão Comprar Agora (Checkout Expresso) */}
-      <Button
-        type="button"
-        onClick={handleBuyNow}
-        disabled={isOutOfStock}
-        variant="default"
-        size="lg"
-        className="w-full font-semibold h-12 text-sm gap-2 shadow-sm"
-      >
-        <Zap className="w-4 h-4 fill-current" />
-        <span>Comprar Agora</span>
-      </Button>
+      {/* Botões de Compra Expressa */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Botão Comprar Agora (Checkout Expresso Online) - Exibido apenas com Mercado Pago Ativo */}
+        {isMercadoPagoActive && (
+          <Button
+            type="button"
+            onClick={handleBuyNow}
+            disabled={isOutOfStock}
+            variant="default"
+            size="lg"
+            className={`${isWhatsAppActive ? "flex-1" : "w-full"} font-semibold h-12 text-sm gap-2 shadow-xs`}
+          >
+            <Zap className="w-4 h-4 fill-current" />
+            <span>Comprar Agora</span>
+          </Button>
+        )}
+
+        {/* Botão Comprar pelo WhatsApp (Baixa Manual) - Exibido apenas com WhatsApp Ativo */}
+        {isWhatsAppActive && (
+          <Button
+            type="button"
+            onClick={handleBuyWhatsApp}
+            disabled={isOutOfStock || isBuyingWhatsApp}
+            isLoading={isBuyingWhatsApp}
+            size="lg"
+            className={`${isMercadoPagoActive ? "flex-1" : "w-full"} font-semibold h-12 text-sm gap-2 shadow-xs bg-emerald-600 hover:bg-emerald-700 text-white border-transparent`}
+          >
+            <MessageCircle className="w-4 h-4 fill-current" />
+            <span>Comprar pelo WhatsApp</span>
+          </Button>
+        )}
+
+        {/* Alerta caso nenhum gateway esteja ativo */}
+        {!isMercadoPagoActive && !isWhatsAppActive && (
+          <div className="w-full p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs text-center font-medium">
+            Opções de compra temporariamente em manutenção. Entre em contato com nossa equipe.
+          </div>
+        )}
+      </div>
 
       {/* Simulador de Frete */}
-      <div className="p-4 rounded-2xl bg-white border border-borda shadow-xs flex flex-col gap-3">
+      <div className="p-4 rounded-2xl bg-fundo-card border border-borda shadow-xs flex flex-col gap-3">
         <div className="flex items-center gap-2 text-xs font-semibold text-texto-escuro">
           <Truck className="w-4 h-4 text-primaria" />
           <span>Calcular Frete e Prazo</span>
@@ -205,7 +270,7 @@ export function ProductActions({
             value={cep}
             maxLength={9}
             onChange={(e) => setCep(e.target.value)}
-            className="flex-1 h-10 px-3 rounded-xl border border-borda text-xs outline-none focus:border-primaria"
+            className="flex-1 h-10 px-3 rounded-xl border border-borda bg-input-fundo text-texto-escuro text-xs outline-none focus:border-primaria"
           />
           <Button
             type="submit"

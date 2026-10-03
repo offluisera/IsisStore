@@ -59,3 +59,48 @@
   --transicao-rapida: 150ms cubic-bezier(0.16, 1, 0.3, 1);
   --transicao-normal: 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+:root.dark,
+[data-theme="dark"] {
+  /* Cores Principais em Alto Contraste para Dark Mode */
+  --cor-primaria: #E598AC;
+  --cor-primaria-hover: #EEABC0;
+  --cor-primaria-active: #D98399;
+  --cor-primaria-soft: #381F27;
+  --cor-primaria-border: #633342;
+
+  --cor-secundaria: #8A4E60;
+  --cor-secundaria-hover: #9E5B6E;
+  --cor-secundaria-clara: #42242D;
+
+  --cor-fundo: #151012;
+  --cor-fundo-card: #20171A;
+  --cor-fundo-elevado: #2A1F23;
+
+  --cor-texto-escuro: #F8EFF1;
+  --cor-texto-medio: #D4BFC5;
+  --cor-texto-claro: #988087;
+  --cor-texto-invertido: #151012;
+
+  /* Neutros e Superfícies Noturnas */
+  --cor-borda: #38272D;
+  --cor-borda-suave: #2C1E23;
+  --cor-borda-destaque: #E598AC;
+  --cor-input-fundo: #1B1316;
+
+  /* Estados Funcionais em Dark Mode */
+  --cor-sucesso: #66BB6A;
+  --cor-sucesso-fundo: #172D1A;
+  --cor-alerta: #F3B33C;
+  --cor-alerta-fundo: #36260B;
+  --cor-erro: #EF5350;
+  --cor-erro-fundo: #361717;
+  --cor-info: #64B5F6;
+  --cor-info-fundo: #13273D;
+
+  /* Sombras Profundas */
+  --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --sombra-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --sombra-lg: 0 8px 32px rgba(0, 0, 0, 0.65);
+}
+

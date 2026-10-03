@@ -15,7 +15,7 @@ export default function ProdutoDetalheLoading() {
         </div>
 
         {/* Informações e Ações Skeleton */}
-        <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-borda space-y-6">
+        <div className="lg:col-span-5 bg-fundo-card p-6 sm:p-8 rounded-3xl border border-borda space-y-6">
           <div className="space-y-2">
             <Skeleton className="h-4 w-28 rounded-md" />
             <Skeleton className="h-8 w-4/5 rounded-xl" />

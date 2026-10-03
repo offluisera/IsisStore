@@ -26,18 +26,18 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
   };
 
   return (
-    <div className="bg-white border border-[#F0E5E7] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full select-none">
+    <div className="bg-white dark:bg-[#1E1518] border border-[#F0E5E7] dark:border-[#332228] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full select-none">
       {/* Cabeçalho */}
-      <div className="flex items-center justify-between pb-4 border-b border-[#F7EFF1]">
+      <div className="flex items-center justify-between pb-4 border-b border-[#F7EFF1] dark:border-[#2C1D23]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center flex-shrink-0">
             <Award className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro">
+            <h2 className="font-serif font-bold text-base sm:text-lg text-texto-escuro dark:text-[#F8EFF1]">
               Produtos Mais Vendidos
             </h2>
-            <p className="text-xs text-texto-claro">
+            <p className="text-xs text-texto-claro dark:text-[#A89299]">
               Ranking de saída com base em itens de pedidos faturados
             </p>
           </div>
@@ -53,11 +53,11 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
       </div>
 
       {/* Lista de Ranking */}
-      <div className="divide-y divide-[#F7EFF1] pt-2 flex-1">
+      <div className="divide-y divide-[#F7EFF1] dark:divide-[#2C1D23] pt-2 flex-1">
         {products.length === 0 ? (
-          <div className="py-12 text-center text-xs text-texto-claro space-y-1">
+          <div className="py-12 text-center text-xs text-texto-claro dark:text-[#A89299] space-y-1">
             <Package className="w-8 h-8 text-primaria/30 mx-auto" />
-            <p className="font-semibold text-texto-escuro">
+            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
               Nenhum produto vendido ainda
             </p>
             <p className="text-[11px]">
@@ -72,7 +72,7 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
             return (
               <div
                 key={item.id}
-                className="py-3 px-1 sm:px-2 flex items-center gap-3 sm:gap-4 hover:bg-[#FFF5F6]/40 rounded-xl transition-colors group"
+                className="py-3 px-1 sm:px-2 flex items-center gap-3 sm:gap-4 hover:bg-[#FFF5F6]/40 dark:hover:bg-[#251A1E] rounded-xl transition-colors group"
               >
                 {/* Posição 01, 02... */}
                 <span
@@ -80,14 +80,14 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
                     "font-mono font-bold text-xs w-6 text-center shrink-0",
                     isTop1
                       ? "text-primaria font-black scale-110"
-                      : "text-texto-claro/80"
+                      : "text-texto-claro/80 dark:text-[#A89299]"
                   )}
                 >
                   {rank}
                 </span>
 
                 {/* Miniatura do Produto */}
-                <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FFF5F6] border border-[#F7EFF1] flex items-center justify-center shrink-0 shadow-2xs relative">
+                <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FFF5F6] dark:bg-[#251A1E] border border-[#F7EFF1] dark:border-[#332228] flex items-center justify-center shrink-0 shadow-2xs relative">
                   {item.imageUrl ? (
                     <Image
                       src={item.imageUrl}
@@ -104,17 +104,17 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
                 {/* Nome, Barra de Progresso e Métricas */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-semibold text-texto-escuro truncate group-hover:text-primaria transition-colors">
+                    <p className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] truncate group-hover:text-primaria transition-colors">
                       {item.name}
                     </p>
-                    <span className="text-xs font-mono font-bold text-texto-escuro shrink-0">
-                      {item.total_sold} <span className="text-[10px] font-normal text-texto-claro">vendidos</span>
+                    <span className="text-xs font-mono font-bold text-texto-escuro dark:text-[#F8EFF1] shrink-0">
+                      {item.total_sold} <span className="text-[10px] font-normal text-texto-claro dark:text-[#A89299]">vendidos</span>
                     </span>
                   </div>
 
                   {/* Barra de Participação Visual */}
                   <div className="flex items-center gap-3 mt-1.5">
-                    <div className="flex-1 h-1.5 bg-[#F7EFF1] rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-[#F7EFF1] dark:bg-[#2C1D23] rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-700 ease-out",
@@ -125,7 +125,7 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
                         style={{ width: `${Math.max(item.percentage, 4)}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-mono font-medium text-texto-claro shrink-0">
+                    <span className="text-[10px] font-mono font-medium text-texto-claro dark:text-[#A89299] shrink-0">
                       {item.percentage}%
                     </span>
                   </div>
@@ -134,10 +134,10 @@ export function TopSellingProducts({ products }: TopSellingProductsProps) {
                 {/* Faturamento do Produto */}
                 {item.revenue_cents > 0 && (
                   <div className="hidden sm:block text-right shrink-0 pl-2">
-                    <p className="text-xs font-mono font-bold text-texto-escuro">
+                    <p className="text-xs font-mono font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       {formatBrl(item.revenue_cents)}
                     </p>
-                    <p className="text-[10px] text-texto-claro">total</p>
+                    <p className="text-[10px] text-texto-claro dark:text-[#A89299]">total</p>
                   </div>
                 )}
               </div>

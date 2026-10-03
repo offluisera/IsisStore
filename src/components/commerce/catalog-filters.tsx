@@ -50,7 +50,7 @@ export function CatalogFilters({
   const hasActiveFilters = Boolean(currentCategory || currentSearch || (currentSort && currentSort !== "newest"));
 
   return (
-    <div className="flex flex-col gap-5 bg-white p-5 sm:p-6 rounded-2xl border border-borda shadow-xs mb-8">
+    <div className="flex flex-col gap-5 bg-fundo-card p-5 sm:p-6 rounded-2xl border border-borda shadow-xs mb-8 transition-colors">
       {/* Top: Search and Sort Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search Input */}
@@ -60,7 +60,7 @@ export function CatalogFilters({
             placeholder="Buscar por nome do produto..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-11 pl-10 pr-24 rounded-xl border border-borda bg-fundo/40 text-xs sm:text-sm text-texto-escuro placeholder:text-texto-claro outline-none focus:border-primaria focus:bg-white transition-all"
+            className="w-full h-11 pl-10 pr-24 rounded-xl border border-borda bg-fundo/40 text-xs sm:text-sm text-texto-escuro placeholder:text-texto-claro outline-none focus:border-primaria focus:bg-fundo-card transition-all"
           />
           <Search className="w-4 h-4 text-texto-claro absolute left-3.5 top-1/2 -translate-y-1/2" />
           <Button
@@ -82,7 +82,7 @@ export function CatalogFilters({
           <select
             value={currentSort}
             onChange={(e) => updateParam("ordem", e.target.value)}
-            className="h-10 px-3 pr-8 rounded-xl border border-borda bg-white text-xs font-medium text-texto-escuro outline-none focus:border-primaria cursor-pointer"
+            className="h-10 px-3 pr-8 rounded-xl border border-borda bg-input-fundo text-xs font-medium text-texto-escuro outline-none focus:border-primaria cursor-pointer"
           >
             <option value="newest">Mais recentes</option>
             <option value="price_asc">Menor Preço</option>
@@ -100,7 +100,7 @@ export function CatalogFilters({
           className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
             currentCategory === ""
               ? "bg-primaria text-white border-primaria shadow-xs"
-              : "bg-white text-texto-escuro border-borda hover:border-primaria/50"
+              : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50"
           }`}
         >
           Todas as Categorias
@@ -116,7 +116,7 @@ export function CatalogFilters({
               className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
                 isSelected
                   ? "bg-primaria text-white border-primaria shadow-xs"
-                  : "bg-white text-texto-escuro border-borda hover:border-primaria/50"
+                  : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50"
               }`}
             >
               {cat.name}

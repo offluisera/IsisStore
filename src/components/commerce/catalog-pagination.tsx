@@ -35,7 +35,7 @@ export function CatalogPagination({
       {currentPage > 1 ? (
         <Link
           href={createPageUrl(currentPage - 1)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-white text-texto-escuro shadow-xs transition-colors hover:border-primaria hover:text-primaria"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-fundo-card text-texto-escuro shadow-xs transition-colors hover:border-primaria hover:text-primaria"
           aria-label="Página anterior"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -65,7 +65,7 @@ export function CatalogPagination({
             <Link
               key={p}
               href={createPageUrl(p)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-white text-texto-escuro text-xs font-medium transition-colors hover:border-primaria hover:text-primaria shadow-xs"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-fundo-card text-texto-escuro text-xs font-medium transition-colors hover:border-primaria hover:text-primaria shadow-xs"
             >
               {p}
             </Link>
@@ -77,7 +77,7 @@ export function CatalogPagination({
       {currentPage < totalPages ? (
         <Link
           href={createPageUrl(currentPage + 1)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-white text-texto-escuro shadow-xs transition-colors hover:border-primaria hover:text-primaria"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-borda bg-fundo-card text-texto-escuro shadow-xs transition-colors hover:border-primaria hover:text-primaria"
           aria-label="Próxima página"
         >
           <ChevronRight className="w-4 h-4" />

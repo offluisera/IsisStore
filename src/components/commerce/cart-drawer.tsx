@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
+import { useStoreSettings } from "@/lib/settings/store-settings-context";
 import { cn } from "@/lib/utils";
 
 export interface CartItemData {
@@ -61,11 +62,12 @@ export function CartDrawer(props: CartDrawerProps) {
     };
   }, [isOpen, onClose]);
 
+  const storeSettings = useStoreSettings();
   const subtotalCents = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const freeShippingThreshold = 19900; // R$ 199,00
+  const freeShippingThreshold = storeSettings.free_shipping_threshold_cents || 19900;
   const missingForFreeShipping = Math.max(
     0,
     freeShippingThreshold - subtotalCents
@@ -173,7 +175,7 @@ export function CartDrawer(props: CartDrawerProps) {
                   key={item.id}
                   className="flex items-center gap-4 p-3 rounded-2xl border border-borda bg-fundo/40 transition-all hover:border-primaria-border"
                 >
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white border border-borda">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-fundo-card border border-borda">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
@@ -198,7 +200,7 @@ export function CartDrawer(props: CartDrawerProps) {
 
                     {/* Quantidade */}
                     <div className="mt-2 flex items-center gap-2">
-                      <div className="flex items-center rounded-lg border border-borda bg-white">
+                      <div className="flex items-center rounded-lg border border-borda bg-input-fundo">
                         <button
                           type="button"
                           onClick={() =>
@@ -244,7 +246,7 @@ export function CartDrawer(props: CartDrawerProps) {
 
           {/* Footer com Subtotal e Checkout */}
           {items.length > 0 && (
-            <div className="p-6 border-t border-borda-suave bg-white space-y-4">
+            <div className="p-6 border-t border-borda-suave bg-fundo-card space-y-4">
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-texto-medio text-xs">
                   <span>Subtotal</span>

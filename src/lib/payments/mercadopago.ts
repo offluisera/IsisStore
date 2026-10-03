@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { getActiveMercadoPagoCredentials } from "./credentials";
 
 export interface PayerData {
   email: string;
@@ -29,14 +30,7 @@ export interface PreferenceResponse {
   sandboxInitPoint: string;
 }
 
-const MP_ACCESS_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN;
-const MP_WEBHOOK_SECRET = process.env.MERCADOPAGO_WEBHOOK_SECRET;
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
-const isRealToken =
-  Boolean(MP_ACCESS_TOKEN) &&
-  !MP_ACCESS_TOKEN?.includes("your-mercadopago-access-token") &&
-  MP_ACCESS_TOKEN?.startsWith("APP_USR-") || MP_ACCESS_TOKEN?.startsWith("TEST-");
 
 // 1. Criar Pagamento Pix Transparente
 export async function createPixPayment({
@@ -54,16 +48,20 @@ export async function createPixPayment({
   const [firstName, ...rest] = payer.name.trim().split(" ");
   const lastName = rest.join(" ") || "Cliente";
 
+  const credentials = await getActiveMercadoPagoCredentials();
+  const token = credentials.accessToken;
+
   // Se tiver token real configurado, faz chamada na API v1 do Mercado Pago
-  if (isRealToken) {
+  if (credentials.isConfigured && token) {
     try {
       const response = await fetch("https://api.mercadopago.com/v1/payments", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           "X-Idempotency-Key": `pix_${orderId}`,
         },
+
         body: JSON.stringify({
           transaction_amount: amount,
           description: `Pedido ${orderNumber} - Isis Store`,
@@ -165,39 +163,56 @@ export async function createPreference({
     });
   }
 
-  if (isRealToken) {
+  const credentials = await getActiveMercadoPagoCredentials();
+  const token = credentials.accessToken;
+
+  if (credentials.isConfigured && token) {
     try {
+      const isLocalhost = APP_URL.includes("localhost") || APP_URL.includes("127.0.0.1");
+      const prefPayload: Record<string, unknown> = {
+        items: mpItems,
+        payer: {
+          email: payer.email,
+          name: payer.name,
+        },
+        back_urls: {
+          success: `${APP_URL}/checkout/sucesso?orderId=${orderId}`,
+          pending: `${APP_URL}/checkout/sucesso?orderId=${orderId}`,
+          failure: `${APP_URL}/checkout?error=payment_failed`,
+        },
+        statement_descriptor: `ISIS ${orderNumber.replace(/[^a-zA-Z0-9]/g, "").slice(-8)}`,
+        external_reference: orderId,
+        notification_url: `${APP_URL}/api/webhooks/mercadopago`,
+      };
+
+      // Mercado Pago só aceita auto_return com HTTPS público
+      if (!isLocalhost && APP_URL.startsWith("https://")) {
+        prefPayload.auto_return = "approved";
+      }
+
       const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: mpItems,
-          payer: {
-            email: payer.email,
-            name: payer.name,
-          },
-          back_urls: {
-            success: `${APP_URL}/checkout/sucesso?orderId=${orderId}`,
-            pending: `${APP_URL}/checkout/sucesso?orderId=${orderId}`,
-            failure: `${APP_URL}/checkout?error=payment_failed`,
-          },
-          auto_return: "approved",
-          statement_descriptor: `ISIS ${orderNumber.replace(/[^a-zA-Z0-9]/g, "").slice(-8)}`,
-          external_reference: orderId,
-          notification_url: `${APP_URL}/api/webhooks/mercadopago`,
-        }),
+        body: JSON.stringify(prefPayload),
       });
 
       if (response.ok) {
         const data = await response.json();
+        const effectiveInitPoint = credentials.isSandbox
+          ? data.sandbox_init_point || data.init_point
+          : data.init_point;
+
         return {
           preferenceId: data.id,
-          initPoint: data.init_point,
-          sandboxInitPoint: data.sandbox_init_point,
+          initPoint: effectiveInitPoint,
+          sandboxInitPoint: data.sandbox_init_point || data.init_point,
         };
+      } else {
+        const errorText = await response.text();
+        console.warn("Mercado Pago API retornou erro ao gerar preferência:", errorText);
       }
     } catch (err) {
       console.warn("Erro ao gerar preferência no Mercado Pago:", err);
@@ -214,11 +229,14 @@ export async function createPreference({
 
 // 3. Buscar Detalhes do Pagamento na API
 export async function getPaymentDetails(paymentId: string) {
-  if (isRealToken && !paymentId.startsWith("mp_sandbox_")) {
+  const credentials = await getActiveMercadoPagoCredentials();
+  const token = credentials.accessToken;
+
+  if (credentials.isConfigured && token && !paymentId.startsWith("mp_sandbox_")) {
     try {
       const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.ok) {
@@ -228,6 +246,7 @@ export async function getPaymentDetails(paymentId: string) {
       console.error("Erro ao buscar detalhes de pagamento:", err);
     }
   }
+
 
   return {
     id: paymentId,
@@ -250,8 +269,9 @@ export function verifyWebhookSignature({
   dataId: string;
   secret?: string;
 }): boolean {
-  const effectiveSecret = secret || MP_WEBHOOK_SECRET;
+  const effectiveSecret = secret || process.env.MERCADOPAGO_WEBHOOK_SECRET;
   if (!effectiveSecret || !xSignature) {
+
     // Se não configurado o secret em desenvolvimento, permite a notificação em sandbox
     return true;
   }

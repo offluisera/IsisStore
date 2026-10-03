@@ -14,10 +14,17 @@ import {
   ArrowRight,
   AlertCircle,
   Plus,
+  MessageCircle,
+  Zap,
+  CheckCircle2,
+  X,
+  Loader2,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
+import { useStoreSettings } from "@/lib/settings/store-settings-context";
 import { createOrderAction } from "@/features/checkout/actions";
+import { validateCouponAction } from "@/features/coupons/actions";
 import { AddressForm } from "@/components/account/address-form";
 
 interface AddressOption {
@@ -37,25 +44,53 @@ interface CheckoutFormProps {
   addresses: AddressOption[];
   userEmail: string;
   userName: string;
+  activeGateways?: string[];
 }
 
 export function CheckoutForm({
   addresses,
   userEmail,
   userName,
+  activeGateways,
 }: CheckoutFormProps) {
   const router = useRouter();
   const { items, clearCart } = useCart();
+
+  const isMercadoPagoActive = activeGateways
+    ? activeGateways.includes("mercadopago")
+    : true;
+  const isInfinitePayActive = activeGateways
+    ? activeGateways.includes("infinitepay")
+    : false;
+  const isWhatsAppActive = activeGateways
+    ? activeGateways.includes("whatsapp")
+    : true;
+
+  const initialMethod = isMercadoPagoActive
+    ? "pix"
+    : isInfinitePayActive
+    ? "infinitepay"
+    : isWhatsAppActive
+    ? "whatsapp"
+    : "pix";
 
   // Estados do Checkout
   const [selectedAddressId, setSelectedAddressId] = React.useState<string>(
     addresses.find((a) => a.is_default)?.id || addresses[0]?.id || ""
   );
   const [shippingMethod, setShippingMethod] = React.useState<"pac" | "sedex">("pac");
-  const [paymentMethod, setPaymentMethod] = React.useState<"pix" | "credit_card">("pix");
+  const [paymentMethod, setPaymentMethod] = React.useState<
+    "pix" | "credit_card" | "whatsapp" | "infinitepay"
+  >(initialMethod);
   const [couponCode, setCouponCode] = React.useState("");
-  const [appliedCoupon, setAppliedCoupon] = React.useState<string | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = React.useState<{
+    code: string;
+    discount_cents: number;
+    description?: string | null;
+  } | null>(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = React.useState(false);
   const [couponError, setCouponError] = React.useState<string | null>(null);
+  const [couponSuccess, setCouponSuccess] = React.useState<string | null>(null);
   const [notes, setNotes] = React.useState("");
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -67,16 +102,15 @@ export function CheckoutForm({
     0
   );
 
-  const freeShippingThreshold = 19900;
+  const storeSettings = useStoreSettings();
+  const freeShippingThreshold = storeSettings.free_shipping_threshold_cents || 19900;
   const isFreeShipping = subtotalCents >= freeShippingThreshold;
 
   const shippingCents =
     shippingMethod === "sedex" ? 2990 : isFreeShipping ? 0 : 1890;
 
-  let discountCents = 0;
-  if (appliedCoupon === "ISIS10") {
-    discountCents += Math.round(subtotalCents * 0.1);
-  }
+  // Desconto dinâmico do cupom validado
+  const discountCents = appliedCoupon ? appliedCoupon.discount_cents : 0;
 
   // Desconto Pix de 5% sobre produtos
   const pixDiscountCents =
@@ -97,16 +131,39 @@ export function CheckoutForm({
     });
   };
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
+  const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     setCouponError(null);
-    if (!couponCode.trim()) return;
+    setCouponSuccess(null);
+    const clean = couponCode.trim().toUpperCase();
+    if (!clean) return;
 
-    if (couponCode.trim().toUpperCase() === "ISIS10") {
-      setAppliedCoupon("ISIS10");
-    } else {
-      setCouponError("Cupom inválido ou expirado.");
+    setIsApplyingCoupon(true);
+    try {
+      const res = await validateCouponAction(clean, subtotalCents);
+      if (res.valid && res.coupon) {
+        setAppliedCoupon({
+          code: res.coupon.code,
+          discount_cents: res.coupon.discount_cents,
+          description: res.coupon.description,
+        });
+        setCouponSuccess(res.message);
+        setCouponCode("");
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(res.message || "Cupom inválido ou expirado.");
+      }
+    } catch {
+      setCouponError("Falha ao comunicar com o servidor para validar cupom.");
+    } finally {
+      setIsApplyingCoupon(false);
     }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponError(null);
+    setCouponSuccess(null);
   };
 
   const handleFinishOrder = async () => {
@@ -127,7 +184,7 @@ export function CheckoutForm({
       addressId: selectedAddressId,
       shippingMethod,
       paymentMethod,
-      couponCode: appliedCoupon || undefined,
+      couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       notes: notes || undefined,
       items: items.map((i) => ({
         productId: i.id,
@@ -139,9 +196,19 @@ export function CheckoutForm({
 
     if (res.success && res.orderId) {
       clearCart();
-      router.push(
-        `/checkout/sucesso?orderId=${res.orderId}&orderNumber=${res.orderNumber || ""}`
-      );
+      if (res.whatsappUrl) {
+        window.open(res.whatsappUrl, "_blank", "noopener,noreferrer");
+        router.push(
+          `/checkout/sucesso?orderId=${res.orderId}&orderNumber=${res.orderNumber || ""}&wa=1&waUrl=${encodeURIComponent(res.whatsappUrl)}`
+        );
+      } else if (res.paymentRedirectUrl && !res.paymentRedirectUrl.includes("/checkout/sucesso")) {
+        // Redireciona o cliente diretamente para a página de pagamento do gateway Mercado Pago (Sandbox ou Produção)
+        window.location.href = res.paymentRedirectUrl;
+      } else {
+        router.push(
+          `/checkout/sucesso?orderId=${res.orderId}&orderNumber=${res.orderNumber || ""}`
+        );
+      }
     } else {
       setIsSubmitting(false);
       setErrorMessage(res.message || "Erro ao processar pedido. Tente novamente.");
@@ -151,7 +218,7 @@ export function CheckoutForm({
   // Se o carrinho estiver vazio
   if (items.length === 0) {
     return (
-      <div className="bg-white rounded-3xl border border-borda p-12 sm:p-16 text-center flex flex-col items-center justify-center shadow-xs">
+      <div className="bg-fundo-card rounded-3xl border border-borda p-12 sm:p-16 text-center flex flex-col items-center justify-center shadow-xs">
         <div className="w-16 h-16 rounded-full bg-primaria-soft text-primaria flex items-center justify-center mb-4 border border-primaria/20 shadow-xs">
           <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
         </div>
@@ -195,7 +262,7 @@ export function CheckoutForm({
         )}
 
         {/* 1. Identificação do Cliente */}
-        <div className="bg-white rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-3">
+        <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-3">
           <div className="flex items-center justify-between pb-3 border-b border-borda/60">
             <div className="flex items-center gap-2.5">
               <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
@@ -226,7 +293,7 @@ export function CheckoutForm({
         </div>
 
         {/* 2. Endereço de Entrega */}
-        <div className="bg-white rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
+        <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-borda/60">
             <div className="flex items-center gap-2.5">
               <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
@@ -264,7 +331,7 @@ export function CheckoutForm({
                     className={`block p-4 rounded-2xl border cursor-pointer transition-all ${
                       isSelected
                         ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
-                        : "border-borda hover:border-borda-hover bg-white"
+                        : "border-borda hover:border-borda-hover bg-fundo-card"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -303,7 +370,7 @@ export function CheckoutForm({
         </div>
 
         {/* 3. Opções de Frete */}
-        <div className="bg-white rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
+        <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
           <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
             <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
               3
@@ -320,7 +387,7 @@ export function CheckoutForm({
               className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
                 shippingMethod === "pac"
                   ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
-                  : "border-borda hover:border-borda-hover bg-white"
+                  : "border-borda hover:border-borda-hover bg-fundo-card"
               }`}
             >
               <input
@@ -351,7 +418,7 @@ export function CheckoutForm({
               className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
                 shippingMethod === "sedex"
                   ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
-                  : "border-borda hover:border-borda-hover bg-white"
+                  : "border-borda hover:border-borda-hover bg-fundo-card"
               }`}
             >
               <input
@@ -377,7 +444,7 @@ export function CheckoutForm({
         </div>
 
         {/* 4. Forma de Pagamento */}
-        <div className="bg-white rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
+        <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
           <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
             <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
               4
@@ -387,61 +454,132 @@ export function CheckoutForm({
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Pix */}
-            <label
-              onClick={() => setPaymentMethod("pix")}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
-                paymentMethod === "pix"
-                  ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
-                  : "border-borda hover:border-borda-hover bg-white"
-              }`}
-            >
-              <input
-                type="radio"
-                name="paymentOption"
-                checked={paymentMethod === "pix"}
-                onChange={() => setPaymentMethod("pix")}
-                className="mt-1 text-primaria focus:ring-primaria"
-              />
-              <div className="flex-1 text-xs">
-                <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
-                  <QrCode className="w-4 h-4 text-sucesso" />
-                  <span>Pix (5% OFF Exclusivo)</span>
+            {isMercadoPagoActive && (
+              <label
+                onClick={() => setPaymentMethod("pix")}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  paymentMethod === "pix"
+                    ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
+                    : "border-borda hover:border-borda-hover bg-fundo-card"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentMethod === "pix"}
+                  onChange={() => setPaymentMethod("pix")}
+                  className="mt-1 text-primaria focus:ring-primaria"
+                />
+                <div className="flex-1 text-xs">
+                  <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
+                    <QrCode className="w-4 h-4 text-sucesso" />
+                    <span>Pix (5% OFF)</span>
+                  </div>
+                  <p className="text-texto-claro text-[11px] mt-1">
+                    Aprovação instantânea
+                  </p>
                 </div>
-                <p className="text-texto-claro text-[11px] mt-1">
-                  Aprovação instantânea e liberação expressa do pedido
-                </p>
-              </div>
-            </label>
+              </label>
+            )}
 
             {/* Cartão de Crédito */}
-            <label
-              onClick={() => setPaymentMethod("credit_card")}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
-                paymentMethod === "credit_card"
-                  ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
-                  : "border-borda hover:border-borda-hover bg-white"
-              }`}
-            >
-              <input
-                type="radio"
-                name="paymentOption"
-                checked={paymentMethod === "credit_card"}
-                onChange={() => setPaymentMethod("credit_card")}
-                className="mt-1 text-primaria focus:ring-primaria"
-              />
-              <div className="flex-1 text-xs">
-                <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
-                  <CreditCard className="w-4 h-4 text-primaria" />
-                  <span>Cartão de Crédito</span>
+            {isMercadoPagoActive && (
+              <label
+                onClick={() => setPaymentMethod("credit_card")}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  paymentMethod === "credit_card"
+                    ? "border-primaria bg-primaria-soft/40 shadow-xs ring-2 ring-primaria/20"
+                    : "border-borda hover:border-borda-hover bg-fundo-card"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentMethod === "credit_card"}
+                  onChange={() => setPaymentMethod("credit_card")}
+                  className="mt-1 text-primaria focus:ring-primaria"
+                />
+                <div className="flex-1 text-xs">
+                  <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
+                    <CreditCard className="w-4 h-4 text-primaria" />
+                    <span>Cartão</span>
+                  </div>
+                  <p className="text-texto-claro text-[11px] mt-1">
+                    Até 10x sem juros
+                  </p>
                 </div>
-                <p className="text-texto-claro text-[11px] mt-1">
-                  Até 10x sem juros (processado no gateway seguro)
-                </p>
-              </div>
-            </label>
+              </label>
+            )}
+
+            {/* InfinitePay */}
+            {isInfinitePayActive && (
+              <label
+                onClick={() => setPaymentMethod("infinitepay")}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  paymentMethod === "infinitepay"
+                    ? "border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 shadow-xs ring-2 ring-amber-500/20"
+                    : "border-borda hover:border-borda-hover bg-fundo-card"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentMethod === "infinitepay"}
+                  onChange={() => setPaymentMethod("infinitepay")}
+                  className="mt-1 text-amber-500 focus:ring-amber-500"
+                />
+                <div className="flex-1 text-xs">
+                  <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
+                    <Zap className="w-4 h-4 text-amber-500 fill-amber-500/20" />
+                    <span>InfinitePay</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 font-bold uppercase tracking-wider">
+                      Até 12x
+                    </span>
+                  </div>
+                  <p className="text-texto-claro text-[11px] mt-1">
+                    Cartão até 12x ou Pix
+                  </p>
+                </div>
+              </label>
+            )}
+
+            {/* WhatsApp */}
+            {isWhatsAppActive && (
+              <label
+                onClick={() => setPaymentMethod("whatsapp")}
+                className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  paymentMethod === "whatsapp"
+                    ? "border-emerald-500 bg-emerald-50/50 shadow-xs ring-2 ring-emerald-500/20"
+                    : "border-borda hover:border-borda-hover bg-fundo-card"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentMethod === "whatsapp"}
+                  onChange={() => setPaymentMethod("whatsapp")}
+                  className="mt-1 text-emerald-600 focus:ring-emerald-500"
+                />
+                <div className="flex-1 text-xs">
+                  <div className="flex items-center gap-1.5 font-semibold text-texto-escuro">
+                    <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600/20" />
+                    <span>WhatsApp</span>
+                  </div>
+                  <p className="text-texto-claro text-[11px] mt-1">
+                    Pedido direto com atendente
+                  </p>
+                </div>
+              </label>
+            )}
           </div>
+
+          {!isMercadoPagoActive && !isInfinitePayActive && !isWhatsAppActive && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs">
+              Nenhum método de pagamento disponível no momento. Entre em contato com nossa equipe.
+            </div>
+          )}
 
           {/* Observações opcionais */}
           <div className="pt-2">
@@ -462,7 +600,7 @@ export function CheckoutForm({
 
       {/* Coluna Direita: Resumo Financeiro e Finalização */}
       <div className="lg:col-span-5 space-y-6">
-        <div className="bg-white rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-5 sticky top-24">
+        <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-5 sticky top-24">
           <h2 className="font-serif text-lg font-bold text-texto-escuro pb-3 border-b border-borda/60 flex items-center justify-between">
             <span>Resumo da Compra</span>
             <span className="text-xs text-primaria font-semibold font-sans">
@@ -498,26 +636,78 @@ export function CheckoutForm({
           </div>
 
           {/* Cupom de Desconto */}
-          <form
-            onSubmit={handleApplyCoupon}
-            className="flex gap-2 pt-3 border-t border-borda/60"
-          >
-            <div className="relative flex-1">
-              <input
-                type="text"
-                placeholder="Cupom (ex: ISIS10)"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                className="w-full h-10 pl-8 pr-2 rounded-xl border border-borda text-xs uppercase outline-none focus:border-primaria bg-fundo/30"
-              />
-              <Tag className="w-3.5 h-3.5 text-texto-claro absolute left-2.5 top-1/2 -translate-y-1/2" />
+          {appliedCoupon ? (
+            <div className="pt-3 border-t border-borda/60">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono font-bold uppercase tracking-wider">
+                        {appliedCoupon.code}
+                      </span>
+                      <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-200/70 text-emerald-800 font-semibold">
+                        -{formatPrice(appliedCoupon.discount_cents)}
+                      </span>
+                    </div>
+                    {appliedCoupon.description && (
+                      <p className="text-[11px] text-emerald-700 mt-0.5">
+                        {appliedCoupon.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  className="p-1.5 rounded-lg hover:bg-emerald-200/60 text-emerald-700 transition-colors"
+                  title="Remover cupom"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <Button type="submit" variant="secondary" size="sm" className="text-xs px-3">
-              Aplicar
-            </Button>
-          </form>
-          {couponError && (
-            <p className="text-[11px] text-erro -mt-2">{couponError}</p>
+          ) : (
+            <div className="pt-3 border-t border-borda/60 space-y-2">
+              <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="Cupom (ex: ISIS10)"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    disabled={isApplyingCoupon}
+                    className="w-full h-10 pl-8 pr-2 rounded-xl border border-borda text-xs uppercase outline-none focus:border-primaria bg-fundo/30 font-mono tracking-wider"
+                  />
+                  <Tag className="w-3.5 h-3.5 text-texto-claro absolute left-2.5 top-1/2 -translate-y-1/2" />
+                </div>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="sm"
+                  disabled={isApplyingCoupon || !couponCode.trim()}
+                  className="text-xs px-3 min-w-[70px]"
+                >
+                  {isApplyingCoupon ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    "Aplicar"
+                  )}
+                </Button>
+              </form>
+              {couponError && (
+                <p className="text-[11px] text-erro flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3 shrink-0" />
+                  {couponError}
+                </p>
+              )}
+              {couponSuccess && (
+                <p className="text-[11px] text-sucesso flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 shrink-0" />
+                  {couponSuccess}
+                </p>
+              )}
+            </div>
           )}
 
           {/* Discriminação de Valores */}
@@ -542,7 +732,7 @@ export function CheckoutForm({
 
             {appliedCoupon && (
               <div className="flex justify-between text-sucesso font-semibold">
-                <span>Cupom ({appliedCoupon})</span>
+                <span>Cupom ({appliedCoupon.code})</span>
                 <span>-{formatPrice(discountCents)}</span>
               </div>
             )}
@@ -566,14 +756,39 @@ export function CheckoutForm({
           <Button
             type="button"
             onClick={handleFinishOrder}
-            disabled={isSubmitting || addresses.length === 0}
+            disabled={
+              isSubmitting ||
+              addresses.length === 0 ||
+              (!isMercadoPagoActive && !isWhatsAppActive)
+            }
             variant="default"
             size="lg"
             isLoading={isSubmitting}
-            className="w-full font-semibold text-sm gap-2 shadow-sm mt-3"
+            className={`w-full font-semibold text-sm gap-2 shadow-sm mt-3 ${
+              paymentMethod === "whatsapp"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white border-transparent"
+                : ""
+            }`}
           >
-            <span>{isSubmitting ? "Processando..." : "Confirmar e Finalizar Pedido"}</span>
-            <ArrowRight className="w-4 h-4" />
+            {paymentMethod === "whatsapp" ? (
+              <>
+                <MessageCircle className="w-4 h-4 fill-current" />
+                <span>
+                  {isSubmitting
+                    ? "Registrando Pedido..."
+                    : "Registrar e Ir para WhatsApp"}
+                </span>
+              </>
+            ) : (
+              <>
+                <span>
+                  {isSubmitting
+                    ? "Processando..."
+                    : "Confirmar e Finalizar Pedido"}
+                </span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </Button>
 
           {/* Selos de Confiança */}

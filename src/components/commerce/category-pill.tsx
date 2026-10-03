@@ -40,7 +40,7 @@ export function CategoryPill({
 
   return (
     <Link
-      href={`/categoria/${category.slug}`}
+      href={`/produtos?categoria=${category.slug}`}
       className={cn(
         "group flex flex-col items-center gap-2.5 text-center transition-transform duration-200 active:scale-95",
         className

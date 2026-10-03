@@ -14,7 +14,7 @@ const badgeVariants = cva(
         secondary:
           "bg-secundaria text-texto-escuro",
         outline:
-          "border border-borda text-texto-medio bg-white",
+          "border border-borda text-texto-medio bg-fundo-card",
         success:
           "bg-sucesso-fundo text-sucesso border border-emerald-200",
         warning:

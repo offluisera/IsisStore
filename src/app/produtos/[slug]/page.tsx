@@ -1,14 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ProductGallery } from "@/components/commerce/product-gallery";
 import { ProductActions } from "@/components/commerce/product-actions";
 import { ProductCard } from "@/components/commerce/product-card";
+import { ProductViewTracker } from "@/components/commerce/product-view-tracker";
 import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/services/catalog.service";
+import { createClient } from "@/lib/supabase/server";
 import { Star, ShieldCheck, RefreshCw, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -86,11 +89,37 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     currency: "BRL",
   });
 
+  const supabase = await createClient();
+
+  const [{ data: gateways }] = await Promise.all([
+    supabase
+      .from("payment_gateways")
+      .select("name, is_active")
+      .eq("is_active", true),
+  ]);
+
+  const activeGatewayNames = gateways?.map((g) => g.name) || [];
+  const isMercadoPagoActive = activeGatewayNames.includes("mercadopago");
+  const isWhatsAppActive = activeGatewayNames.includes("whatsapp");
+
   return (
     <div className="min-h-screen bg-fundo text-texto-escuro flex flex-col justify-between selection:bg-primaria-soft selection:text-primaria">
       <Header />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        {/* Registro do Histórico de Visualização do Cliente */}
+        <ProductViewTracker
+          product={{
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            price_cents: product.price_cents,
+            sale_price_cents: product.sale_price_cents,
+            category_name: product.categories?.name,
+            image_url: primaryImage?.public_url,
+          }}
+        />
+
         {/* Breadcrumb */}
         <nav aria-label="Navegação estrutural" className="mb-6">
           <ol className="flex flex-wrap items-center gap-2 text-xs text-texto-claro">
@@ -163,7 +192,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </div>
 
             {/* Bloco de Preço */}
-            <div className="p-5 rounded-2xl bg-white border border-borda shadow-xs">
+            <div className="p-5 rounded-2xl bg-fundo-card border border-borda shadow-xs">
               <div className="flex items-baseline gap-3">
                 <span className="font-serif text-3xl font-bold text-primaria">
                   {formatPrice(priceCents)}
@@ -176,13 +205,23 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </div>
 
               <div className="mt-2 flex flex-col gap-1 text-xs text-texto-medio">
-                <p>
-                  ou até <strong>10x de {installment10x}</strong> sem juros no cartão
-                </p>
-                <p className="text-sucesso font-semibold flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>{pixPrice} no Pix (5% de desconto exclusivo)</span>
-                </p>
+                {isMercadoPagoActive && (
+                  <>
+                    <p>
+                      ou até <strong>10x de {installment10x}</strong> sem juros no cartão
+                    </p>
+                    <p className="text-sucesso font-semibold flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{pixPrice} no Pix (5% de desconto exclusivo)</span>
+                    </p>
+                  </>
+                )}
+                {isWhatsAppActive && !isMercadoPagoActive && (
+                  <p className="text-emerald-700 font-semibold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Fechamento direto e exclusivo via WhatsApp oficial</span>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -194,12 +233,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               stock={product.stock}
               imageUrl={primaryImage?.public_url}
               slug={product.slug}
+              isMercadoPagoActive={isMercadoPagoActive}
+              isWhatsAppActive={isWhatsAppActive}
             />
           </div>
         </div>
 
         {/* Detalhes do Produto / Descrição */}
-        <section className="mt-16 bg-white rounded-2xl border border-borda p-6 sm:p-10 shadow-xs">
+        <section className="mt-16 bg-fundo-card rounded-2xl border border-borda p-6 sm:p-10 shadow-xs">
           <div className="border-b border-borda pb-4 mb-6">
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-texto-escuro">
               Detalhes do Produto
@@ -296,6 +337,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     <ProductCard
                       id={rel.id}
                       name={rel.name}
+                      slug={rel.slug}
                       category={rel.categories?.name}
                       price={rel.sale_price_cents || rel.price_cents}
                       originalPrice={
@@ -314,9 +356,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-8 text-center text-xs text-texto-claro border-t border-borda/60 bg-white">
-        <p>&copy; {new Date().getFullYear()} Isis Store. Todos os direitos reservados.</p>
-      </footer>
+      <Footer />
 
       <BottomNav />
     </div>

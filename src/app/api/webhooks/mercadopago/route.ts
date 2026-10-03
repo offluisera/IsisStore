@@ -4,6 +4,7 @@ import {
   getPaymentDetails,
   verifyWebhookSignature,
 } from "@/lib/payments/mercadopago";
+import { getActiveMercadoPagoCredentials } from "@/lib/payments/credentials";
 import { Json } from "@/types/database";
 
 export async function POST(req: NextRequest) {
@@ -42,12 +43,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Validar Assinatura do Webhook
+    // 1. Validar Assinatura do Webhook com credenciais dinâmicas do banco ou fallback .env
+    const credentials = await getActiveMercadoPagoCredentials();
     const isSignatureValid = verifyWebhookSignature({
       xSignature,
       xRequestId,
       dataId: String(paymentId),
+      secret: credentials.webhookSecret,
     });
+
 
     if (!isSignatureValid) {
       console.warn("Assinatura do webhook Mercado Pago inválida:", { paymentId });

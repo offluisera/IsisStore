@@ -9,6 +9,8 @@ import {
   CreditCard,
   QrCode,
   Package,
+  MessageCircle,
+  ExternalLink,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { OrderStatusManager } from "@/components/admin/order-status-manager";
@@ -26,6 +28,7 @@ interface ShippingAddressSnapshot {
   city?: string;
   state?: string;
   postal_code?: string;
+  phone?: string;
   payment_method?: string;
   shipping_method?: string;
 }
@@ -303,7 +306,9 @@ export default async function AdminPedidoDetalhesPage({
           {/* Histórico de Pagamentos */}
           <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-3 text-xs">
             <div className="flex items-center gap-2 pb-2 border-b border-borda/60">
-              {shippingAddr.payment_method === "pix" ? (
+              {shippingAddr.payment_method === "whatsapp" ? (
+                <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600/20" />
+              ) : shippingAddr.payment_method === "pix" ? (
                 <QrCode className="w-4 h-4 text-primaria" />
               ) : (
                 <CreditCard className="w-4 h-4 text-primaria" />
@@ -313,13 +318,45 @@ export default async function AdminPedidoDetalhesPage({
               </h3>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="text-texto-medio">
                 <strong>Método:</strong>{" "}
-                {shippingAddr.payment_method === "pix"
+                {shippingAddr.payment_method === "whatsapp"
+                  ? "WhatsApp (Baixa Manual)"
+                  : shippingAddr.payment_method === "pix"
                   ? "Pix Instantâneo"
                   : "Cartão de Crédito"}
               </p>
+
+              {/* Alerta de Baixa Manual se pendente */}
+              {shippingAddr.payment_method === "whatsapp" && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] space-y-1.5">
+                  <p className="font-semibold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                    <span>Canal de Vendas WhatsApp</span>
+                  </p>
+                  <p className="leading-relaxed text-emerald-800">
+                    {order.status === "pending_payment"
+                      ? "Este pedido foi registrado diretamente pelo WhatsApp e aguarda sua confirmação manual. Ao alterar o status acima para 'Pago', o sistema aprovará o pagamento e dará a baixa no estoque automaticamente."
+                      : "Pagamento confirmado e estoque baixado manualmente no sistema."}
+                  </p>
+
+                  {(order.profiles?.phone || shippingAddr.phone) && (
+                    <a
+                      href={`https://wa.me/${(order.profiles?.phone || shippingAddr.phone || "").replace(/\D/g, "")}?text=${encodeURIComponent(
+                        `Olá ${order.profiles?.full_name || shippingAddr.recipient_name || "Cliente"}, sobre o seu pedido #${order.order_number} na Isis Store:`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold text-[10px] hover:bg-emerald-700 transition-colors shadow-2xs mt-1"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                      <span>Conversar com o Cliente no WhatsApp</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              )}
 
               {order.payments && order.payments.length > 0 ? (
                 (order.payments as unknown as PaymentSnapshot[]).map((p) => (

@@ -13,9 +13,28 @@ export const profileUpdateSchema = z.object({
     )
     .optional()
     .or(z.literal("")),
+  cpf: z
+    .string()
+    .transform((val) => val.replace(/\D/g, ""))
+    .refine((val) => val.length === 0 || val.length === 11, {
+      message: "O CPF deve conter exatamente 11 dígitos",
+    })
+    .optional()
+    .or(z.literal("")),
 });
 
+export const passwordChangeSchema = z
+  .object({
+    password: z.string().min(6, "A nova senha deve ter no mínimo 6 caracteres"),
+    confirmPassword: z.string().min(6, "Confirme a nova senha"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });
+
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 
 export const addressSchema = z.object({
   recipientName: z

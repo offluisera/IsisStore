@@ -76,7 +76,7 @@ Todas as métricas, gráficos e tabelas foram conectados diretamente ao banco de
 ### 3.3 Indicadores Analíticos (KPI Cards)
 - **`KPICard` (`src/components/admin/kpi-card.tsx`) & `MetricSparkline` (`src/components/admin/metric-sparkline.tsx`)**:
   - Total de Vendas (cálculo real em centavos de faturamento aprovado).
-  - Pedidos (contagem total e separação por status).
+  - Pedidos (contage m total e separação por status).
   - Clientes (contagem de perfis cadastrados).
   - Produtos (contagem de itens em catálogo e link direto).
   - Mini gráficos vetoriais em SVG (sparklines) com curvas cúbicas Bezier, gradiente e ponto luminoso pulsante.
@@ -168,12 +168,38 @@ Execução completa das suítes de validação automatizadas do projeto:
   ✔ 5. Skeletons Completos e Resiliência (loading.tsx e Empty States)
 ✔ Gate 18 — Admin Dashboard Redesign (Aprovado)
 
+### 3.7 Submenus Expansíveis de Produtos no Menu Lateral
+- **`AdminSidebar` (`src/components/admin/admin-sidebar.tsx`)**:
+  - Submenu do item **Produtos** transformado em accordion expansível acessível (`aria-expanded`, `aria-controls`), eliminando navegação involuntária direta ao clicar.
+  - Submenus implementados:
+    1. **Produtos** (`/admin/produtos`): Listagem completa do catálogo, fotos, edição rápida e links de vitrine.
+    2. **Criar Produtos** (`/admin/produtos/novo`): Formulário de cadastro de novos itens.
+    3. **Relatórios** (`/admin/produtos/relatorios`): Métricas de produtos mais vendidos, faturamento em R$, percentual de vendas, ticket médio e exportação/impressão.
+    4. **Estoque** (`/admin/produtos/estoque`): Gestão de estoque com ajuste inline em tempo real (+/- e digitação direta), filtros por esgotados, crítico e regular.
+
+### 3.8 Submenus Expansíveis de Categorias no Menu Lateral
+- **`AdminSidebar` (`src/components/admin/admin-sidebar.tsx`)**:
+  - Submenu do item **Categorias** transformado em accordion expansível acessível (`aria-expanded`, `aria-controls`), evitando navegação direta ao clicar no item pai.
+  - Submenus implementados:
+    1. **Todas as Categorias** (`/admin/categorias`): Listagem completa com informações de popularidade, ranking das mais acessadas, volume de produtos e participação no tráfego.
+    2. **Criar Categoria** (`/admin/categorias/novo`): Formulário dedicado com geração automática de slug e pré-visualização ao vivo na loja.
+    3. **Editar Categoria** (`/admin/categorias/editar`): Painel de edição com seletor interativo, atualização de nome, slug, descrição, ordem e status ativo via `updateCategoryAction`.
+
+### 3.9 Submenus Expansíveis de Pedidos no Menu Lateral
+- **`AdminSidebar` (`src/components/admin/admin-sidebar.tsx`)**:
+  - Submenu do item **Pedidos** transformado em accordion expansível acessível (`aria-expanded`, `aria-controls`), garantindo navegação rápida e expansão automática em sub-rotas.
+  - Submenus implementados:
+    1. **Todos os Pedidos** (`/admin/pedidos`): Mantém a tela completa de gerenciamento com filtros por status (pagos, aguardando, enviados, cancelados) e identificação de etiquetas já geradas.
+    2. **Categorias** (`/admin/pedidos/categorias`): Visualização analítica dos pedidos agrupados por categoria real dos produtos, com métricas de faturamento por categoria, itens vendidos e abas de navegação.
+    3. **Etiquetas** (`/admin/pedidos/etiquetas`): Exibição de pedidos pagos prontos para despacho, gerador e impressor de etiqueta de embalagem com dados de remetente (Isis Store) e destinatário (`shipping_address`), declaração de conteúdo e código de barras postal. Ao emitir, registra na auditoria e exibe a mensagem destacada *"Pedido com etiqueta gerada"* na frente do pedido.
+    4. **Reembolsados** (`/admin/pedidos/reembolsados`): Relatório consolidado de pedidos cancelados, devolvidos e estornados (`status: refunded`), com dados financeiros, método de pagamento e garantia de reversão de estoque.
+
 Resumo dos Testes:
-ℹ tests 46 | suites 10 | pass 46 | fail 0 (100% de sucesso)
+ℹ tests 59 | suites 13 | pass 59 | fail 0 (100% de sucesso)
 ```
 
 - **Verificação Estática de Tipos (`npm run typecheck`):** 0 erros TypeScript.
-- **Build de Produção (`npm run build`):** Compilação bem-sucedida de todas as 27 rotas (Next.js 16.3.6 com Turbopack).
+- **Build de Produção (`npm run build`):** Compilação bem-sucedida de todas as rotas (Next.js 16.3.6 com Turbopack).
 
 ---
 

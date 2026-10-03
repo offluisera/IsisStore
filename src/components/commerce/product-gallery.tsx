@@ -53,7 +53,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       )}
 
       {/* Main Image Display */}
-      <div className="relative aspect-square w-full flex-1 overflow-hidden rounded-2xl border border-borda bg-white shadow-xs">
+      <div className="relative aspect-square w-full flex-1 overflow-hidden rounded-2xl border border-borda bg-fundo-card shadow-xs">
         {activeImage ? (
           <Image
             src={activeImage.public_url}

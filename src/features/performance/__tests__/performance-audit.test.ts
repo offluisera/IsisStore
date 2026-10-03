@@ -77,12 +77,16 @@ describe("Gate 14 — Performance & Otimização", () => {
     assert.ok(fs.existsSync(homePagePath), "src/app/page.tsx deve existir");
 
     const homeContent = fs.readFileSync(homePagePath, "utf-8");
+    const sliderPath = path.join(rootDir, "src/components/commerce/home-hero-slider.tsx");
+    const sliderContent = fs.existsSync(sliderPath) ? fs.readFileSync(sliderPath, "utf-8") : "";
+    const bannerContent = homeContent + "\n" + sliderContent;
+
     assert.ok(
-      homeContent.includes("priority"),
+      bannerContent.includes("priority"),
       "Banner Hero da Home deve ter priority para otimizar LCP"
     );
     assert.ok(
-      homeContent.includes('sizes="(max-width: 1024px) 100vw, 42vw"'),
+      bannerContent.includes('sizes="(max-width: 1024px) 100vw, 42vw"'),
       "Banner Hero deve ter atributo sizes responsivo para evitar sobrecarga de dados"
     );
 

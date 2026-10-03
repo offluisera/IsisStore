@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
-import { Package, Plus, CheckCircle2, ArrowLeft, ExternalLink } from "lucide-react";
+import { Package, Plus, CheckCircle2, ArrowLeft, ExternalLink, TrendingUp, Boxes } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { QuickProductEditor } from "@/components/admin/quick-product-editor";
 import { ProductImageManager } from "@/components/admin/product-image-manager";
@@ -62,13 +62,27 @@ export default async function AdminProdutosPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <Link
             href="/admin"
             className={buttonVariants({ variant: "white", size: "sm" })}
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
             <span>Voltar</span>
+          </Link>
+          <Link
+            href="/admin/produtos/relatorios"
+            className={buttonVariants({ variant: "white", size: "sm" })}
+          >
+            <TrendingUp className="w-3.5 h-3.5 mr-1 text-primaria" />
+            <span>Relatórios</span>
+          </Link>
+          <Link
+            href="/admin/produtos/estoque"
+            className={buttonVariants({ variant: "white", size: "sm" })}
+          >
+            <Boxes className="w-3.5 h-3.5 mr-1 text-primaria" />
+            <span>Estoque</span>
           </Link>
           <Link
             href="/admin/produtos/novo"

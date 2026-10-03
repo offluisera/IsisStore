@@ -4,7 +4,7 @@ export default function ProdutosLoading() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
       {/* Top Banner Skeleton */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-borda space-y-3">
+      <div className="bg-fundo-card p-6 sm:p-8 rounded-3xl border border-borda space-y-3">
         <Skeleton className="h-4 w-28 rounded-lg" />
         <Skeleton className="h-8 w-64 rounded-xl" />
         <Skeleton className="h-4 w-96 max-w-full rounded-lg opacity-70" />
@@ -13,7 +13,7 @@ export default function ProdutosLoading() {
       {/* Grid with Filters + Products */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar Skeleton */}
-        <div className="hidden lg:block space-y-6 bg-white p-6 rounded-2xl border border-borda h-fit">
+        <div className="hidden lg:block space-y-6 bg-fundo-card p-6 rounded-2xl border border-borda h-fit">
           <Skeleton className="h-5 w-32 rounded-lg" />
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -30,7 +30,7 @@ export default function ProdutosLoading() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="bg-white rounded-2xl border border-borda p-4 space-y-4 shadow-2xs"
+              className="bg-fundo-card rounded-2xl border border-borda p-4 space-y-4 shadow-2xs"
             >
               <Skeleton className="aspect-square w-full rounded-xl" />
               <div className="space-y-2">
