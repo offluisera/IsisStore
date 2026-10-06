@@ -60,15 +60,15 @@ export function UserRoleManager({
         value={role}
         disabled={loading || isSelf}
         onChange={(e) => handleChange(e.target.value as "customer" | "admin")}
-        className={`bg-white border rounded-xl px-2.5 py-1 text-[11px] font-semibold focus:outline-none transition-colors ${
+        className={`border rounded-xl px-2.5 py-1 text-[11px] font-semibold focus:outline-none transition-colors ${
           role === "admin"
-            ? "border-primaria/40 text-primaria font-bold bg-primaria-soft/20"
-            : "border-borda text-texto-medio"
+            ? "border-primaria/40 text-primaria font-bold bg-primaria-soft/20 dark:bg-primaria/10 dark:border-primaria/40"
+            : "bg-white dark:bg-[#151012] border-borda dark:border-[#38262C] text-texto-medio dark:text-[#F8EFF1]"
         } ${isSelf ? "cursor-not-allowed opacity-80" : ""}`}
         title={isSelf ? "Não é possível alterar seu próprio privilégio" : undefined}
       >
-        <option value="customer">Cliente</option>
-        <option value="admin">Administrador</option>
+        <option value="customer" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Cliente</option>
+        <option value="admin" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Administrador</option>
       </select>
 
       {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-primaria" />}

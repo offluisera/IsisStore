@@ -202,13 +202,13 @@ export function NewCustomerForm() {
       {/* Formulário Principal */}
       <form
         onSubmit={handleSubmit}
-        className="lg:col-span-8 bg-white p-6 sm:p-8 rounded-2xl border border-borda shadow-xs space-y-8"
+        className="lg:col-span-8 bg-white dark:bg-[#1E1518] p-6 sm:p-8 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-8"
       >
         {/* Seção 1: Dados Cadastrais */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
             <User className="w-4 h-4 text-primaria" />
-            <h2 className="font-serif text-base font-bold text-texto-escuro">
+            <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
               1. Identificação do Cliente
             </h2>
           </div>
@@ -216,7 +216,7 @@ export function NewCustomerForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Nome Completo */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
                 <span>Nome Completo</span>
                 <span className="text-primaria">*</span>
               </label>
@@ -226,14 +226,14 @@ export function NewCustomerForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Ex: Maria Clara Souza"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* E-mail */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                <Mail className="w-3 h-3 text-texto-claro" />
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                <Mail className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                 <span>E-mail</span>
                 <span className="text-primaria">*</span>
               </label>
@@ -243,19 +243,19 @@ export function NewCustomerForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="cliente@exemplo.com"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Senha Inicial */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                 <span className="flex items-center gap-1">
-                  <Lock className="w-3 h-3 text-texto-claro" />
+                  <Lock className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                   <span>Senha de Acesso</span>
                   <span className="text-primaria">*</span>
                 </span>
-                <span className="text-[10px] text-texto-claro">mín. 6 dígitos</span>
+                <span className="text-[10px] text-texto-claro dark:text-[#988087]">mín. 6 dígitos</span>
               </label>
               <div className="relative">
                 <input
@@ -264,12 +264,12 @@ export function NewCustomerForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Defina a senha do cliente"
-                  className="w-full pl-3.5 pr-9 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                  className="w-full pl-3.5 pr-9 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro hover:text-texto-escuro"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
                 >
                   {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
@@ -278,8 +278,8 @@ export function NewCustomerForm() {
 
             {/* Telefone / WhatsApp */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                <Phone className="w-3 h-3 text-texto-claro" />
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                <Phone className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                 <span>Telefone / WhatsApp</span>
               </label>
               <input
@@ -287,14 +287,14 @@ export function NewCustomerForm() {
                 value={phone}
                 onChange={handlePhoneChange}
                 placeholder="(00) 00000-0000"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* CPF */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                <CreditCard className="w-3 h-3 text-texto-claro" />
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                <CreditCard className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                 <span>CPF (Documento)</span>
               </label>
               <input
@@ -302,7 +302,7 @@ export function NewCustomerForm() {
                 value={cpf}
                 onChange={handleCpfChange}
                 placeholder="000.000.000-00"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
           </div>
@@ -310,9 +310,9 @@ export function NewCustomerForm() {
 
         {/* Seção 2: Privilégios & Papel na Loja */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
             <Shield className="w-4 h-4 text-primaria" />
-            <h2 className="font-serif text-base font-bold text-texto-escuro">
+            <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
               2. Nível de Acesso (Cargo)
             </h2>
           </div>
@@ -323,8 +323,8 @@ export function NewCustomerForm() {
               onClick={() => setRole("customer")}
               className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
                 role === "customer"
-                  ? "border-primaria bg-primaria-soft/20 shadow-2xs"
-                  : "border-borda hover:border-primaria/40 bg-white"
+                  ? "border-primaria bg-primaria-soft/20 dark:bg-primaria/10 shadow-2xs"
+                  : "border-borda dark:border-[#38262C] hover:border-primaria/40 bg-white dark:bg-[#151012]"
               }`}
             >
               <input
@@ -335,10 +335,10 @@ export function NewCustomerForm() {
                 className="mt-1 text-primaria focus:ring-primaria"
               />
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-texto-escuro block">
+                <span className="text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] block">
                   Cliente Comum (Padrão)
                 </span>
-                <p className="text-[11px] text-texto-claro leading-relaxed">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] leading-relaxed">
                   Acesso para compras na vitrine, carrinho, checkout e área do cliente pessoal.
                 </p>
               </div>
@@ -349,8 +349,8 @@ export function NewCustomerForm() {
               onClick={() => setRole("admin")}
               className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
                 role === "admin"
-                  ? "border-amber-500 bg-amber-500/10 shadow-2xs"
-                  : "border-borda hover:border-amber-500/40 bg-white"
+                  ? "border-amber-500 bg-amber-500/10 dark:bg-amber-950/20 shadow-2xs"
+                  : "border-borda dark:border-[#38262C] hover:border-amber-500/40 bg-white dark:bg-[#151012]"
               }`}
             >
               <input
@@ -361,13 +361,13 @@ export function NewCustomerForm() {
                 className="mt-1 text-amber-600 focus:ring-amber-500"
               />
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-amber-900 block flex items-center gap-1.5">
+                <span className="text-xs font-bold text-amber-900 dark:text-amber-200 block flex items-center gap-1.5">
                   <span>Administrador</span>
-                  <span className="text-[9px] bg-amber-200 text-amber-800 px-1 rounded-sm uppercase font-bold">
+                  <span className="text-[9px] bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 px-1 rounded-sm uppercase font-bold">
                     Painel
                   </span>
                 </span>
-                <p className="text-[11px] text-texto-claro leading-relaxed">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] leading-relaxed">
                   Acesso completo ao Painel Administrativo, pedidos, produtos, clientes e auditoria.
                 </p>
               </div>
@@ -377,14 +377,14 @@ export function NewCustomerForm() {
 
         {/* Seção 3: Endereço Inicial de Entrega */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+          <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
             <div className="flex items-center gap-2.5">
               <MapPin className="w-4 h-4 text-primaria" />
-              <h2 className="font-serif text-base font-bold text-texto-escuro">
+              <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 3. Endereço Principal (Opcional)
               </h2>
             </div>
-            <span className="text-[11px] text-texto-claro">
+            <span className="text-[11px] text-texto-claro dark:text-[#988087]">
               Poderá ser editado a qualquer momento
             </span>
           </div>
@@ -392,7 +392,7 @@ export function NewCustomerForm() {
           <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
             {/* CEP */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                 <span>CEP</span>
                 {isSearchingCep && (
                   <span className="text-[10px] text-primaria flex items-center gap-1">
@@ -405,7 +405,7 @@ export function NewCustomerForm() {
                 value={postalCode}
                 onChange={handleCepChange}
                 placeholder="00000-000"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors font-mono"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors font-mono"
               />
               {cepError && (
                 <p className="text-[10px] text-erro mt-0.5">{cepError}</p>
@@ -414,7 +414,7 @@ export function NewCustomerForm() {
 
             {/* Rua */}
             <div className="sm:col-span-4 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Logradouro (Rua, Av, etc.)
               </label>
               <input
@@ -422,13 +422,13 @@ export function NewCustomerForm() {
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
                 placeholder="Ex: Rua das Flores"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Número */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Número
               </label>
               <input
@@ -436,13 +436,13 @@ export function NewCustomerForm() {
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
                 placeholder="Ex: 120"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Complemento */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Complemento
               </label>
               <input
@@ -450,13 +450,13 @@ export function NewCustomerForm() {
                 value={complement}
                 onChange={(e) => setComplement(e.target.value)}
                 placeholder="Apto 42, Bloco B"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Bairro */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Bairro
               </label>
               <input
@@ -464,13 +464,13 @@ export function NewCustomerForm() {
                 value={neighborhood}
                 onChange={(e) => setNeighborhood(e.target.value)}
                 placeholder="Centro"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Cidade */}
             <div className="sm:col-span-4 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Cidade
               </label>
               <input
@@ -478,13 +478,13 @@ export function NewCustomerForm() {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="São Paulo"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
               />
             </div>
 
             {/* Estado (UF) */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 UF / Estado
               </label>
               <input
@@ -493,7 +493,7 @@ export function NewCustomerForm() {
                 value={state}
                 onChange={(e) => setState(e.target.value.toUpperCase())}
                 placeholder="SP"
-                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors uppercase font-mono"
+                className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors uppercase font-mono"
               />
             </div>
           </div>
@@ -504,25 +504,25 @@ export function NewCustomerForm() {
           <div
             className={`p-4 rounded-xl flex items-center gap-3 text-xs ${
               feedback.type === "success"
-                ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
-                : "bg-red-50 border border-red-200 text-red-800"
+                ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300"
+                : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/40 text-red-800 dark:text-red-300"
             }`}
           >
             {feedback.type === "success" ? (
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
             ) : (
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
             )}
             <span>{feedback.message}</span>
           </div>
         )}
 
         {/* Botões de Ação */}
-        <div className="pt-4 border-t border-borda/60 flex items-center justify-between">
+        <div className="pt-4 border-t border-borda/60 dark:border-[#38262C]/60 flex items-center justify-between">
           <button
             type="button"
             onClick={resetForm}
-            className="text-xs text-texto-claro hover:text-texto-escuro transition-colors font-medium"
+            className="text-xs text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1] transition-colors font-medium"
           >
             Limpar formulário
           </button>
@@ -557,30 +557,30 @@ export function NewCustomerForm() {
 
       {/* Card Lateral: Preview em Tempo Real */}
       <div className="lg:col-span-4 space-y-6">
-        <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-5">
-          <div className="flex items-center gap-2 pb-3 border-b border-borda/60 text-xs font-bold text-texto-escuro uppercase tracking-wider">
+        <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60 text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] uppercase tracking-wider">
             <Sparkles className="w-4 h-4 text-primaria" />
             <span>Pré-visualização do Cliente</span>
           </div>
 
           {/* Card Visual Simulado */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF5F6] via-white to-[#FDF2F4] border border-primaria/20 shadow-xs space-y-4">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF5F6] via-white to-[#FDF2F4] dark:from-[#251A1E] dark:via-[#1E1518] dark:to-[#151012] border border-primaria/20 dark:border-[#38262C] shadow-xs space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secundaria to-primaria text-white flex items-center justify-center font-serif font-bold text-base shadow-sm">
                 {fullName ? fullName.charAt(0).toUpperCase() : "?"}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-texto-escuro truncate">
+                <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1] truncate">
                   {fullName || "Nome do Cliente"}
                 </p>
-                <p className="text-[11px] text-texto-claro truncate font-mono">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] truncate font-mono">
                   {email || "cliente@exemplo.com"}
                 </p>
                 <span
                   className={`inline-block mt-1 text-[9px] px-2 py-0.2 rounded-full font-bold uppercase ${
                     role === "admin"
-                      ? "bg-amber-100 text-amber-800"
-                      : "bg-primaria-soft text-primaria"
+                      ? "bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/40"
+                      : "bg-primaria-soft dark:bg-primaria/20 text-primaria"
                   }`}
                 >
                   {role === "admin" ? "Administrador" : "Cliente"}
@@ -588,17 +588,17 @@ export function NewCustomerForm() {
               </div>
             </div>
 
-            <div className="space-y-1.5 pt-2 border-t border-primaria/10 text-xs text-texto-medio">
+            <div className="space-y-1.5 pt-2 border-t border-primaria/10 dark:border-[#38262C]/60 text-xs text-texto-medio dark:text-[#D4BFC5]">
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-texto-claro">Telefone:</span>
+                <span className="text-texto-claro dark:text-[#988087]">Telefone:</span>
                 <span className="font-mono">{phone || "Não informado"}</span>
               </div>
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-texto-claro">CPF:</span>
+                <span className="text-texto-claro dark:text-[#988087]">CPF:</span>
                 <span className="font-mono">{cpf || "Não informado"}</span>
               </div>
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-texto-claro">Cidade/UF:</span>
+                <span className="text-texto-claro dark:text-[#988087]">Cidade/UF:</span>
                 <span>
                   {city && state ? `${city} - ${state}` : "Não informado"}
                 </span>
@@ -606,7 +606,7 @@ export function NewCustomerForm() {
             </div>
           </div>
 
-          <div className="text-[11px] text-texto-claro leading-relaxed space-y-2">
+          <div className="text-[11px] text-texto-claro dark:text-[#988087] leading-relaxed space-y-2">
             <p>
               &bull; Ao salvar, a conta é criada diretamente no sistema de autenticação e no banco de dados.
             </p>

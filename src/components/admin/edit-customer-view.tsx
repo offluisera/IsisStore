@@ -288,22 +288,22 @@ export function EditCustomerView({
   return (
     <div className="space-y-6">
       {/* Seletor Superior de Cliente */}
-      <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 w-full md:w-auto flex-1">
           <div className="w-10 h-10 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
             <User className="w-5 h-5" />
           </div>
           <div className="space-y-0.5 flex-1 max-w-sm">
-            <span className="text-[11px] font-semibold text-texto-claro uppercase tracking-wider block">
+            <span className="text-[11px] font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider block">
               Selecione o Cliente para Editar
             </span>
             <select
               value={selectedId}
               onChange={(e) => handleSelectCustomer(e.target.value)}
-              className="w-full text-xs font-semibold bg-white border border-borda rounded-xl px-3 py-2 text-texto-escuro focus:outline-none focus:border-primaria"
+              className="w-full text-xs font-semibold bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl px-3 py-2 text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:border-primaria"
             >
               {customers.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} className="dark:bg-[#151012] dark:text-[#F8EFF1]">
                   {c.full_name} ({c.email}) {c.role === "admin" ? "[ADMIN]" : ""}
                 </option>
               ))}
@@ -334,18 +334,18 @@ export function EditCustomerView({
           {/* Formulário Principal */}
           <form
             onSubmit={handleSubmit}
-            className="lg:col-span-8 bg-white p-6 sm:p-8 rounded-2xl border border-borda shadow-xs space-y-8"
+            className="lg:col-span-8 bg-white dark:bg-[#1E1518] p-6 sm:p-8 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-8"
           >
             {/* Seção 1: Dados Pessoais */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                 <div className="flex items-center gap-2.5">
                   <User className="w-4 h-4 text-primaria" />
-                  <h2 className="font-serif text-base font-bold text-texto-escuro">
+                  <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     1. Dados do Cliente
                   </h2>
                 </div>
-                <span className="text-[10px] font-mono text-texto-claro">
+                <span className="text-[10px] font-mono text-texto-claro dark:text-[#988087]">
                   ID: {currentCustomer.id}
                 </span>
               </div>
@@ -353,7 +353,7 @@ export function EditCustomerView({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Nome Completo */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
                     <span>Nome Completo</span>
                     <span className="text-primaria">*</span>
                   </label>
@@ -362,14 +362,14 @@ export function EditCustomerView({
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* E-mail */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                    <Mail className="w-3 h-3 text-texto-claro" />
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                    <Mail className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                     <span>E-mail</span>
                     <span className="text-primaria">*</span>
                   </label>
@@ -378,18 +378,18 @@ export function EditCustomerView({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* Redefinição de Senha */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                     <span className="flex items-center gap-1">
-                      <Lock className="w-3 h-3 text-texto-claro" />
+                      <Lock className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                       <span>Nova Senha</span>
                     </span>
-                    <span className="text-[10px] text-texto-claro">
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087]">
                       Opcional (mín. 6 dígitos)
                     </span>
                   </label>
@@ -399,12 +399,12 @@ export function EditCustomerView({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Deixe em branco para não alterar"
-                      className="w-full pl-3.5 pr-9 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                      className="w-full pl-3.5 pr-9 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro hover:text-texto-escuro"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
                     >
                       {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -413,8 +413,8 @@ export function EditCustomerView({
 
                 {/* Telefone */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-texto-claro" />
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                     <span>Telefone / WhatsApp</span>
                   </label>
                   <input
@@ -422,14 +422,14 @@ export function EditCustomerView({
                     value={phone}
                     onChange={handlePhoneChange}
                     placeholder="(00) 00000-0000"
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* CPF */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1">
-                    <CreditCard className="w-3 h-3 text-texto-claro" />
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1">
+                    <CreditCard className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
                     <span>CPF (Documento)</span>
                   </label>
                   <input
@@ -437,7 +437,7 @@ export function EditCustomerView({
                     value={cpf}
                     onChange={handleCpfChange}
                     placeholder="000.000.000-00"
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
               </div>
@@ -445,10 +445,10 @@ export function EditCustomerView({
 
             {/* Seção 2: Cargo / Permissões */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                 <div className="flex items-center gap-2.5">
                   <Shield className="w-4 h-4 text-primaria" />
-                  <h2 className="font-serif text-base font-bold text-texto-escuro">
+                  <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     2. Cargo na Loja
                   </h2>
                 </div>
@@ -466,8 +466,8 @@ export function EditCustomerView({
                     isSelf ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
                   } ${
                     role === "customer"
-                      ? "border-primaria bg-primaria-soft/20 shadow-2xs"
-                      : "border-borda hover:border-primaria/40 bg-white"
+                      ? "border-primaria bg-primaria-soft/20 dark:bg-primaria/10 shadow-2xs"
+                      : "border-borda dark:border-[#38262C] hover:border-primaria/40 bg-white dark:bg-[#151012]"
                   }`}
                 >
                   <input
@@ -479,10 +479,10 @@ export function EditCustomerView({
                     className="mt-1 text-primaria focus:ring-primaria"
                   />
                   <div className="space-y-0.5">
-                    <span className="text-xs font-bold text-texto-escuro block">
+                    <span className="text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] block">
                       Cliente Comum
                     </span>
-                    <p className="text-[11px] text-texto-claro">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                       Acesso apenas para compras e sua conta pessoal.
                     </p>
                   </div>
@@ -492,8 +492,8 @@ export function EditCustomerView({
                   onClick={() => setRole("admin")}
                   className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
                     role === "admin"
-                      ? "border-amber-500 bg-amber-500/10 shadow-2xs"
-                      : "border-borda hover:border-amber-500/40 bg-white"
+                      ? "border-amber-500 bg-amber-500/10 dark:bg-amber-950/20 shadow-2xs"
+                      : "border-borda dark:border-[#38262C] hover:border-amber-500/40 bg-white dark:bg-[#151012]"
                   }`}
                 >
                   <input
@@ -504,13 +504,13 @@ export function EditCustomerView({
                     className="mt-1 text-amber-600 focus:ring-amber-500"
                   />
                   <div className="space-y-0.5">
-                    <span className="text-xs font-bold text-amber-900 block flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-amber-900 dark:text-amber-200 block flex items-center gap-1.5">
                       <span>Administrador</span>
-                      <span className="text-[9px] bg-amber-200 text-amber-800 px-1 rounded-sm uppercase font-bold">
+                      <span className="text-[9px] bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 px-1 rounded-sm uppercase font-bold">
                         Painel
                       </span>
                     </span>
-                    <p className="text-[11px] text-texto-claro">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                       Acesso completo ao painel administrativo e dados.
                     </p>
                   </div>
@@ -520,9 +520,9 @@ export function EditCustomerView({
 
             {/* Seção 3: Endereço Principal */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                 <MapPin className="w-4 h-4 text-primaria" />
-                <h2 className="font-serif text-base font-bold text-texto-escuro">
+                <h2 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   3. Endereço Principal de Entrega
                 </h2>
               </div>
@@ -530,7 +530,7 @@ export function EditCustomerView({
               <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
                 {/* CEP */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                     <span>CEP</span>
                     {isSearchingCep && (
                       <span className="text-[10px] text-primaria flex items-center gap-1">
@@ -543,7 +543,7 @@ export function EditCustomerView({
                     value={postalCode}
                     onChange={handleCepChange}
                     placeholder="00000-000"
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors font-mono"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors font-mono"
                   />
                   {cepError && (
                     <p className="text-[10px] text-erro mt-0.5">{cepError}</p>
@@ -552,72 +552,72 @@ export function EditCustomerView({
 
                 {/* Rua */}
                 <div className="sm:col-span-4 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     Logradouro
                   </label>
                   <input
                     type="text"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* Número */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     Número
                   </label>
                   <input
                     type="text"
                     value={number}
                     onChange={(e) => setNumber(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* Complemento */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     Complemento
                   </label>
                   <input
                     type="text"
                     value={complement}
                     onChange={(e) => setComplement(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* Bairro */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     Bairro
                   </label>
                   <input
                     type="text"
                     value={neighborhood}
                     onChange={(e) => setNeighborhood(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* Cidade */}
                 <div className="sm:col-span-4 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     Cidade
                   </label>
                   <input
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors"
                   />
                 </div>
 
                 {/* UF */}
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                     UF
                   </label>
                   <input
@@ -625,7 +625,7 @@ export function EditCustomerView({
                     maxLength={2}
                     value={state}
                     onChange={(e) => setState(e.target.value.toUpperCase())}
-                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 rounded-xl border border-borda focus:outline-none focus:border-primaria transition-colors uppercase font-mono"
+                    className="w-full px-3.5 py-2.5 text-xs bg-fundo/40 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:border-primaria transition-colors uppercase font-mono"
                   />
                 </div>
               </div>
@@ -636,21 +636,21 @@ export function EditCustomerView({
               <div
                 className={`p-4 rounded-xl flex items-center gap-3 text-xs ${
                   feedback.type === "success"
-                    ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
-                    : "bg-red-50 border border-red-200 text-red-800"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300"
+                    : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/40 text-red-800 dark:text-red-300"
                 }`}
               >
                 {feedback.type === "success" ? (
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                  <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
                 )}
                 <span>{feedback.message}</span>
               </div>
             )}
 
             {/* Botões */}
-            <div className="pt-4 border-t border-borda/60 flex items-center justify-between">
+            <div className="pt-4 border-t border-borda/60 dark:border-[#38262C]/60 flex items-center justify-between">
               <Link
                 href="/admin/clientes"
                 className={buttonVariants({ variant: "white", size: "sm" })}
@@ -679,31 +679,31 @@ export function EditCustomerView({
 
           {/* Card Lateral: Resumo & Atalhos */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-borda/60 text-xs font-bold text-texto-escuro uppercase tracking-wider">
+            <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60 text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] uppercase tracking-wider">
                 <ShoppingBag className="w-4 h-4 text-primaria" />
                 <span>Atividade do Cliente</span>
               </div>
 
               <div className="space-y-3">
-                <div className="p-4 rounded-xl bg-fundo/40 border border-borda flex items-center justify-between">
-                  <span className="text-xs text-texto-claro">Total de Pedidos</span>
-                  <span className="text-xs font-bold text-texto-escuro">
+                <div className="p-4 rounded-xl bg-fundo/40 dark:bg-[#151012] border border-borda dark:border-[#38262C] flex items-center justify-between">
+                  <span className="text-xs text-texto-claro dark:text-[#988087]">Total de Pedidos</span>
+                  <span className="text-xs font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     {currentCustomer.orderCount}{" "}
                     {currentCustomer.orderCount === 1 ? "pedido" : "pedidos"}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-fundo/40 border border-borda flex items-center justify-between">
-                  <span className="text-xs text-texto-claro">Volume Gasto</span>
+                <div className="p-4 rounded-xl bg-fundo/40 dark:bg-[#151012] border border-borda dark:border-[#38262C] flex items-center justify-between">
+                  <span className="text-xs text-texto-claro dark:text-[#988087]">Volume Gasto</span>
                   <span className="text-xs font-bold text-primaria">
                     {formatCurrency(currentCustomer.totalSpentCents)}
                   </span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-fundo/40 border border-borda flex items-center justify-between">
-                  <span className="text-xs text-texto-claro">Data de Cadastro</span>
-                  <span className="text-xs font-mono text-texto-escuro">
+                <div className="p-4 rounded-xl bg-fundo/40 dark:bg-[#151012] border border-borda dark:border-[#38262C] flex items-center justify-between">
+                  <span className="text-xs text-texto-claro dark:text-[#988087]">Data de Cadastro</span>
+                  <span className="text-xs font-mono text-texto-escuro dark:text-[#F8EFF1]">
                     {formatDate(currentCustomer.created_at)}
                   </span>
                 </div>
@@ -726,7 +726,7 @@ export function EditCustomerView({
           </div>
         </div>
       ) : (
-        <div className="p-12 text-center bg-white rounded-2xl border border-borda text-texto-claro">
+        <div className="p-12 text-center bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087]">
           Nenhum cliente cadastrado para edição.
         </div>
       )}

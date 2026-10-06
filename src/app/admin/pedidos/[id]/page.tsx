@@ -131,9 +131,9 @@ export default async function AdminPedidoDetalhesPage({
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
@@ -145,14 +145,14 @@ export default async function AdminPedidoDetalhesPage({
               Pedidos
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">
               #{order.order_number}
             </span>
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1]">
             Detalhes do Pedido #{order.order_number}
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Realizado em {formatDate(order.created_at)}
           </p>
         </div>
@@ -160,7 +160,11 @@ export default async function AdminPedidoDetalhesPage({
         <div>
           <Link
             href="/admin/pedidos"
-            className={buttonVariants({ variant: "white", size: "sm" })}
+            className={buttonVariants({
+              variant: "white",
+              size: "sm",
+              className: "dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1]",
+            })}
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
             <span>Voltar aos Pedidos</span>
@@ -189,53 +193,53 @@ export default async function AdminPedidoDetalhesPage({
           />
 
           {/* Snapshot dos Itens do Pedido */}
-          <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
-            <div className="p-5 border-b border-borda/60 flex items-center gap-2">
+          <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
+            <div className="p-5 border-b border-borda/60 dark:border-[#38262C]/60 flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-primaria" />
-              <h2 className="font-serif text-sm font-bold text-texto-escuro">
+              <h2 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 Produtos Comprados (Snapshot Imutável)
               </h2>
             </div>
 
-            <div className="divide-y divide-borda/60 text-xs">
+            <div className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-xs">
               {(order.order_items as unknown as OrderItemSnapshot[])?.map((item) => (
                 <div
                   key={item.id}
                   className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20 mt-0.5">
+                    <div className="w-10 h-10 rounded-xl bg-primaria-soft dark:bg-primaria-soft/30 text-primaria flex items-center justify-center shrink-0 border border-primaria/20 mt-0.5">
                       <Package className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="font-semibold text-texto-escuro">
+                      <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                         {item.product_name}
                       </p>
-                      <p className="text-[11px] text-texto-claro font-mono">
+                      <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                         SKU: {item.sku} &bull; Qtd: {item.quantity} un.
                       </p>
 
                       {item.customization && (
-                        <div className="mt-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-50/70 to-primaria-soft/40 border border-amber-200/80 max-w-lg space-y-1.5">
-                          <div className="flex items-center gap-1.5 font-bold text-amber-900 text-xs">
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <div className="mt-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-50/70 to-primaria-soft/40 dark:from-amber-950/30 dark:to-primaria-soft/10 border border-amber-200/80 dark:border-amber-800/40 max-w-lg space-y-1.5">
+                          <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-amber-300 text-xs">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                             <span>Dados de Personalização / Gravação Solicitada:</span>
                           </div>
                           {item.customization.text && (
-                            <div className="text-xs text-texto-escuro bg-white/80 p-2 rounded-lg border border-amber-200 font-serif font-semibold">
+                            <div className="text-xs text-texto-escuro dark:text-[#F8EFF1] bg-white/80 dark:bg-[#151012] p-2 rounded-lg border border-amber-200 dark:border-amber-800/40 font-serif font-semibold">
                               &ldquo;{item.customization.text}&rdquo;
                             </div>
                           )}
                           {item.customization.imageUrl && (
                             <div className="flex items-center gap-2 pt-1">
-                              <span className="text-[11px] font-semibold text-texto-medio">
+                              <span className="text-[11px] font-semibold text-texto-medio dark:text-[#D4BFC5]">
                                 Imagem Anexada:
                               </span>
                               <a
                                 href={item.customization.imageUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-primaria bg-white px-2.5 py-1 rounded-md border border-primaria/30 hover:bg-primaria-soft transition-colors"
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-primaria bg-white dark:bg-[#1E1518] px-2.5 py-1 rounded-md border border-primaria/30 dark:border-primaria/40 hover:bg-primaria-soft dark:hover:bg-primaria-soft/20 transition-colors"
                               >
                                 <ExternalLink className="w-3 h-3" />
                                 <span>Abrir / Baixar Foto Original</span>
@@ -243,7 +247,7 @@ export default async function AdminPedidoDetalhesPage({
                             </div>
                           )}
                           {item.customization.notes && (
-                            <p className="text-[11px] text-texto-claro">
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                               <strong>Instruções do Cliente:</strong> {item.customization.notes}
                             </p>
                           )}
@@ -256,7 +260,7 @@ export default async function AdminPedidoDetalhesPage({
                     <p className="font-bold text-primaria">
                       {formatPrice(item.subtotal_cents)}
                     </p>
-                    <p className="text-[10px] text-texto-claro">
+                    <p className="text-[10px] text-texto-claro dark:text-[#988087]">
                       ({formatPrice(item.unit_price_cents)} un.)
                     </p>
                   </div>
@@ -268,38 +272,38 @@ export default async function AdminPedidoDetalhesPage({
           {/* Dados do Cliente e Endereço */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Cliente */}
-            <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs space-y-2 text-xs">
-              <div className="flex items-center gap-2 pb-2 border-b border-borda/60">
+            <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-2 text-xs">
+              <div className="flex items-center gap-2 pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
                 <User className="w-4 h-4 text-primaria" />
-                <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   Dados do Cliente
                 </h3>
               </div>
-              <p className="font-semibold text-texto-escuro">
+              <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 {order.profiles?.full_name || "Cliente Isis Store"}
               </p>
-              <p className="text-texto-medio">{order.profiles?.email}</p>
+              <p className="text-texto-medio dark:text-[#D4BFC5]">{order.profiles?.email}</p>
               {order.profiles?.phone && (
-                <p className="text-texto-claro">Tel: {order.profiles.phone}</p>
+                <p className="text-texto-claro dark:text-[#988087]">Tel: {order.profiles.phone}</p>
               )}
             </div>
 
             {/* Endereço de Entrega */}
-            <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs space-y-2 text-xs">
-              <div className="flex items-center gap-2 pb-2 border-b border-borda/60">
+            <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-2 text-xs">
+              <div className="flex items-center gap-2 pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
                 <MapPin className="w-4 h-4 text-primaria" />
-                <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   Endereço de Entrega
                 </h3>
               </div>
-              <p className="font-semibold text-texto-escuro">
+              <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Destinatário: {shippingAddr.recipient_name || "Não informado"}
               </p>
-              <p className="text-texto-medio">
+              <p className="text-texto-medio dark:text-[#D4BFC5]">
                 {shippingAddr.street}, {shippingAddr.number}
                 {shippingAddr.complement ? ` — ${shippingAddr.complement}` : ""}
               </p>
-              <p className="text-texto-claro">
+              <p className="text-texto-claro dark:text-[#988087]">
                 {shippingAddr.neighborhood} &bull; {shippingAddr.city} - {shippingAddr.state} &bull; CEP: {shippingAddr.postal_code}
               </p>
             </div>
@@ -309,12 +313,12 @@ export default async function AdminPedidoDetalhesPage({
         {/* Coluna Direita: Resumo Financeiro & Pagamentos */}
         <div className="lg:col-span-4 space-y-6">
           {/* Resumo Financeiro */}
-          <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-4 text-xs">
-            <h2 className="font-serif text-sm font-bold text-texto-escuro pb-2 border-b border-borda/60">
+          <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-4 text-xs">
+            <h2 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1] pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
               Resumo Financeiro
             </h2>
 
-            <div className="space-y-2 text-texto-medio">
+            <div className="space-y-2 text-texto-medio dark:text-[#D4BFC5]">
               <div className="flex justify-between">
                 <span>Subtotal dos Produtos:</span>
                 <span>{formatPrice(order.subtotal_cents)}</span>
@@ -330,13 +334,13 @@ export default async function AdminPedidoDetalhesPage({
               </div>
 
               {order.discount_cents > 0 && (
-                <div className="flex justify-between text-sucesso font-medium">
+                <div className="flex justify-between text-sucesso dark:text-emerald-400 font-medium">
                   <span>Descontos Aplicados:</span>
                   <span>-{formatPrice(order.discount_cents)}</span>
                 </div>
               )}
 
-              <div className="pt-3 border-t border-borda/60 flex justify-between items-center text-sm font-bold text-texto-escuro">
+              <div className="pt-3 border-t border-borda/60 dark:border-[#38262C]/60 flex justify-between items-center text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 <span>Total do Pedido:</span>
                 <span className="text-primaria text-base">
                   {formatPrice(order.total_cents)}
@@ -346,8 +350,8 @@ export default async function AdminPedidoDetalhesPage({
           </div>
 
           {/* Histórico de Pagamentos */}
-          <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-3 text-xs">
-            <div className="flex items-center gap-2 pb-2 border-b border-borda/60">
+          <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-3 text-xs">
+            <div className="flex items-center gap-2 pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
               {shippingAddr.payment_method === "whatsapp" ? (
                 <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600/20" />
               ) : shippingAddr.payment_method === "pix" ? (
@@ -355,13 +359,13 @@ export default async function AdminPedidoDetalhesPage({
               ) : (
                 <CreditCard className="w-4 h-4 text-primaria" />
               )}
-              <h3 className="font-serif text-sm font-bold text-texto-escuro">
+              <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 Informações de Pagamento
               </h3>
             </div>
 
             <div className="space-y-3">
-              <p className="text-texto-medio">
+              <p className="text-texto-medio dark:text-[#D4BFC5]">
                 <strong>Método:</strong>{" "}
                 {shippingAddr.payment_method === "whatsapp"
                   ? "WhatsApp (Baixa Manual)"
@@ -372,12 +376,12 @@ export default async function AdminPedidoDetalhesPage({
 
               {/* Alerta de Baixa Manual se pendente */}
               {shippingAddr.payment_method === "whatsapp" && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] space-y-1.5">
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200 text-[11px] space-y-1.5">
                   <p className="font-semibold flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
                     <span>Canal de Vendas WhatsApp</span>
                   </p>
-                  <p className="leading-relaxed text-emerald-800">
+                  <p className="leading-relaxed text-emerald-800 dark:text-emerald-300">
                     {order.status === "pending_payment"
                       ? "Este pedido foi registrado diretamente pelo WhatsApp e aguarda sua confirmação manual. Ao alterar o status acima para 'Pago', o sistema aprovará o pagamento e dará a baixa no estoque automaticamente."
                       : "Pagamento confirmado e estoque baixado manualmente no sistema."}
@@ -404,13 +408,13 @@ export default async function AdminPedidoDetalhesPage({
                 (order.payments as unknown as PaymentSnapshot[]).map((p) => (
                   <div
                     key={p.id}
-                    className="p-3 bg-fundo/50 rounded-xl border border-borda text-[11px] space-y-1"
+                    className="p-3 bg-fundo/50 dark:bg-[#151012] rounded-xl border border-borda dark:border-[#38262C] text-[11px] space-y-1 text-texto-medio dark:text-[#D4BFC5]"
                   >
                     <p>
                       <strong>Gateway:</strong> {p.gateway?.toUpperCase()}
                     </p>
                     {p.gateway_payment_id && (
-                      <p className="font-mono text-texto-claro truncate">
+                      <p className="font-mono text-texto-claro dark:text-[#988087] truncate">
                         ID: {p.gateway_payment_id}
                       </p>
                     )}
@@ -420,7 +424,7 @@ export default async function AdminPedidoDetalhesPage({
                   </div>
                 ))
               ) : (
-                <p className="text-texto-claro text-[11px]">
+                <p className="text-texto-claro dark:text-[#988087] text-[11px]">
                   Nenhum registro no gateway associado.
                 </p>
               )}

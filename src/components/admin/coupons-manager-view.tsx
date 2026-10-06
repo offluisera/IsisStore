@@ -322,25 +322,25 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
   return (
     <div className="flex flex-col gap-6">
       {/* Header do Módulo */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Cupons & Descontos</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Cupons & Descontos</span>
           </div>
           <div className="flex items-center gap-2">
-            <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+            <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1]">
               Gerenciamento de Cupons
             </h1>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primaria/10 text-primaria border border-primaria/20">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primaria/10 dark:bg-primaria/20 text-primaria border border-primaria/20">
               <Sparkles className="w-3 h-3" />
               Checkout Ativo
             </span>
           </div>
-          <p className="text-xs text-texto-claro mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-1 max-w-2xl leading-relaxed">
             Crie, personalize regras e acompanhe os cupons promocionais aplicados pelos clientes durante o checkout da Isis Store.
           </p>
         </div>
@@ -356,69 +356,69 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs font-medium text-texto-claro">Total de Cupons</span>
-            <div className="text-2xl font-bold text-texto-escuro mt-1">{totalCount}</div>
-            <span className="text-[11px] text-texto-claro mt-0.5 block">
+            <span className="text-xs font-medium text-texto-claro dark:text-[#988087]">Total de Cupons</span>
+            <div className="text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-1">{totalCount}</div>
+            <span className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5 block">
               {percentageCount} em porcentagem / {totalCount - percentageCount} fixos
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center shrink-0">
             <TicketPercent className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs font-medium text-texto-claro">Cupons Ativos</span>
-            <div className="text-2xl font-bold text-emerald-600 mt-1">{activeCount}</div>
-            <span className="text-[11px] text-texto-claro mt-0.5 block">
+            <span className="text-xs font-medium text-texto-claro dark:text-[#988087]">Cupons Ativos</span>
+            <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{activeCount}</div>
+            <span className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5 block">
               Disponíveis para uso imediato
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-200 dark:border-emerald-800/40">
             <CheckCircle2 className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs font-medium text-texto-claro">Resgates Realizados</span>
-            <div className="text-2xl font-bold text-texto-escuro mt-1">{totalUses}</div>
-            <span className="text-[11px] text-texto-claro mt-0.5 block">
+            <span className="text-xs font-medium text-texto-claro dark:text-[#988087]">Resgates Realizados</span>
+            <div className="text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-1">{totalUses}</div>
+            <span className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5 block">
               Vezes resgatados no checkout
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200 dark:border-blue-800/40">
             <TrendingUp className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs font-medium text-texto-claro">Regras e Validações</span>
-            <div className="text-sm font-bold text-texto-escuro mt-1">100% Automático</div>
-            <span className="text-[11px] text-texto-claro mt-0.5 block">
+            <span className="text-xs font-medium text-texto-claro dark:text-[#988087]">Regras e Validações</span>
+            <div className="text-sm font-bold text-texto-escuro dark:text-[#F8EFF1] mt-1">100% Automático</div>
+            <span className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5 block">
               Checagem em tempo real no servidor
             </span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-800/40">
             <Layers className="w-6 h-6" />
           </div>
         </div>
       </div>
 
       {/* Barra de Filtros & Busca */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-[#1E1518] p-4 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-texto-claro" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087]" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por código ou descrição..."
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-borda bg-fundo-card text-texto-escuro placeholder:text-texto-claro focus:outline-none focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-fundo-card dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] focus:outline-none focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
           />
         </div>
 
@@ -438,7 +438,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                 "px-3 py-1.5 text-xs font-medium rounded-xl transition-all shrink-0",
                 statusFilter === filter.key
                   ? "bg-primaria text-white shadow-xs"
-                  : "bg-fundo-card text-texto-claro hover:text-texto-escuro hover:bg-cinza-claro"
+                  : "bg-fundo-card dark:bg-[#151012] text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-cinza-claro dark:hover:bg-[#251A1E]"
               )}
             >
               {filter.label}
@@ -448,16 +448,16 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
       </div>
 
       {/* Lista / Tabela de Cupons */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         {filteredCoupons.length === 0 ? (
           <div className="p-12 text-center flex flex-col items-center justify-center">
             <div className="w-14 h-14 rounded-2xl bg-primaria/10 text-primaria flex items-center justify-center mb-3">
               <TicketPercent className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold text-texto-escuro">
+            <h3 className="text-base font-semibold text-texto-escuro dark:text-[#F8EFF1]">
               Nenhum cupom encontrado
             </h3>
-            <p className="text-xs text-texto-claro mt-1 max-w-sm">
+            <p className="text-xs text-texto-claro dark:text-[#988087] mt-1 max-w-sm">
               {searchTerm || statusFilter !== "all"
                 ? "Não encontramos cupons para o filtro selecionado. Tente alterar os critérios de busca."
                 : "Você ainda não possui cupons cadastrados. Crie o primeiro cupom da loja agora!"}
@@ -486,7 +486,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-borda bg-cinza-claro/50 text-[11px] font-semibold text-texto-claro uppercase tracking-wider">
+                <tr className="border-b border-borda dark:border-[#38262C] bg-cinza-claro/50 dark:bg-[#251A1E] text-[11px] font-semibold text-texto-claro dark:text-[#D4BFC5] uppercase tracking-wider">
                   <th className="py-3 px-5">Cupom & Código</th>
                   <th className="py-3 px-4">Desconto</th>
                   <th className="py-3 px-4">Critérios & Regras</th>
@@ -495,7 +495,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   <th className="py-3 px-5 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-borda text-xs">
+              <tbody className="divide-y divide-borda dark:divide-[#38262C] text-xs">
                 {filteredCoupons.map((coupon) => {
                   const isExpired = coupon.expires_at
                     ? new Date(coupon.expires_at) < new Date()
@@ -508,8 +508,8 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                     <tr
                       key={coupon.id}
                       className={cn(
-                        "hover:bg-primaria-soft/10 transition-colors group",
-                        !coupon.is_active && "opacity-75 bg-cinza-claro/20"
+                        "hover:bg-primaria-soft/10 dark:hover:bg-[#251A1E]/50 transition-colors group",
+                        !coupon.is_active && "opacity-75 bg-cinza-claro/20 dark:bg-[#151012]/50"
                       )}
                     >
                       {/* Código & Descrição */}
@@ -523,7 +523,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                               title="Copiar código"
                             >
                               {copiedCode === coupon.code ? (
-                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                               ) : (
                                 <Copy className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100" />
                               )}
@@ -531,7 +531,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                           </div>
                         </div>
                         {coupon.description && (
-                          <p className="text-[11px] text-texto-claro mt-1 line-clamp-1 max-w-xs">
+                          <p className="text-[11px] text-texto-claro dark:text-[#988087] mt-1 line-clamp-1 max-w-xs">
                             {coupon.description}
                           </p>
                         )}
@@ -539,7 +539,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
                       {/* Desconto */}
                       <td className="py-4 px-4">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
                           {coupon.discount_type === "percentage" ? (
                             <>
                               <Percent className="w-3 h-3" />
@@ -553,7 +553,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                           )}
                         </div>
                         {coupon.discount_type === "percentage" && coupon.max_discount_cents && (
-                          <div className="text-[10px] text-texto-claro mt-0.5">
+                          <div className="text-[10px] text-texto-claro dark:text-[#988087] mt-0.5">
                             Teto máx: {formatMoney(coupon.max_discount_cents)}
                           </div>
                         )}
@@ -561,24 +561,24 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
                       {/* Critérios */}
                       <td className="py-4 px-4">
-                        <div className="space-y-0.5 text-[11px] text-texto-escuro">
-                          <div className="flex items-center gap-1 text-texto-claro">
+                        <div className="space-y-0.5 text-[11px] text-texto-escuro dark:text-[#F8EFF1]">
+                          <div className="flex items-center gap-1 text-texto-claro dark:text-[#988087]">
                             <span>Mínimo:</span>
-                            <span className="font-medium text-texto-escuro">
+                            <span className="font-medium text-texto-escuro dark:text-[#F8EFF1]">
                               {coupon.min_subtotal_cents > 0
                                 ? formatMoney(coupon.min_subtotal_cents)
                                 : "Sem valor mínimo"}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 text-texto-claro">
+                          <div className="flex items-center gap-1 text-texto-claro dark:text-[#988087]">
                             <Clock className="w-3 h-3 shrink-0" />
                             <span>
                               {coupon.expires_at ? (
                                 <span
                                   className={cn(
                                     isExpired
-                                      ? "text-rose-600 font-semibold"
-                                      : "text-texto-escuro"
+                                      ? "text-rose-600 dark:text-rose-400 font-semibold"
+                                      : "text-texto-escuro dark:text-[#F8EFF1]"
                                   )}
                                 >
                                   {isExpired ? "Expirou em " : "Válido até "}
@@ -601,15 +601,15 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                       {/* Utilizações */}
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
-                          <div className="text-xs font-semibold text-texto-escuro">
+                          <div className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                             {coupon.used_count}{" "}
-                            <span className="text-[11px] font-normal text-texto-claro">
+                            <span className="text-[11px] font-normal text-texto-claro dark:text-[#988087]">
                               / {coupon.usage_limit ? coupon.usage_limit : "∞"}
                             </span>
                           </div>
                         </div>
                         {isLimitReached && (
-                          <span className="inline-block mt-0.5 text-[10px] font-semibold text-rose-600">
+                          <span className="inline-block mt-0.5 text-[10px] font-semibold text-rose-600 dark:text-rose-400">
                             Esgotado
                           </span>
                         )}
@@ -626,7 +626,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                             onClick={() => handleToggleActive(coupon)}
                             className={cn(
                               "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primaria/20",
-                              coupon.is_active ? "bg-emerald-500" : "bg-cinza-escuro/30",
+                              coupon.is_active ? "bg-emerald-500" : "bg-cinza-escuro/30 dark:bg-[#38262C]",
                               togglingId === coupon.id && "opacity-50 cursor-wait"
                             )}
                           >
@@ -640,7 +640,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                           <span
                             className={cn(
                               "text-[11px] font-medium",
-                              coupon.is_active ? "text-emerald-700" : "text-texto-claro"
+                              coupon.is_active ? "text-emerald-700 dark:text-emerald-400" : "text-texto-claro dark:text-[#988087]"
                             )}
                           >
                             {coupon.is_active ? "Ativo" : "Pausado"}
@@ -653,7 +653,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => handleOpenEdit(coupon)}
-                            className="p-1.5 rounded-lg text-texto-claro hover:text-primaria hover:bg-primaria/10 transition-colors"
+                            className="p-1.5 rounded-lg text-texto-claro dark:text-[#988087] hover:text-primaria hover:bg-primaria/10 transition-colors"
                             title="Editar cupom"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -661,7 +661,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
                           <button
                             onClick={() => setCouponToDelete(coupon)}
-                            className="p-1.5 rounded-lg text-texto-claro hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            className="p-1.5 rounded-lg text-texto-claro dark:text-[#988087] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                             title="Excluir cupom"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -687,14 +687,14 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
       >
         <form onSubmit={handleSubmitForm} className="space-y-5 mt-4">
           {formError && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-200 text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <span>{formError}</span>
             </div>
           )}
 
           {/* Ticket Preview Interativo em Tempo Real */}
-          <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-primaria/40 bg-gradient-to-br from-primaria/5 via-fundo-card to-primaria-soft/20 p-4 sm:p-5">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-primaria/40 bg-gradient-to-br from-primaria/5 via-fundo-card to-primaria-soft/20 dark:from-primaria/10 dark:via-[#1A1215] dark:to-primaria-soft/10 p-4 sm:p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-primaria uppercase tracking-wider">
@@ -702,7 +702,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   <span>Preview do Cupom do Cliente</span>
                 </div>
                 <div className="mt-1 flex items-baseline gap-2">
-                  <span className="font-mono text-xl sm:text-2xl font-black text-texto-escuro tracking-wider">
+                  <span className="font-mono text-xl sm:text-2xl font-black text-texto-escuro dark:text-[#F8EFF1] tracking-wider">
                     {formData.code.trim().toUpperCase() || "SEUCODIGO"}
                   </span>
                   <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white">
@@ -714,15 +714,15 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                         })} OFF`}
                   </span>
                 </div>
-                <p className="text-[11px] text-texto-claro mt-1 line-clamp-1">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] mt-1 line-clamp-1">
                   {formData.description || "Descrição de desconto exibida ao cliente"}
                 </p>
               </div>
 
-              <div className="text-right sm:border-l sm:border-primaria/20 sm:pl-4 text-[11px] text-texto-claro space-y-0.5">
+              <div className="text-right sm:border-l sm:border-primaria/20 dark:sm:border-primaria/30 sm:pl-4 text-[11px] text-texto-claro dark:text-[#988087] space-y-0.5">
                 <div>
                   Mínimo:{" "}
-                  <strong className="text-texto-escuro font-semibold">
+                  <strong className="text-texto-escuro dark:text-[#F8EFF1] font-semibold">
                     {formData.min_subtotal_reais > 0
                       ? Number(formData.min_subtotal_reais).toLocaleString("pt-BR", {
                           style: "currency",
@@ -734,7 +734,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                 {formData.discount_type === "percentage" && formData.max_discount_reais !== "" && (
                   <div>
                     Teto máx:{" "}
-                    <strong className="text-texto-escuro font-semibold">
+                    <strong className="text-texto-escuro dark:text-[#F8EFF1] font-semibold">
                       {Number(formData.max_discount_reais).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
@@ -754,9 +754,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Código do Cupom */}
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                 <span>Código Promocional *</span>
-                <span className="text-[11px] text-texto-claro font-normal">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087] font-normal">
                   Letras e números sem espaços (ex: ISIS10, VERAO20)
                 </span>
               </label>
@@ -771,13 +771,13 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   }))
                 }
                 placeholder="Ex: PRIMEIRACOMPRA"
-                className="w-full px-3.5 py-2.5 text-sm font-mono font-bold tracking-wider rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria uppercase transition-all"
+                className="w-full px-3.5 py-2.5 text-sm font-mono font-bold tracking-wider rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria uppercase transition-all"
               />
             </div>
 
             {/* Descrição */}
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Descrição do Cupom
               </label>
               <input
@@ -787,13 +787,13 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   setFormData((prev) => ({ ...prev, description: e.target.value }))
                 }
                 placeholder="Ex: 10% de desconto para todos os pedidos de boas-vindas"
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
               />
             </div>
 
             {/* Tipo de Desconto Selector */}
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Tipo de Desconto *
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -810,7 +810,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                     "flex items-center justify-center gap-2 p-3 rounded-xl border-2 text-xs font-semibold transition-all",
                     formData.discount_type === "percentage"
                       ? "border-primaria bg-primaria/10 text-primaria"
-                      : "border-borda bg-white text-texto-claro hover:border-cinza-escuro"
+                      : "border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-claro dark:text-[#988087] hover:border-cinza-escuro dark:hover:border-[#4E353E]"
                   )}
                 >
                   <Percent className="w-4 h-4" />
@@ -830,7 +830,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                     "flex items-center justify-center gap-2 p-3 rounded-xl border-2 text-xs font-semibold transition-all",
                     formData.discount_type === "fixed"
                       ? "border-primaria bg-primaria/10 text-primaria"
-                      : "border-borda bg-white text-texto-claro hover:border-cinza-escuro"
+                      : "border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-claro dark:text-[#988087] hover:border-cinza-escuro dark:hover:border-[#4E353E]"
                   )}
                 >
                   <DollarSign className="w-4 h-4" />
@@ -841,7 +841,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
             {/* Valor do Desconto */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 {formData.discount_type === "percentage"
                   ? "Porcentagem de Desconto (%) *"
                   : "Valor do Desconto em Reais (R$) *"}
@@ -860,9 +860,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                       discount_value: parseFloat(e.target.value) || 0,
                     }))
                   }
-                  className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                  className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro text-xs font-semibold">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] text-xs font-semibold">
                   {formData.discount_type === "percentage" ? "%" : "R$"}
                 </span>
               </div>
@@ -870,7 +870,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
             {/* Pedido Mínimo */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-texto-escuro">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Pedido Mínimo (R$)
               </label>
               <div className="relative">
@@ -886,9 +886,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                     }))
                   }
                   placeholder="0 para sem mínimo"
-                  className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                  className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro text-xs font-semibold">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] text-xs font-semibold">
                   R$
                 </span>
               </div>
@@ -897,9 +897,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
             {/* Teto Máximo (apenas para porcentagem) */}
             {formData.discount_type === "percentage" && (
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+                <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                   <span>Teto Máximo de Desconto</span>
-                  <span className="text-[10px] text-texto-claro font-normal">Opcional</span>
+                  <span className="text-[10px] text-texto-claro dark:text-[#988087] font-normal">Opcional</span>
                 </label>
                 <div className="relative">
                   <input
@@ -915,9 +915,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                       }))
                     }
                     placeholder="Ex: 50.00"
-                    className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                    className="w-full pl-8 pr-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro text-xs font-semibold">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] text-xs font-semibold">
                     R$
                   </span>
                 </div>
@@ -926,9 +926,9 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
 
             {/* Limite de Usos */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                 <span>Limite Global de Usos</span>
-                <span className="text-[10px] text-texto-claro font-normal">
+                <span className="text-[10px] text-texto-claro dark:text-[#988087] font-normal">
                   Vazio = Ilimitado
                 </span>
               </label>
@@ -944,15 +944,15 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   }))
                 }
                 placeholder="Ex: 100"
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
               />
             </div>
 
             {/* Data de Expiração */}
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+              <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                 <span>Data e Hora de Expiração</span>
-                <span className="text-[10px] text-texto-claro font-normal">
+                <span className="text-[10px] text-texto-claro dark:text-[#988087] font-normal">
                   Vazio = Sem prazo de validade
                 </span>
               </label>
@@ -962,7 +962,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, expires_at: e.target.value }))
                 }
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda bg-white text-texto-escuro focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:ring-2 focus:ring-primaria/20 focus:border-primaria transition-all"
               />
             </div>
 
@@ -975,13 +975,13 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, is_active: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded text-primaria focus:ring-primaria border-borda"
+                  className="w-4 h-4 rounded text-primaria focus:ring-primaria border-borda dark:border-[#38262C] bg-white dark:bg-[#151012]"
                 />
                 <div>
-                  <span className="text-xs font-semibold text-texto-escuro block">
+                  <span className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     Cupom Ativo para Uso Imediato
                   </span>
-                  <span className="text-[11px] text-texto-claro block">
+                  <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                     Clientes poderão validar e aplicar este cupom na etapa de checkout.
                   </span>
                 </div>
@@ -989,12 +989,12 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-borda">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-borda dark:border-[#38262C]">
             <button
               type="button"
               disabled={isSubmitting}
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-xs font-medium text-texto-claro hover:text-texto-escuro transition-colors"
+              className="px-4 py-2 text-xs font-medium text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1] transition-colors"
             >
               Cancelar
             </button>
@@ -1029,14 +1029,14 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
         className="max-w-md"
       >
         <div className="space-y-4 mt-3">
-          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-start gap-2.5">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-xs text-rose-900 dark:text-rose-200 flex items-start gap-2.5">
+            <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold">
                 Deseja realmente excluir o cupom{" "}
                 <span className="font-mono">{couponToDelete?.code}</span>?
               </p>
-              <p className="text-[11px] text-rose-700 mt-0.5">
+              <p className="text-[11px] text-rose-700 dark:text-rose-300 mt-0.5">
                 Novos pedidos não poderão mais resgatar este código.
               </p>
             </div>
@@ -1047,7 +1047,7 @@ export function CouponsManagerView({ initialCoupons }: CouponsManagerViewProps) 
               type="button"
               disabled={isDeleting}
               onClick={() => setCouponToDelete(null)}
-              className="px-4 py-2 text-xs font-medium text-texto-claro hover:text-texto-escuro"
+              className="px-4 py-2 text-xs font-medium text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
             >
               Cancelar
             </button>

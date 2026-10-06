@@ -21,13 +21,13 @@ interface OrderStatusManagerProps {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  pending_payment: { label: "Aguardando Pagamento", color: "bg-amber-100 text-amber-800 border-amber-300" },
-  paid: { label: "Pago", color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
-  processing: { label: "Em Separação", color: "bg-blue-100 text-blue-800 border-blue-300" },
-  shipped: { label: "Enviado", color: "bg-purple-100 text-purple-800 border-purple-300" },
-  delivered: { label: "Entregue", color: "bg-emerald-100 text-emerald-900 border-emerald-400" },
-  cancelled: { label: "Cancelado", color: "bg-rose-100 text-rose-800 border-rose-300" },
-  refunded: { label: "Reembolsado", color: "bg-neutral-100 text-neutral-800 border-neutral-300" },
+  pending_payment: { label: "Aguardando Pagamento", color: "bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800/40" },
+  paid: { label: "Pago", color: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800/40" },
+  processing: { label: "Em Separação", color: "bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-800/40" },
+  shipped: { label: "Enviado", color: "bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800/40" },
+  delivered: { label: "Entregue", color: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border-emerald-400 dark:border-emerald-700/50" },
+  cancelled: { label: "Cancelado", color: "bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800/40" },
+  refunded: { label: "Reembolsado", color: "bg-neutral-100 dark:bg-neutral-800/50 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-700" },
 };
 
 export function OrderStatusManager({
@@ -73,13 +73,13 @@ export function OrderStatusManager({
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-5">
-      <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+    <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+      <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
         <div>
-          <h2 className="font-serif text-sm font-bold text-texto-escuro">
+          <h2 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
             Gerenciamento do Pedido #{orderNumber}
           </h2>
-          <p className="text-[11px] text-texto-claro mt-0.5">
+          <p className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5">
             Atualize a situação operacional e informe o código de rastreio
           </p>
         </div>
@@ -112,7 +112,7 @@ export function OrderStatusManager({
 
       <form onSubmit={handleUpdate} className="space-y-4 text-xs">
         <div>
-          <label className="block font-semibold text-texto-escuro mb-1.5">
+          <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
             Alterar Status do Pedido *
           </label>
           <select
@@ -129,7 +129,7 @@ export function OrderStatusManager({
                   | "refunded"
               )
             }
-            className="w-full bg-white border border-borda rounded-xl p-3 text-xs font-medium text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria"
+            className="w-full bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl p-3 text-xs font-medium text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria"
           >
             <option value="pending_payment">Aguardando Pagamento</option>
             <option value="paid">Pago (Aprovado)</option>
@@ -142,7 +142,7 @@ export function OrderStatusManager({
         </div>
 
         <div>
-          <label className="block font-semibold text-texto-escuro mb-1.5">
+          <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
             Código de Rastreamento / Observações Internas
           </label>
           <Input
@@ -150,7 +150,7 @@ export function OrderStatusManager({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Ex: Correios Sedex BR123456789BR ou nota para a equipe"
-            className="text-xs"
+            className="text-xs dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1]"
           />
         </div>
 

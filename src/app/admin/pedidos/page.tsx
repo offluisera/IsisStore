@@ -36,31 +36,31 @@ type ValidOrderStatus = (typeof VALID_STATUSES)[number];
 const STATUS_MAP: Record<string, { label: string; badgeClass: string }> = {
   pending_payment: {
     label: "Aguardando Pagamento",
-    badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+    badgeClass: "bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/40",
   },
   paid: {
     label: "Pago",
-    badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    badgeClass: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40",
   },
   processing: {
     label: "Em Separação",
-    badgeClass: "bg-blue-100 text-blue-800 border-blue-200",
+    badgeClass: "bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800/40",
   },
   shipped: {
     label: "Enviado",
-    badgeClass: "bg-purple-100 text-purple-800 border-purple-200",
+    badgeClass: "bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800/40",
   },
   delivered: {
     label: "Entregue",
-    badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    badgeClass: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-700/50",
   },
   cancelled: {
     label: "Cancelado",
-    badgeClass: "bg-rose-100 text-rose-800 border-rose-200",
+    badgeClass: "bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/40",
   },
   refunded: {
     label: "Reembolsado",
-    badgeClass: "bg-neutral-100 text-neutral-800 border-neutral-200",
+    badgeClass: "bg-neutral-100 dark:bg-neutral-800/50 text-neutral-800 dark:text-neutral-200 border-neutral-200 dark:border-neutral-700",
   },
 };
 
@@ -125,19 +125,19 @@ export default async function AdminPedidosPage({
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Pedidos</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Pedidos</span>
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1]">
             Gerenciamento de Pedidos
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Visualize vendas, despache mercadorias e gerencie o fluxo de entrega.
           </p>
         </div>
@@ -145,7 +145,11 @@ export default async function AdminPedidosPage({
         <div>
           <Link
             href="/admin"
-            className={buttonVariants({ variant: "white", size: "sm" })}
+            className={buttonVariants({
+              variant: "white",
+              size: "sm",
+              className: "dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1]",
+            })}
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
             <span>Voltar ao Painel</span>
@@ -155,7 +159,7 @@ export default async function AdminPedidosPage({
 
       {/* Filtros de Status */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs">
-        <Filter className="w-4 h-4 text-texto-claro shrink-0 ml-1 mr-1" />
+        <Filter className="w-4 h-4 text-texto-claro dark:text-[#988087] shrink-0 ml-1 mr-1" />
         {FILTER_TABS.map((tab) => {
           const isActive =
             (!currentStatus && tab.value === "all") ||
@@ -172,7 +176,7 @@ export default async function AdminPedidosPage({
               className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-colors border ${
                 isActive
                   ? "bg-primaria text-white border-primaria shadow-2xs"
-                  : "bg-white text-texto-medio border-borda hover:border-primaria/40"
+                  : "bg-white dark:bg-[#1E1518] text-texto-medio dark:text-[#D4BFC5] border-borda dark:border-[#38262C] hover:border-primaria/40 dark:hover:border-primaria/60"
               }`}
             >
               {tab.label}
@@ -182,10 +186,10 @@ export default async function AdminPedidosPage({
       </div>
 
       {/* Tabela de Pedidos */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#251A1E] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5">Pedido</th>
                 <th className="px-5 py-3.5">Cliente</th>
@@ -195,33 +199,33 @@ export default async function AdminPedidosPage({
                 <th className="px-5 py-3.5 text-right">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {orders && orders.length > 0 ? (
                 (orders as unknown as OrderListItem[]).map((ord) => {
                   const statusInfo = STATUS_MAP[ord.status] || {
                     label: ord.status,
-                    badgeClass: "bg-neutral-100 text-neutral-800 border-neutral-200",
+                    badgeClass: "bg-neutral-100 dark:bg-neutral-800/50 text-neutral-800 dark:text-neutral-200 border-neutral-200 dark:border-neutral-700",
                   };
 
                   return (
                     <tr
                       key={ord.id}
-                      className="hover:bg-fundo/30 transition-colors"
+                      className="hover:bg-fundo/30 dark:hover:bg-[#251A1E]/40 transition-colors"
                     >
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
+                          <div className="w-9 h-9 rounded-xl bg-primaria-soft dark:bg-primaria-soft/30 text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
                             <ShoppingBag className="w-4 h-4" />
                           </div>
                           <div>
-                            <p className="font-semibold text-texto-escuro">
+                            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                               #{ord.order_number}
                             </p>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               {formatDate(ord.created_at)}
                             </p>
                             {ord.label_generated && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full mt-1">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 px-2 py-0.5 rounded-full mt-1">
                                 ✓ Etiqueta gerada
                               </span>
                             )}
@@ -230,15 +234,15 @@ export default async function AdminPedidosPage({
                       </td>
 
                       <td className="px-5 py-4">
-                        <p className="font-semibold text-texto-escuro">
+                        <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                           {ord.profiles?.full_name || "Cliente Isis Store"}
                         </p>
-                        <p className="text-[11px] text-texto-claro">
+                        <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                           {ord.profiles?.email || "Sem e-mail"}
                         </p>
                       </td>
 
-                      <td className="px-5 py-4 text-texto-medio">
+                      <td className="px-5 py-4 text-texto-medio dark:text-[#D4BFC5]">
                         {ord.order_items?.length ?? 0} {ord.order_items?.length === 1 ? "item" : "itens"}
                       </td>
 
@@ -260,7 +264,7 @@ export default async function AdminPedidosPage({
                           className={buttonVariants({
                             variant: "outline",
                             size: "sm",
-                            className: "text-[11px] h-8 px-3 gap-1",
+                            className: "text-[11px] h-8 px-3 gap-1 dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1] hover:dark:bg-[#251A1E]",
                           })}
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -272,7 +276,7 @@ export default async function AdminPedidosPage({
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro">
+                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087]">
                     Nenhum pedido encontrado para o filtro selecionado.
                   </td>
                 </tr>

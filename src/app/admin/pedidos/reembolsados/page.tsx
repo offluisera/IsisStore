@@ -124,9 +124,9 @@ export default async function AdminPedidosReembolsadosPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
@@ -138,12 +138,12 @@ export default async function AdminPedidosReembolsadosPage() {
               Pedidos
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Reembolsados</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Reembolsados</span>
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1]">
             Pedidos Reembolsados & Devolvidos
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Histórico consolidado de pedidos estornados e itens retornados ao estoque.
           </p>
         </div>
@@ -151,7 +151,11 @@ export default async function AdminPedidosReembolsadosPage() {
         <div>
           <Link
             href="/admin/pedidos"
-            className={buttonVariants({ variant: "white", size: "sm" })}
+            className={buttonVariants({
+              variant: "white",
+              size: "sm",
+              className: "dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1]",
+            })}
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
             <span>Ver Todos os Pedidos</span>
@@ -161,62 +165,62 @@ export default async function AdminPedidosReembolsadosPage() {
 
       {/* Cards de Métricas Reais de Reembolso */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-200">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-200 dark:border-rose-800/40">
             <DollarSign className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-texto-claro font-medium">Total Estornado</p>
-            <p className="text-xl font-bold text-rose-600">
+            <p className="text-xs text-texto-claro dark:text-[#988087] font-medium">Total Estornado</p>
+            <p className="text-xl font-bold text-rose-600 dark:text-rose-400">
               {formatPrice(totalRefundedCents)}
             </p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-neutral-100 text-neutral-700 flex items-center justify-center shrink-0 border border-neutral-200">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800/50 text-neutral-700 dark:text-neutral-300 flex items-center justify-center shrink-0 border border-neutral-200 dark:border-neutral-700">
             <RotateCcw className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-texto-claro font-medium">Pedidos Estornados</p>
-            <p className="text-xl font-bold text-texto-escuro">
+            <p className="text-xs text-texto-claro dark:text-[#988087] font-medium">Pedidos Estornados</p>
+            <p className="text-xl font-bold text-texto-escuro dark:text-[#F8EFF1]">
               {refundedOrders.length}{" "}
-              <span className="text-xs font-normal text-texto-claro">
+              <span className="text-xs font-normal text-texto-claro dark:text-[#988087]">
                 {refundedOrders.length === 1 ? "pedido" : "pedidos"}
               </span>
             </p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-200">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200 dark:border-blue-800/40">
             <Package className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-texto-claro font-medium">Itens Devolvidos ao Estoque</p>
-            <p className="text-xl font-bold text-texto-escuro">
+            <p className="text-xs text-texto-claro dark:text-[#988087] font-medium">Itens Devolvidos ao Estoque</p>
+            <p className="text-xl font-bold text-texto-escuro dark:text-[#F8EFF1]">
               {totalReturnedItems}{" "}
-              <span className="text-xs font-normal text-texto-claro">unidades</span>
+              <span className="text-xs font-normal text-texto-claro dark:text-[#988087]">unidades</span>
             </p>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-200">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-800/40">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-texto-claro font-medium">Taxa de Reembolso</p>
-            <p className="text-xl font-bold text-texto-escuro">
+            <p className="text-xs text-texto-claro dark:text-[#988087] font-medium">Taxa de Reembolso</p>
+            <p className="text-xl font-bold text-texto-escuro dark:text-[#F8EFF1]">
               {refundRate}%{" "}
-              <span className="text-xs font-normal text-texto-claro">das vendas</span>
+              <span className="text-xs font-normal text-texto-claro dark:text-[#988087]">das vendas</span>
             </p>
           </div>
         </div>
       </div>
 
       {/* Banner Informativo de Reversão Automática */}
-      <div className="p-4 bg-primaria-soft/50 rounded-2xl border border-primaria/20 flex items-center gap-3 text-xs text-texto-escuro">
+      <div className="p-4 bg-primaria-soft/50 dark:bg-primaria-soft/20 rounded-2xl border border-primaria/20 flex items-center gap-3 text-xs text-texto-escuro dark:text-[#F8EFF1]">
         <ShieldCheck className="w-5 h-5 text-primaria shrink-0" />
         <p>
           <span className="font-semibold text-primaria">Garantia de Integridade de Estoque:</span>{" "}
@@ -226,10 +230,10 @@ export default async function AdminPedidosReembolsadosPage() {
       </div>
 
       {/* Tabela de Pedidos Reembolsados */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#251A1E] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5">Pedido</th>
                 <th className="px-5 py-3.5">Cliente</th>
@@ -240,7 +244,7 @@ export default async function AdminPedidosReembolsadosPage() {
                 <th className="px-5 py-3.5 text-right">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {refundedOrders.length > 0 ? (
                 refundedOrders.map((ord) => {
                   const payment = ord.payments?.[0];
@@ -248,19 +252,19 @@ export default async function AdminPedidosReembolsadosPage() {
                   return (
                     <tr
                       key={ord.id}
-                      className="hover:bg-fundo/30 transition-colors"
+                      className="hover:bg-fundo/30 dark:hover:bg-[#251A1E]/40 transition-colors"
                     >
                       {/* Pedido */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-200">
+                          <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-200 dark:border-rose-800/40">
                             <RotateCcw className="w-4 h-4" />
                           </div>
                           <div>
-                            <p className="font-semibold text-texto-escuro">
+                            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                               #{ord.order_number}
                             </p>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               Estornado em: {formatDate(ord.updated_at || ord.created_at)}
                             </p>
                           </div>
@@ -269,14 +273,14 @@ export default async function AdminPedidosReembolsadosPage() {
 
                       {/* Cliente */}
                       <td className="px-5 py-4">
-                        <p className="font-semibold text-texto-escuro">
+                        <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                           {ord.profiles?.full_name || "Cliente Isis Store"}
                         </p>
-                        <p className="text-[11px] text-texto-claro">
+                        <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                           {ord.profiles?.email || "Sem e-mail"}
                         </p>
                         {ord.profiles?.phone && (
-                          <p className="text-[10px] text-texto-claro font-mono">
+                          <p className="text-[10px] text-texto-claro dark:text-[#988087] font-mono">
                             {ord.profiles.phone}
                           </p>
                         )}
@@ -289,16 +293,16 @@ export default async function AdminPedidosReembolsadosPage() {
                             ord.order_items.map((item) => (
                               <span
                                 key={item.id}
-                                className="text-xs text-texto-escuro font-medium"
+                                className="text-xs text-texto-escuro dark:text-[#F8EFF1] font-medium"
                               >
                                 • {item.product_name}{" "}
-                                <span className="text-texto-claro font-normal">
+                                <span className="text-texto-claro dark:text-[#988087] font-normal">
                                   ({item.quantity}x dev.)
                                 </span>
                               </span>
                             ))
                           ) : (
-                            <span className="text-texto-claro italic">Sem itens</span>
+                            <span className="text-texto-claro dark:text-[#988087] italic">Sem itens</span>
                           )}
                         </div>
                       </td>
@@ -306,12 +310,12 @@ export default async function AdminPedidosReembolsadosPage() {
                       {/* Gateway / Pagamento */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4 text-texto-claro shrink-0" />
+                          <CreditCard className="w-4 h-4 text-texto-claro dark:text-[#988087] shrink-0" />
                           <div>
-                            <p className="font-medium text-texto-escuro uppercase text-[11px]">
+                            <p className="font-medium text-texto-escuro dark:text-[#F8EFF1] uppercase text-[11px]">
                               {payment?.gateway || "Mercado Pago"}
                             </p>
-                            <p className="text-[10px] text-texto-claro font-mono truncate max-w-[140px]">
+                            <p className="text-[10px] text-texto-claro dark:text-[#988087] font-mono truncate max-w-[140px]">
                               {payment?.gateway_payment_id || "Estorno via sistema"}
                             </p>
                           </div>
@@ -320,10 +324,10 @@ export default async function AdminPedidosReembolsadosPage() {
 
                       {/* Valor Total Reembolsado */}
                       <td className="px-5 py-4">
-                        <p className="font-bold text-rose-600 text-sm">
+                        <p className="font-bold text-rose-600 dark:text-rose-400 text-sm">
                           {formatPrice(ord.total_cents)}
                         </p>
-                        <p className="text-[10px] text-texto-claro">
+                        <p className="text-[10px] text-texto-claro dark:text-[#988087]">
                           (Produtos: {formatPrice(ord.subtotal_cents)} + Frete:{" "}
                           {formatPrice(ord.shipping_cents)})
                         </p>
@@ -331,11 +335,11 @@ export default async function AdminPedidosReembolsadosPage() {
 
                       {/* Status */}
                       <td className="px-5 py-4">
-                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold border bg-neutral-100 text-neutral-800 border-neutral-300">
+                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold border bg-neutral-100 dark:bg-neutral-800/50 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-700">
                           Reembolsado
                         </span>
                         {ord.notes && (
-                          <p className="text-[10px] text-texto-claro mt-1 line-clamp-1 italic max-w-xs">
+                          <p className="text-[10px] text-texto-claro dark:text-[#988087] mt-1 line-clamp-1 italic max-w-xs">
                             Motivo: {ord.notes}
                           </p>
                         )}
@@ -348,7 +352,7 @@ export default async function AdminPedidosReembolsadosPage() {
                           className={buttonVariants({
                             variant: "outline",
                             size: "sm",
-                            className: "text-[11px] h-8 px-3 gap-1",
+                            className: "text-[11px] h-8 px-3 gap-1 dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1] hover:dark:bg-[#251A1E]",
                           })}
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -360,7 +364,7 @@ export default async function AdminPedidosReembolsadosPage() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-texto-claro">
+                  <td colSpan={7} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087]">
                     Nenhum pedido reembolsado registrado até o momento.
                   </td>
                 </tr>
