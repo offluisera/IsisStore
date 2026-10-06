@@ -7,6 +7,7 @@ import {
   MapPin,
   CreditCard,
   Package,
+  Sparkles,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +51,8 @@ export default async function PedidoDetalhesPage({
         sku,
         quantity,
         unit_price_cents,
-        subtotal_cents
+        subtotal_cents,
+        customization
       )
     `)
     .eq("id", id)
@@ -235,6 +237,38 @@ export default async function PedidoDetalhesPage({
                       <span>&bull;</span>
                       <span>Unitário: {formatPrice(item.unit_price_cents)}</span>
                     </div>
+
+                    {item.customization && (
+                      <div className="mt-2.5 p-3 rounded-xl bg-primaria-soft/40 dark:bg-[#2A1820] border border-primaria/20 text-xs space-y-1.5 max-w-md">
+                        <div className="flex items-center gap-1.5 font-semibold text-primaria">
+                          <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                          <span>Sua Personalização:</span>
+                        </div>
+                        {(item.customization as { text?: string })?.text && (
+                          <p className="text-texto-escuro dark:text-[#F8EFF1] italic font-serif">
+                            &ldquo;{(item.customization as { text?: string }).text}&rdquo;
+                          </p>
+                        )}
+                        {(item.customization as { imageUrl?: string })?.imageUrl && (
+                          <div className="flex items-center gap-2 pt-0.5">
+                            <span className="text-[11px] text-texto-medio dark:text-[#A89299]">📷 Foto anexada:</span>
+                            <a
+                              href={(item.customization as { imageUrl?: string }).imageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[11px] text-primaria font-semibold hover:underline"
+                            >
+                              Ver foto original
+                            </a>
+                          </div>
+                        )}
+                        {(item.customization as { notes?: string })?.notes && (
+                          <p className="text-[11px] text-texto-claro dark:text-[#A89299]">
+                            Obs: {(item.customization as { notes?: string }).notes}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <span className="font-serif text-base font-bold text-primaria self-end sm:self-auto">

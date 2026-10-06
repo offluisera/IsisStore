@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
 import { useStoreSettings } from "@/lib/settings/store-settings-context";
@@ -15,6 +15,11 @@ export interface CartItemData {
   price: number; // Em centavos
   quantity: number;
   imageUrl: string;
+  customization?: {
+    text?: string;
+    imageUrl?: string;
+    notes?: string;
+  };
 }
 
 interface CartDrawerProps {
@@ -197,6 +202,38 @@ export function CartDrawer(props: CartDrawerProps) {
                     <p className="text-xs font-semibold text-primaria mt-0.5">
                       {formatPrice(item.price)}
                     </p>
+
+                    {item.customization && (
+                      <div className="mt-1.5 p-2 rounded-xl bg-primaria-soft/40 border border-primaria/15 text-[11px] space-y-1">
+                        <div className="flex items-center gap-1 font-semibold text-primaria">
+                          <Sparkles className="w-3 h-3 shrink-0" />
+                          <span>Personalizado:</span>
+                        </div>
+                        {item.customization.text && (
+                          <p className="text-texto-escuro italic truncate">
+                            &ldquo;{item.customization.text}&rdquo;
+                          </p>
+                        )}
+                        {item.customization.imageUrl && (
+                          <div className="flex items-center gap-1.5 pt-0.5">
+                            <span className="text-[10px] text-texto-medio">📷 Foto:</span>
+                            <a
+                              href={item.customization.imageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-primaria font-medium hover:underline truncate"
+                            >
+                              Ver anexo
+                            </a>
+                          </div>
+                        )}
+                        {item.customization.notes && (
+                          <p className="text-[10px] text-texto-claro truncate">
+                            Obs: {item.customization.notes}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                     {/* Quantidade */}
                     <div className="mt-2 flex items-center gap-2">

@@ -1,8 +1,21 @@
 import { z } from "zod";
 
+export const productCustomizationSchema = z
+  .object({
+    text: z.string().max(200, "Texto de personalização muito longo").nullish(),
+    imageUrl: z
+      .string()
+      .url("URL de imagem inválida")
+      .or(z.literal(""))
+      .nullish(),
+    notes: z.string().max(300, "Observações muito longas").nullish(),
+  })
+  .nullish();
+
 export const checkoutItemSchema = z.object({
   productId: z.string().uuid("ID de produto inválido"),
   quantity: z.number().int().min(1, "Quantidade mínima é 1").max(50, "Quantidade máxima excedida"),
+  customization: productCustomizationSchema,
 });
 
 export const checkoutSchema = z.object({

@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Tag,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -191,6 +192,38 @@ export default function CarrinhoPage() {
                         <p className="text-xs text-texto-claro mt-0.5">
                           Unitário: {formatPrice(item.price)}
                         </p>
+
+                        {item.customization && (
+                          <div className="mt-2 p-2.5 rounded-xl bg-primaria-soft/40 border border-primaria/15 text-xs max-w-md space-y-1">
+                            <div className="flex items-center gap-1.5 font-semibold text-primaria">
+                              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                              <span>Personalização do Produto:</span>
+                            </div>
+                            {item.customization.text && (
+                              <p className="text-texto-escuro italic">
+                                &ldquo;{item.customization.text}&rdquo;
+                              </p>
+                            )}
+                            {item.customization.imageUrl && (
+                              <div className="flex items-center gap-2 pt-0.5">
+                                <span className="text-[11px] text-texto-medio">📷 Foto anexada:</span>
+                                <a
+                                  href={item.customization.imageUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[11px] text-primaria font-semibold hover:underline"
+                                >
+                                  Ver imagem original
+                                </a>
+                              </div>
+                            )}
+                            {item.customization.notes && (
+                              <p className="text-[11px] text-texto-claro">
+                                <strong>Obs:</strong> {item.customization.notes}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 

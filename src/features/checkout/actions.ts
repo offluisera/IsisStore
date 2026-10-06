@@ -97,6 +97,7 @@ export async function createOrderAction(
       quantity: number;
       unitPriceCents: number;
       subtotalCents: number;
+      customization?: Record<string, unknown> | null;
     }> = [];
 
     for (const item of cartItems) {
@@ -127,6 +128,7 @@ export async function createOrderAction(
         quantity: item.quantity,
         unitPriceCents,
         subtotalCents: itemSubtotalCents,
+        customization: item.customization as Record<string, unknown> | null | undefined,
       });
     }
 
@@ -246,6 +248,7 @@ export async function createOrderAction(
       quantity: item.quantity,
       unit_price_cents: item.unitPriceCents,
       subtotal_cents: item.subtotalCents,
+      customization: (item.customization as import("@/types/database").Json) || null,
     }));
 
     const { error: itemsInsertError } = await supabase
@@ -523,6 +526,11 @@ export async function createQuickWhatsAppOrderAction(input: {
   quantity: number;
   customerName?: string;
   customerPhone?: string;
+  customization?: {
+    text?: string;
+    imageUrl?: string;
+    notes?: string;
+  };
 }): Promise<{
   success: boolean;
   message: string;
@@ -539,6 +547,7 @@ export async function createQuickWhatsAppOrderAction(input: {
       p_quantity: Math.max(1, input.quantity),
       p_customer_name: input.customerName || null,
       p_customer_phone: input.customerPhone || null,
+      p_customization: (input.customization as unknown as import("@/types/database").Json) || null,
     });
 
     if (error || !data) {

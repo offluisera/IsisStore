@@ -19,6 +19,7 @@ interface RemoteCartProduct {
 interface RemoteCartItemRow {
   product_id: string;
   quantity: number;
+  customization?: Record<string, unknown> | null;
   products: RemoteCartProduct | null;
 }
 
@@ -66,13 +67,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = React.useCallback(
     (item: Omit<CartItem, "quantity">, quantity = 1) => {
       setItems((prev) => {
-        const existing = prev.find((i) => i.id === item.id);
+        const rawProductId = item.productId || item.id;
+        const uniqueId = item.customization
+          ? `${rawProductId}_cust_${(item.customization.text || "").trim().toLowerCase().slice(0, 20).replace(/\s+/g, "-")}_${item.customization.imageUrl ? "img" : "txt"}`
+          : item.id;
+
+        const resolvedItem: CartItem = {
+          ...item,
+          id: uniqueId,
+          productId: rawProductId,
+          quantity,
+        };
+
+        const existing = prev.find((i) => i.id === uniqueId);
         if (existing) {
           return prev.map((i) =>
-            i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
+            i.id === uniqueId ? { ...i, quantity: i.quantity + quantity } : i
           );
         }
-        return [...prev, { ...item, quantity }];
+        return [...prev, resolvedItem];
       });
       setIsOpen(true);
     },
@@ -113,16 +126,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         productName?: string;
         imageUrl?: string;
         slug?: string;
+        customization?: CartItem["customization"];
       }>;
       const detail = customEvent.detail;
       if (detail && detail.productId) {
         addItem(
           {
             id: detail.productId,
+            productId: detail.productId,
             name: detail.productName || "Produto Selecionado",
             price: detail.priceCents || 0,
             imageUrl: detail.imageUrl || "/images/logo/logo.jpeg",
             slug: detail.slug,
+            customization: detail.customization,
           },
           detail.quantity || 1
         );
@@ -172,7 +188,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const { data: remoteData } = await supabase
           .from("cart_items")
           .select(
-            "product_id, quantity, products(id, name, slug, price_cents, sale_price_cents, stock, product_images(public_url, is_primary))"
+            "product_id, quantity, customization, products(id, name, slug, price_cents, sale_price_cents, stock, product_images(public_url, is_primary))"
           )
           .eq("cart_id", cart.id);
 
@@ -187,14 +203,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 prod.product_images?.find((img) => img.is_primary) ||
                 prod.product_images?.[0];
 
+              const cust =
+                ri.customization &&
+                typeof ri.customization === "object" &&
+                !Array.isArray(ri.customization)
+                  ? (ri.customization as unknown as CartItem["customization"])
+                  : undefined;
+
+              const uniqueId = cust
+                ? `${prod.id}_cust_${(cust.text || "").trim().toLowerCase().slice(0, 20).replace(/\s+/g, "-")}_${cust.imageUrl ? "img" : "txt"}`
+                : prod.id;
+
               return {
-                id: prod.id,
+                id: uniqueId,
+                productId: prod.id,
                 name: prod.name,
                 slug: prod.slug,
                 price: prod.sale_price_cents || prod.price_cents,
                 quantity: ri.quantity,
                 imageUrl: primaryImg?.public_url || "/images/logo/logo.jpeg",
                 stock: prod.stock,
+                customization: cust,
               };
             });
 

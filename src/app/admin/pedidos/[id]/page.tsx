@@ -11,6 +11,7 @@ import {
   Package,
   MessageCircle,
   ExternalLink,
+  Sparkles,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { OrderStatusManager } from "@/components/admin/order-status-manager";
@@ -40,6 +41,11 @@ interface OrderItemSnapshot {
   quantity: number;
   unit_price_cents: number;
   subtotal_cents: number;
+  customization?: {
+    text?: string;
+    imageUrl?: string;
+    notes?: string;
+  } | null;
 }
 
 interface PaymentSnapshot {
@@ -82,7 +88,8 @@ export default async function AdminPedidoDetalhesPage({
         sku,
         quantity,
         unit_price_cents,
-        subtotal_cents
+        subtotal_cents,
+        customization
       ),
       payments (
         id,
@@ -194,10 +201,10 @@ export default async function AdminPedidoDetalhesPage({
               {(order.order_items as unknown as OrderItemSnapshot[])?.map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 sm:p-5 flex items-center justify-between gap-4"
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0 border border-primaria/20 mt-0.5">
                       <Package className="w-4 h-4" />
                     </div>
                     <div>
@@ -207,10 +214,45 @@ export default async function AdminPedidoDetalhesPage({
                       <p className="text-[11px] text-texto-claro font-mono">
                         SKU: {item.sku} &bull; Qtd: {item.quantity} un.
                       </p>
+
+                      {item.customization && (
+                        <div className="mt-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-50/70 to-primaria-soft/40 border border-amber-200/80 max-w-lg space-y-1.5">
+                          <div className="flex items-center gap-1.5 font-bold text-amber-900 text-xs">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                            <span>Dados de Personalização / Gravação Solicitada:</span>
+                          </div>
+                          {item.customization.text && (
+                            <div className="text-xs text-texto-escuro bg-white/80 p-2 rounded-lg border border-amber-200 font-serif font-semibold">
+                              &ldquo;{item.customization.text}&rdquo;
+                            </div>
+                          )}
+                          {item.customization.imageUrl && (
+                            <div className="flex items-center gap-2 pt-1">
+                              <span className="text-[11px] font-semibold text-texto-medio">
+                                Imagem Anexada:
+                              </span>
+                              <a
+                                href={item.customization.imageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-primaria bg-white px-2.5 py-1 rounded-md border border-primaria/30 hover:bg-primaria-soft transition-colors"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                <span>Abrir / Baixar Foto Original</span>
+                              </a>
+                            </div>
+                          )}
+                          {item.customization.notes && (
+                            <p className="text-[11px] text-texto-claro">
+                              <strong>Instruções do Cliente:</strong> {item.customization.notes}
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <p className="font-bold text-primaria">
                       {formatPrice(item.subtotal_cents)}
                     </p>

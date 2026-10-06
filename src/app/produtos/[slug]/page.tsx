@@ -235,6 +235,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               slug={product.slug}
               isMercadoPagoActive={isMercadoPagoActive}
               isWhatsAppActive={isWhatsAppActive}
+              categorySlug={product.categories?.slug}
+              categoryName={product.categories?.name}
             />
           </div>
         </div>

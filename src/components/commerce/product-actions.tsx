@@ -19,6 +19,8 @@ import { useCart } from "@/features/cart/context/cart-context";
 import { useToast } from "@/components/ui/toast-context";
 import { useStoreSettings } from "@/lib/settings/store-settings-context";
 import { createQuickWhatsAppOrderAction } from "@/features/checkout/actions";
+import { ProductCustomizationBox } from "@/components/commerce/product-customization-box";
+import type { ProductCustomization } from "@/features/cart/types";
 
 interface ProductActionsProps {
   productId: string;
@@ -29,6 +31,9 @@ interface ProductActionsProps {
   slug?: string;
   isMercadoPagoActive?: boolean;
   isWhatsAppActive?: boolean;
+  categorySlug?: string;
+  categoryName?: string;
+  isCustomizable?: boolean;
 }
 
 export function ProductActions({
@@ -40,6 +45,9 @@ export function ProductActions({
   slug,
   isMercadoPagoActive = true,
   isWhatsAppActive = true,
+  categorySlug,
+  categoryName,
+  isCustomizable,
 }: ProductActionsProps) {
   const router = useRouter();
   const cart = useCart();
@@ -56,6 +64,34 @@ export function ProductActions({
   const [isCalculatingShipping, setIsCalculatingShipping] = React.useState(false);
   const [isBuyingWhatsApp, setIsBuyingWhatsApp] = React.useState(false);
 
+  const isCustomizableProduct = Boolean(
+    isCustomizable ||
+      categorySlug === "personalizados" ||
+      categorySlug?.includes("personalizad") ||
+      categoryName?.toLowerCase().includes("personalizad")
+  );
+
+  const [customization, setCustomization] = React.useState<ProductCustomization>({});
+  const [hasCustomizationError, setHasCustomizationError] = React.useState(false);
+
+  const validateCustomization = () => {
+    if (!isCustomizableProduct) return true;
+    const hasInput = Boolean(
+      (customization.text && customization.text.trim().length > 0) ||
+        customization.imageUrl
+    );
+    if (!hasInput) {
+      setHasCustomizationError(true);
+      toast.error(
+        "Personalização Obrigatória",
+        "Por favor, insira o nome, frase ou anexe uma foto para a gravação."
+      );
+      return false;
+    }
+    setHasCustomizationError(false);
+    return true;
+  };
+
   const isOutOfStock = stock <= 0;
 
   const handleDecrease = () => {
@@ -71,17 +107,21 @@ export function ProductActions({
   };
 
   const handleAddToCart = (openDrawer = true) => {
+    if (!validateCustomization()) return;
+
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2500);
 
     cart.addItem(
       {
         id: productId,
+        productId,
         name: productName,
         price: priceCents,
         imageUrl: imageUrl || "/images/logo/logo.jpeg",
         slug,
         stock,
+        customization: isCustomizableProduct ? customization : undefined,
       },
       quantity
     );
@@ -97,17 +137,21 @@ export function ProductActions({
   };
 
   const handleBuyNow = () => {
+    if (!validateCustomization()) return;
     handleAddToCart(false);
     router.push("/checkout");
   };
 
   const handleBuyWhatsApp = async () => {
     if (isOutOfStock) return;
+    if (!validateCustomization()) return;
+
     setIsBuyingWhatsApp(true);
     try {
       const res = await createQuickWhatsAppOrderAction({
         productId,
         quantity,
+        customization: isCustomizableProduct ? customization : undefined,
       });
 
       if (res.success && res.whatsappUrl) {
@@ -165,6 +209,20 @@ export function ProductActions({
           </div>
         )}
       </div>
+
+      {/* Box de Personalização da Joia se o produto for personalizado */}
+      {isCustomizableProduct && (
+        <ProductCustomizationBox
+          customization={customization}
+          onChange={(newCust) => {
+            setCustomization(newCust);
+            if (newCust.text?.trim() || newCust.imageUrl) {
+              setHasCustomizationError(false);
+            }
+          }}
+          hasError={hasCustomizationError}
+        />
+      )}
 
       {/* Seletor de Quantidade + Botão Adicionar */}
       <div className="flex flex-col sm:flex-row items-stretch gap-3">

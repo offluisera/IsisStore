@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Heart, ShoppingBag, Star, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Heart, ShoppingBag, Star, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,9 @@ export function ProductCard({
   const [wishlist, setWishlist] = React.useState(isWishlisted);
   const [justAdded, setJustAdded] = React.useState(false);
   const { toast } = useToast();
+  const router = useRouter();
+
+  const isCustomizable = Boolean(category?.toLowerCase().includes("personalizad"));
 
   let cartCtx: ReturnType<typeof useCart> | null = null;
   try {
@@ -177,73 +181,91 @@ export function ProductCard({
             )}
           </div>
 
-          <Button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setJustAdded(true);
-              setTimeout(() => setJustAdded(false), 1800);
+          {isCustomizable ? (
+            <Button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (slug) {
+                  router.push(`/produtos/${slug}`);
+                }
+              }}
+              variant="outline"
+              className="w-full text-xs font-semibold h-10 gap-1.5 sm:gap-2 border-primaria text-primaria hover:bg-primaria hover:text-white shadow-xs transition-all duration-200 touch-manipulation"
+              aria-label={`Personalizar ${name}`}
+            >
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
+              <span>Personalizar</span>
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setJustAdded(true);
+                setTimeout(() => setJustAdded(false), 1800);
 
-              // 1. Sempre adiciona ao CartContext real e abre a gaveta do carrinho
-              if (cartCtx) {
-                cartCtx.addItem(
-                  {
-                    id,
-                    name,
-                    price,
-                    imageUrl: imageUrl || "/images/logo/logo.jpeg",
-                    slug,
-                  },
-                  1
-                );
-                cartCtx.openCart();
-              } else if (typeof window !== "undefined") {
-                window.dispatchEvent(
-                  new CustomEvent("cart:add-item", {
-                    detail: {
+                // 1. Sempre adiciona ao CartContext real e abre a gaveta do carrinho
+                if (cartCtx) {
+                  cartCtx.addItem(
+                    {
+                      id,
                       productId: id,
-                      productName: name,
-                      priceCents: price,
-                      imageUrl: imageUrl,
+                      name,
+                      price,
+                      imageUrl: imageUrl || "/images/logo/logo.jpeg",
                       slug,
-                      quantity: 1,
                     },
-                  })
+                    1
+                  );
+                  cartCtx.openCart();
+                } else if (typeof window !== "undefined") {
+                  window.dispatchEvent(
+                    new CustomEvent("cart:add-item", {
+                      detail: {
+                        productId: id,
+                        productName: name,
+                        priceCents: price,
+                        imageUrl: imageUrl,
+                        slug,
+                        quantity: 1,
+                      },
+                    })
+                  );
+                }
+
+                toast.success(
+                  "Produto adicionado ao carrinho!",
+                  `${name} já está na sua sacola.`
                 );
-              }
 
-              toast.success(
-                "Produto adicionado ao carrinho!",
-                `${name} já está na sua sacola.`
-              );
-
-              if (onAddToCart) {
-                onAddToCart(id);
-              }
-            }}
-            variant={justAdded ? "default" : "default"}
-            className={cn(
-              "w-full text-xs font-semibold h-10 gap-1.5 sm:gap-2 shadow-xs transition-all duration-200 touch-manipulation",
-              justAdded
-                ? "bg-emerald-600 hover:bg-emerald-600 text-white"
-                : "group-hover:bg-primaria-hover"
-            )}
-          >
-            {justAdded ? (
-              <>
-                <Check className="h-3.5 w-3.5 shrink-0" />
-                <span>Adicionado!</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">
-                  Adicionar<span className="hidden min-[380px]:inline"> ao carrinho</span>
-                </span>
-              </>
-            )}
-          </Button>
+                if (onAddToCart) {
+                  onAddToCart(id);
+                }
+              }}
+              variant={justAdded ? "default" : "default"}
+              className={cn(
+                "w-full text-xs font-semibold h-10 gap-1.5 sm:gap-2 shadow-xs transition-all duration-200 touch-manipulation",
+                justAdded
+                  ? "bg-emerald-600 hover:bg-emerald-600 text-white"
+                  : "group-hover:bg-primaria-hover"
+              )}
+            >
+              {justAdded ? (
+                <>
+                  <Check className="h-3.5 w-3.5 shrink-0" />
+                  <span>Adicionado!</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
+                  <span>Adicionar</span>
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>

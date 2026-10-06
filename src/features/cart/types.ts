@@ -1,11 +1,19 @@
+export interface ProductCustomization {
+  text?: string;
+  imageUrl?: string;
+  notes?: string;
+}
+
 export interface CartItem {
-  id: string; // ID do produto
+  id: string; // ID único do item no carrinho
+  productId?: string; // ID real do produto no catálogo
   name: string;
   price: number; // Em centavos (ex: R$ 149,90 = 14990)
   quantity: number;
   imageUrl: string;
   stock?: number;
   slug?: string;
+  customization?: ProductCustomization;
 }
 
 export interface CartContextType {

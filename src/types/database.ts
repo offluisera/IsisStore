@@ -112,6 +112,7 @@ export type Database = {
           id: string
           product_id: string
           quantity: number
+          customization: Json | null
         }
         Insert: {
           cart_id: string
@@ -119,6 +120,7 @@ export type Database = {
           id?: string
           product_id: string
           quantity?: number
+          customization?: Json | null
         }
         Update: {
           cart_id?: string
@@ -126,6 +128,7 @@ export type Database = {
           id?: string
           product_id?: string
           quantity?: number
+          customization?: Json | null
         }
         Relationships: [
           {
@@ -223,6 +226,7 @@ export type Database = {
           sku: string
           subtotal_cents: number
           unit_price_cents: number
+          customization: Json | null
         }
         Insert: {
           created_at?: string
@@ -234,6 +238,7 @@ export type Database = {
           sku: string
           subtotal_cents: number
           unit_price_cents: number
+          customization?: Json | null
         }
         Update: {
           created_at?: string
@@ -245,6 +250,7 @@ export type Database = {
           sku?: string
           subtotal_cents?: number
           unit_price_cents?: number
+          customization?: Json | null
         }
         Relationships: [
           {

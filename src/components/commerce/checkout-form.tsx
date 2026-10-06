@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   X,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useCart } from "@/features/cart/context/cart-context";
@@ -187,8 +188,9 @@ export function CheckoutForm({
       couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       notes: notes || undefined,
       items: items.map((i) => ({
-        productId: i.id,
+        productId: i.productId || i.id,
         quantity: i.quantity,
+        customization: i.customization,
       })),
     };
 
@@ -627,6 +629,14 @@ export function CheckoutForm({
                   <p className="text-texto-claro text-[11px] mt-0.5">
                     {item.quantity}x {formatPrice(item.price)}
                   </p>
+                  {item.customization && (
+                    <div className="mt-1 text-[10px] text-primaria font-medium flex items-center gap-1 truncate">
+                      <Sparkles className="w-3 h-3 shrink-0" />
+                      <span className="truncate">
+                        {item.customization.text ? `"${item.customization.text}"` : "Personalizado com foto"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <span className="font-serif text-xs font-bold text-texto-escuro">
                   {formatPrice(item.price * item.quantity)}
