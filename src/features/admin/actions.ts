@@ -14,6 +14,9 @@ import {
   adminUpdateCustomerSchema,
   updateStoreSettingsSchema,
   updateBrandFeaturesSchema,
+  updateContactPageSchema,
+  updateTermsPageSchema,
+  updatePrivacyPageSchema,
 } from "@/schemas/admin";
 
 import {
@@ -1734,6 +1737,258 @@ export async function updateBrandFeaturesAction(
     message: "Diferenciais da loja atualizados com sucesso!",
   };
 }
+
+// 17. Atualizar Configurações da Página de Contato
+export async function updateContactPageSettingsAction(
+  formData: FormData
+): Promise<AdminActionResult> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  let rawData: any = {};
+  const payloadRaw = formData.get("payload");
+  if (payloadRaw && typeof payloadRaw === "string") {
+    try {
+      rawData = JSON.parse(payloadRaw);
+    } catch {
+      return { success: false, message: "Payload JSON inválido." };
+    }
+  } else {
+    let faqItems: any[] = [];
+    const faqRaw = formData.get("faq_items");
+    if (faqRaw && typeof faqRaw === "string") {
+      try {
+        faqItems = JSON.parse(faqRaw);
+      } catch {
+        // fallback
+      }
+    }
+    rawData = {
+      hero_badge: formData.get("hero_badge") ?? undefined,
+      hero_title: formData.get("hero_title") ?? undefined,
+      hero_description: formData.get("hero_description") ?? undefined,
+      whatsapp_title: formData.get("whatsapp_title") ?? undefined,
+      whatsapp_description: formData.get("whatsapp_description") ?? undefined,
+      whatsapp_number: formData.get("whatsapp_number") ?? undefined,
+      whatsapp_button_text: formData.get("whatsapp_button_text") ?? undefined,
+      email_title: formData.get("email_title") ?? undefined,
+      email_description: formData.get("email_description") ?? undefined,
+      email_address: formData.get("email_address") ?? undefined,
+      email_button_text: formData.get("email_button_text") ?? undefined,
+      hours_title: formData.get("hours_title") ?? undefined,
+      hours_description: formData.get("hours_description") ?? undefined,
+      hours_text: formData.get("hours_text") ?? undefined,
+      guarantee_title: formData.get("guarantee_title") ?? undefined,
+      guarantee_description: formData.get("guarantee_description") ?? undefined,
+      guarantee_text: formData.get("guarantee_text") ?? undefined,
+      form_badge: formData.get("form_badge") ?? undefined,
+      form_title: formData.get("form_title") ?? undefined,
+      form_description: formData.get("form_description") ?? undefined,
+      faq_badge: formData.get("faq_badge") ?? undefined,
+      faq_title: formData.get("faq_title") ?? undefined,
+      faq_description: formData.get("faq_description") ?? undefined,
+      faq_items: faqItems,
+    };
+  }
+
+  const parsed = updateContactPageSchema.safeParse(rawData);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: parsed.error.issues[0]?.message || "Dados de contato inválidos.",
+    };
+  }
+
+  const { error } = await auth.supabase
+    .from("store_settings")
+    .upsert({
+      id: "default",
+      contact_page_settings: parsed.data as any,
+      updated_at: new Date().toISOString(),
+    });
+
+  if (error) {
+    return {
+      success: false,
+      message: `Erro ao salvar página de contato: ${error.message}`,
+    };
+  }
+
+  await logAdminAudit(
+    auth.supabase,
+    auth.user.id,
+    "update_contact_page",
+    "store_settings",
+    "default",
+    { hero_title: parsed.data.hero_title, faq_count: parsed.data.faq_items.length }
+  );
+
+  revalidatePath("/", "layout");
+  revalidatePath("/contato");
+  revalidatePath("/admin/configuracoes");
+
+  return { success: true, message: "Página de Contato atualizada com sucesso!" };
+}
+
+// 18. Atualizar Configurações da Página de Termos de Uso
+export async function updateTermsPageSettingsAction(
+  formData: FormData
+): Promise<AdminActionResult> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  let rawData: any = {};
+  const payloadRaw = formData.get("payload");
+  if (payloadRaw && typeof payloadRaw === "string") {
+    try {
+      rawData = JSON.parse(payloadRaw);
+    } catch {
+      return { success: false, message: "Payload JSON inválido." };
+    }
+  } else {
+    let sections: any[] = [];
+    const secRaw = formData.get("sections");
+    if (secRaw && typeof secRaw === "string") {
+      try {
+        sections = JSON.parse(secRaw);
+      } catch {
+        // fallback
+      }
+    }
+    rawData = {
+      hero_badge: formData.get("hero_badge") ?? undefined,
+      hero_title: formData.get("hero_title") ?? undefined,
+      hero_description: formData.get("hero_description") ?? undefined,
+      last_updated_text: formData.get("last_updated_text") ?? undefined,
+      cdc_banner_title: formData.get("cdc_banner_title") ?? undefined,
+      cdc_banner_text: formData.get("cdc_banner_text") ?? undefined,
+      sections,
+    };
+  }
+
+  const parsed = updateTermsPageSchema.safeParse(rawData);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: parsed.error.issues[0]?.message || "Dados dos termos inválidos.",
+    };
+  }
+
+  const { error } = await auth.supabase
+    .from("store_settings")
+    .upsert({
+      id: "default",
+      terms_page_settings: parsed.data as any,
+      updated_at: new Date().toISOString(),
+    });
+
+  if (error) {
+    return {
+      success: false,
+      message: `Erro ao salvar termos de uso: ${error.message}`,
+    };
+  }
+
+  await logAdminAudit(
+    auth.supabase,
+    auth.user.id,
+    "update_terms_page",
+    "store_settings",
+    "default",
+    { hero_title: parsed.data.hero_title, sections_count: parsed.data.sections.length }
+  );
+
+  revalidatePath("/", "layout");
+  revalidatePath("/termos");
+  revalidatePath("/admin/configuracoes");
+
+  return { success: true, message: "Termos e Condições atualizados com sucesso!" };
+}
+
+// 19. Atualizar Configurações da Política de Privacidade (LGPD)
+export async function updatePrivacyPageSettingsAction(
+  formData: FormData
+): Promise<AdminActionResult> {
+  const auth = await getAdminUser();
+  if (auth.error || !auth.supabase || !auth.user) {
+    return { success: false, message: auth.error || "Não autorizado." };
+  }
+
+  let rawData: any = {};
+  const payloadRaw = formData.get("payload");
+  if (payloadRaw && typeof payloadRaw === "string") {
+    try {
+      rawData = JSON.parse(payloadRaw);
+    } catch {
+      return { success: false, message: "Payload JSON inválido." };
+    }
+  } else {
+    let sections: any[] = [];
+    const secRaw = formData.get("sections");
+    if (secRaw && typeof secRaw === "string") {
+      try {
+        sections = JSON.parse(secRaw);
+      } catch {
+        // fallback
+      }
+    }
+    rawData = {
+      hero_badge: formData.get("hero_badge") ?? undefined,
+      hero_title: formData.get("hero_title") ?? undefined,
+      hero_description: formData.get("hero_description") ?? undefined,
+      last_updated_text: formData.get("last_updated_text") ?? undefined,
+      lgpd_banner_title: formData.get("lgpd_banner_title") ?? undefined,
+      lgpd_banner_text: formData.get("lgpd_banner_text") ?? undefined,
+      dpo_name: formData.get("dpo_name") ?? undefined,
+      dpo_email: formData.get("dpo_email") ?? undefined,
+      dpo_role: formData.get("dpo_role") ?? undefined,
+      sections,
+    };
+  }
+
+  const parsed = updatePrivacyPageSchema.safeParse(rawData);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: parsed.error.issues[0]?.message || "Dados de privacidade inválidos.",
+    };
+  }
+
+  const { error } = await auth.supabase
+    .from("store_settings")
+    .upsert({
+      id: "default",
+      privacy_page_settings: parsed.data as any,
+      updated_at: new Date().toISOString(),
+    });
+
+  if (error) {
+    return {
+      success: false,
+      message: `Erro ao salvar política de privacidade: ${error.message}`,
+    };
+  }
+
+  await logAdminAudit(
+    auth.supabase,
+    auth.user.id,
+    "update_privacy_page",
+    "store_settings",
+    "default",
+    { hero_title: parsed.data.hero_title, sections_count: parsed.data.sections.length }
+  );
+
+  revalidatePath("/", "layout");
+  revalidatePath("/privacidade");
+  revalidatePath("/admin/configuracoes");
+
+  return { success: true, message: "Política de Privacidade atualizada com sucesso!" };
+}
+
 
 export interface AdminNotification {
   id: string;

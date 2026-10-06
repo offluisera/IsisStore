@@ -427,6 +427,9 @@ export type Database = {
           editorial_banner_image_tag: string | null
           editorial_banner_image_title: string | null
           editorial_banner_image_subtitle: string | null
+          contact_page_settings: Json | null
+          terms_page_settings: Json | null
+          privacy_page_settings: Json | null
           updated_at: string
         }
         Insert: {
@@ -475,6 +478,9 @@ export type Database = {
           editorial_banner_image_tag?: string | null
           editorial_banner_image_title?: string | null
           editorial_banner_image_subtitle?: string | null
+          contact_page_settings?: Json | null
+          terms_page_settings?: Json | null
+          privacy_page_settings?: Json | null
           updated_at?: string
         }
         Update: {
@@ -523,6 +529,9 @@ export type Database = {
           editorial_banner_image_tag?: string | null
           editorial_banner_image_title?: string | null
           editorial_banner_image_subtitle?: string | null
+          contact_page_settings?: Json | null
+          terms_page_settings?: Json | null
+          privacy_page_settings?: Json | null
           updated_at?: string
         }
         Relationships: []

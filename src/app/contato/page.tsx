@@ -4,14 +4,15 @@ import {
   MessageCircle,
   Mail,
   Clock,
-  MapPin,
   ChevronRight,
   ShieldCheck,
   Sparkles,
   HelpCircle,
-  Phone,
 } from "lucide-react";
-import { getStoreSettings } from "@/lib/settings/store-settings";
+import {
+  getStoreSettings,
+  DEFAULT_CONTACT_PAGE_SETTINGS,
+} from "@/lib/settings/store-settings";
 import { ContactForm } from "@/components/commerce/contact-form";
 
 export const metadata: Metadata = {
@@ -22,10 +23,13 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await getStoreSettings();
-  const rawPhone = settings.support_phone || "(17) 99249-5308";
+  const contact = settings.contact_page_settings || DEFAULT_CONTACT_PAGE_SETTINGS;
+
+  const rawPhone = contact.whatsapp_number || settings.support_phone || "(17) 99249-5308";
   const cleanPhone = rawPhone.replace(/\D/g, "");
-  const supportEmail = settings.support_email || "contato@isisstore.com.br";
+  const supportEmail = contact.email_address || settings.support_email || "contato@isisstore.com.br";
   const supportHours =
+    contact.hours_text ||
     settings.support_hours ||
     "Segunda a Sexta: 09h às 18h | Sábado: 09h às 13h";
 
@@ -45,7 +49,7 @@ export default async function ContactPage() {
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="font-semibold text-texto-escuro dark:text-white">
-            Fale Conosco
+            {contact.hero_title || "Fale Conosco"}
           </span>
         </nav>
 
@@ -53,14 +57,14 @@ export default async function ContactPage() {
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primaria/10 dark:bg-primaria/20 text-primaria text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Estamos Aqui por Você</span>
+            <span>{contact.hero_badge || "Estamos Aqui por Você"}</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-texto-escuro dark:text-[#F8EFF1]">
-            Fale Conosco
+            {contact.hero_title || "Fale Conosco"}
           </h1>
           <p className="text-sm sm:text-base text-texto-claro dark:text-[#BFAEB3] leading-relaxed">
-            Dúvidas sobre semijoias, medidas, status do seu pedido ou trocas?
-            Nossa equipe está sempre pronta para te acolher e ajudar com todo o carinho.
+            {contact.hero_description ||
+              "Dúvidas sobre semijoias, medidas, status do seu pedido ou trocas? Nossa equipe está sempre pronta para te acolher e ajudar com todo o carinho."}
           </p>
         </div>
 
@@ -73,10 +77,11 @@ export default async function ContactPage() {
                 <MessageCircle className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-base text-texto-escuro dark:text-[#F8EFF1]">
-                WhatsApp Oficial
+                {contact.whatsapp_title || "WhatsApp Oficial"}
               </h3>
               <p className="text-xs text-texto-claro dark:text-[#A89299] leading-relaxed">
-                Atendimento rápido para dúvidas sobre compras e pedidos.
+                {contact.whatsapp_description ||
+                  "Atendimento rápido para dúvidas sobre compras e pedidos."}
               </p>
             </div>
 
@@ -87,7 +92,7 @@ export default async function ContactPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
               >
-                <span>Chamar no WhatsApp</span>
+                <span>{contact.whatsapp_button_text || "Chamar no WhatsApp"}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -100,10 +105,11 @@ export default async function ContactPage() {
                 <Mail className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-base text-texto-escuro dark:text-[#F8EFF1]">
-                E-mail de Suporte
+                {contact.email_title || "E-mail de Suporte"}
               </h3>
               <p className="text-xs text-texto-claro dark:text-[#A89299] leading-relaxed">
-                Para assuntos formais, trocas, parcerias e pós-venda.
+                {contact.email_description ||
+                  "Para assuntos formais, trocas, parcerias e pós-venda."}
               </p>
             </div>
 
@@ -124,7 +130,7 @@ export default async function ContactPage() {
                 <Clock className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-base text-texto-escuro dark:text-[#F8EFF1]">
-                Horário de Atendimento
+                {contact.hours_title || "Horário de Atendimento"}
               </h3>
               <p className="text-xs text-texto-claro dark:text-[#A89299] leading-relaxed">
                 {supportHours}
@@ -132,7 +138,8 @@ export default async function ContactPage() {
             </div>
 
             <div className="pt-4 text-[11px] text-texto-claro dark:text-[#8E797F]">
-              Mensagens fora do horário são respondidas no próximo dia útil.
+              {contact.hours_description ||
+                "Mensagens fora do horário são respondidas no próximo dia útil."}
             </div>
           </div>
 
@@ -143,10 +150,11 @@ export default async function ContactPage() {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h3 className="font-serif font-bold text-base text-texto-escuro dark:text-[#F8EFF1]">
-                Segurança & Garantia
+                {contact.guarantee_title || "Segurança & Garantia"}
               </h3>
               <p className="text-xs text-texto-claro dark:text-[#A89299] leading-relaxed">
-                Todas as nossas semijoias possuem certificado de qualidade e garantia de banho.
+                {contact.guarantee_description ||
+                  "Todas as nossas semijoias possuem certificado de qualidade e garantia de banho."}
               </p>
             </div>
 
@@ -175,53 +183,31 @@ export default async function ContactPage() {
               <div className="flex items-center gap-2">
                 <HelpCircle className="w-5 h-5 text-primaria" />
                 <h3 className="font-serif font-bold text-lg text-texto-escuro dark:text-[#F8EFF1]">
-                  Perguntas Frequentes
+                  {contact.faq_title || "Perguntas Frequentes"}
                 </h3>
               </div>
 
               <div className="space-y-4 text-xs sm:text-sm">
-                <div className="border-b border-borda-suave/60 dark:border-[#2C1D22] pb-3 space-y-1">
-                  <h4 className="font-semibold text-texto-escuro dark:text-white">
-                    Como posso acompanhar o meu pedido?
-                  </h4>
-                  <p className="text-texto-claro dark:text-[#A89299] leading-relaxed">
-                    Você pode acessar a área{" "}
-                    <Link
-                      href="/conta/pedidos"
-                      className="text-primaria underline font-medium"
-                    >
-                      Meus Pedidos
-                    </Link>{" "}
-                    a qualquer momento para ver o status e o código de rastreio dos Correios.
-                  </p>
-                </div>
-
-                <div className="border-b border-borda-suave/60 dark:border-[#2C1D22] pb-3 space-y-1">
-                  <h4 className="font-semibold text-texto-escuro dark:text-white">
-                    Qual o prazo de envio das semijoias?
-                  </h4>
-                  <p className="text-texto-claro dark:text-[#A89299] leading-relaxed">
-                    Nossos produtos são embalados com carinho e despachados em até 1 a 2 dias úteis após a confirmação do pagamento.
-                  </p>
-                </div>
-
-                <div className="border-b border-borda-suave/60 dark:border-[#2C1D22] pb-3 space-y-1">
-                  <h4 className="font-semibold text-texto-escuro dark:text-white">
-                    Posso solicitar troca ou devolução?
-                  </h4>
-                  <p className="text-texto-claro dark:text-[#A89299] leading-relaxed">
-                    Sim! Conforme o Código de Defesa do Consumidor, você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução sem custos.
-                  </p>
-                </div>
-
-                <div className="space-y-1">
-                  <h4 className="font-semibold text-texto-escuro dark:text-white">
-                    Quais são as formas de pagamento aceitas?
-                  </h4>
-                  <p className="text-texto-claro dark:text-[#A89299] leading-relaxed">
-                    Aceitamos Pix com aprovação imediata e cartões de crédito em até 12x com proteção bancária antifraude.
-                  </p>
-                </div>
+                {(contact.faq_items && contact.faq_items.length > 0
+                  ? contact.faq_items
+                  : DEFAULT_CONTACT_PAGE_SETTINGS.faq_items
+                ).map((item, idx, arr) => (
+                  <div
+                    key={item.id || idx}
+                    className={`${
+                      idx < arr.length - 1
+                        ? "border-b border-borda-suave/60 dark:border-[#2C1D22] pb-3"
+                        : ""
+                    } space-y-1`}
+                  >
+                    <h4 className="font-semibold text-texto-escuro dark:text-white">
+                      {item.question}
+                    </h4>
+                    <p className="text-texto-claro dark:text-[#A89299] leading-relaxed whitespace-pre-line">
+                      {item.answer}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -245,3 +231,4 @@ export default async function ContactPage() {
     </div>
   );
 }
+

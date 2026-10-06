@@ -28,6 +28,9 @@ import {
   Sliders,
   Megaphone,
   TicketPercent,
+  MessageCircle,
+  FileText,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -210,6 +213,21 @@ const NAV_ITEMS: NavItem[] = [
         label: "Avisos & Operação",
         href: "/admin/configuracoes?tab=operation",
         icon: Megaphone,
+      },
+      {
+        label: "Pág. Contato",
+        href: "/admin/configuracoes?tab=contact-page",
+        icon: MessageCircle,
+      },
+      {
+        label: "Pág. Termos de Uso",
+        href: "/admin/configuracoes?tab=terms-page",
+        icon: FileText,
+      },
+      {
+        label: "Pág. Privacidade (LGPD)",
+        href: "/admin/configuracoes?tab=privacy-page",
+        icon: Lock,
       },
     ],
   },

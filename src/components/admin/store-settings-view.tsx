@@ -45,6 +45,9 @@ import type { StoreSettings } from "@/lib/settings/types";
 import type { HomeSlide } from "@/lib/slides/types";
 import { HomeSlidesManager } from "@/components/admin/home-slides-manager";
 import { BrandFeaturesManager } from "@/components/admin/brand-features-manager";
+import { ContactPageManager } from "@/components/admin/institutional/contact-page-manager";
+import { TermsPageManager } from "@/components/admin/institutional/terms-page-manager";
+import { PrivacyPageManager } from "@/components/admin/institutional/privacy-page-manager";
 
 function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
@@ -76,7 +79,10 @@ type TabType =
   | "editorial"
   | "seo"
   | "contact"
-  | "operation";
+  | "operation"
+  | "contact-page"
+  | "terms-page"
+  | "privacy-page";
 
 export function StoreSettingsView({ settings, initialSlides }: StoreSettingsViewProps) {
   const [activeTab, setActiveTab] = React.useState<TabType>("general");
@@ -100,6 +106,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
           "seo",
           "contact",
           "operation",
+          "contact-page",
+          "terms-page",
+          "privacy-page",
         ].includes(tabParam)
       ) {
         setActiveTab(tabParam);
@@ -553,6 +562,72 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
           <Megaphone className="w-3.5 h-3.5" />
           <span>Avisos & Operação</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("contact-page")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
+            activeTab === "contact-page"
+              ? "bg-primaria text-white shadow-2xs"
+              : "text-texto-medio dark:text-[#C5B0B6] hover:text-texto-escuro dark:hover:text-white hover:bg-fundo dark:hover:bg-[#25181E]"
+          }`}
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Pág. Contato</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+              activeTab === "contact-page"
+                ? "bg-white text-primaria"
+                : "bg-primaria/10 text-primaria"
+            }`}
+          >
+            Live Preview
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("terms-page")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
+            activeTab === "terms-page"
+              ? "bg-primaria text-white shadow-2xs"
+              : "text-texto-medio dark:text-[#C5B0B6] hover:text-texto-escuro dark:hover:text-white hover:bg-fundo dark:hover:bg-[#25181E]"
+          }`}
+        >
+          <FileText className="w-3.5 h-3.5" />
+          <span>Termos de Uso</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+              activeTab === "terms-page"
+                ? "bg-white text-primaria"
+                : "bg-primaria/10 text-primaria"
+            }`}
+          >
+            CDC
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("privacy-page")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
+            activeTab === "privacy-page"
+              ? "bg-primaria text-white shadow-2xs"
+              : "text-texto-medio dark:text-[#C5B0B6] hover:text-texto-escuro dark:hover:text-white hover:bg-fundo dark:hover:bg-[#25181E]"
+          }`}
+        >
+          <ShieldAlert className="w-3.5 h-3.5" />
+          <span>Privacidade</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+              activeTab === "privacy-page"
+                ? "bg-white text-primaria"
+                : "bg-emerald-500/10 text-emerald-600"
+            }`}
+          >
+            LGPD
+          </span>
+        </button>
       </div>
 
       {/* Conteúdo da Aba Ativa */}
@@ -564,6 +639,21 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
           initialTitle={settings.brand_features_title}
           initialSubtitle={settings.brand_features_subtitle}
           initialCards={settings.brand_features_cards}
+          storeName={storeName}
+        />
+      ) : activeTab === "contact-page" ? (
+        <ContactPageManager
+          initialSettings={settings.contact_page_settings}
+          storeName={storeName}
+        />
+      ) : activeTab === "terms-page" ? (
+        <TermsPageManager
+          initialSettings={settings.terms_page_settings}
+          storeName={storeName}
+        />
+      ) : activeTab === "privacy-page" ? (
+        <PrivacyPageManager
+          initialSettings={settings.privacy_page_settings}
           storeName={storeName}
         />
       ) : (

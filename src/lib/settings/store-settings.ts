@@ -1,10 +1,32 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import type { StoreSettings, BrandFeatureCard } from "./types";
-import { DEFAULT_STORE_SETTINGS } from "./types";
+import type {
+  StoreSettings,
+  BrandFeatureCard,
+  ContactPageSettings,
+  TermsPageSettings,
+  PrivacyPageSettings,
+} from "./types";
+import {
+  DEFAULT_STORE_SETTINGS,
+  DEFAULT_CONTACT_PAGE_SETTINGS,
+  DEFAULT_TERMS_PAGE_SETTINGS,
+  DEFAULT_PRIVACY_PAGE_SETTINGS,
+} from "./types";
 
-export type { StoreSettings, BrandFeatureCard };
-export { DEFAULT_STORE_SETTINGS };
+export type {
+  StoreSettings,
+  BrandFeatureCard,
+  ContactPageSettings,
+  TermsPageSettings,
+  PrivacyPageSettings,
+};
+export {
+  DEFAULT_STORE_SETTINGS,
+  DEFAULT_CONTACT_PAGE_SETTINGS,
+  DEFAULT_TERMS_PAGE_SETTINGS,
+  DEFAULT_PRIVACY_PAGE_SETTINGS,
+};
 
 export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
   try {
@@ -120,6 +142,33 @@ export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
       editorial_banner_image_subtitle:
         data.editorial_banner_image_subtitle ||
         DEFAULT_STORE_SETTINGS.editorial_banner_image_subtitle,
+      contact_page_settings:
+        data.contact_page_settings &&
+        typeof data.contact_page_settings === "object" &&
+        !Array.isArray(data.contact_page_settings)
+          ? {
+              ...DEFAULT_CONTACT_PAGE_SETTINGS,
+              ...(data.contact_page_settings as unknown as Partial<ContactPageSettings>),
+            }
+          : DEFAULT_CONTACT_PAGE_SETTINGS,
+      terms_page_settings:
+        data.terms_page_settings &&
+        typeof data.terms_page_settings === "object" &&
+        !Array.isArray(data.terms_page_settings)
+          ? {
+              ...DEFAULT_TERMS_PAGE_SETTINGS,
+              ...(data.terms_page_settings as unknown as Partial<TermsPageSettings>),
+            }
+          : DEFAULT_TERMS_PAGE_SETTINGS,
+      privacy_page_settings:
+        data.privacy_page_settings &&
+        typeof data.privacy_page_settings === "object" &&
+        !Array.isArray(data.privacy_page_settings)
+          ? {
+              ...DEFAULT_PRIVACY_PAGE_SETTINGS,
+              ...(data.privacy_page_settings as unknown as Partial<PrivacyPageSettings>),
+            }
+          : DEFAULT_PRIVACY_PAGE_SETTINGS,
       updated_at: data.updated_at,
     };
   } catch {

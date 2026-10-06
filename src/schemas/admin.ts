@@ -219,4 +219,76 @@ export const updateBrandFeaturesSchema = z.object({
 
 export type UpdateBrandFeaturesInput = z.infer<typeof updateBrandFeaturesSchema>;
 
+// --- Schemas para Páginas Institucionais ---
+
+export const contactFaqItemSchema = z.object({
+  id: z.string(),
+  question: z.string().min(1, "A pergunta não pode estar vazia"),
+  answer: z.string().min(1, "A resposta não pode estar vazia"),
+});
+
+export const updateContactPageSchema = z.object({
+  hero_badge: z.string().max(100).default("Estamos Aqui por Você"),
+  hero_title: z.string().max(150).default("Fale Conosco"),
+  hero_description: z.string().max(1000).default(""),
+  whatsapp_title: z.string().max(100).default("WhatsApp Oficial"),
+  whatsapp_description: z.string().max(255).default(""),
+  whatsapp_number: z.string().max(30).default(""),
+  whatsapp_button_text: z.string().max(50).default("Iniciar Conversa"),
+  email_title: z.string().max(100).default("E-mail de Suporte"),
+  email_description: z.string().max(255).default(""),
+  email_address: z.string().max(150).default(""),
+  email_button_text: z.string().max(50).default("Enviar E-mail"),
+  hours_title: z.string().max(100).default("Horário de Atendimento"),
+  hours_description: z.string().max(255).default(""),
+  hours_text: z.string().max(255).default(""),
+  guarantee_title: z.string().max(100).default("Garantia & Trocas"),
+  guarantee_description: z.string().max(255).default(""),
+  guarantee_text: z.string().max(255).default(""),
+  form_badge: z.string().max(100).default("Envie sua Mensagem"),
+  form_title: z.string().max(150).default("Como podemos te ajudar hoje?"),
+  form_description: z.string().max(500).default(""),
+  faq_badge: z.string().max(100).default("Dúvidas Frequentes"),
+  faq_title: z.string().max(150).default("Perguntas Frequentes"),
+  faq_description: z.string().max(500).default(""),
+  faq_items: z.array(contactFaqItemSchema).default([]),
+});
+
+export type UpdateContactPageInput = z.infer<typeof updateContactPageSchema>;
+
+export const legalSectionItemSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Título obrigatório"),
+  content: z.string().min(1, "Conteúdo obrigatório"),
+  highlight: z.string().optional().nullable().or(z.literal("")),
+});
+
+export const updateTermsPageSchema = z.object({
+  hero_badge: z.string().max(100).default("Transparência & Conformidade Legal"),
+  hero_title: z.string().max(150).default("Termos e Condições de Uso"),
+  hero_description: z.string().max(1000).default(""),
+  last_updated_text: z.string().max(100).default(""),
+  cdc_banner_title: z.string().max(150).default("Compromisso com o Código de Defesa do Consumidor"),
+  cdc_banner_text: z.string().max(1000).default(""),
+  sections: z.array(legalSectionItemSchema).default([]),
+});
+
+export type UpdateTermsPageInput = z.infer<typeof updateTermsPageSchema>;
+
+export const updatePrivacyPageSchema = z.object({
+  hero_badge: z.string().max(100).default("Conformidade com a LGPD (Lei 13.709/2018)"),
+  hero_title: z.string().max(150).default("Política de Privacidade & Dados"),
+  hero_description: z.string().max(1000).default(""),
+  last_updated_text: z.string().max(100).default(""),
+  lgpd_banner_title: z.string().max(150).default("Sua Privacidade é Sagrada para Nós"),
+  lgpd_banner_text: z.string().max(1000).default(""),
+  dpo_name: z.string().max(150).default("Encarregado de Proteção de Dados (DPO)"),
+  dpo_email: z.string().max(150).default(""),
+  dpo_role: z.string().max(255).default(""),
+  sections: z.array(legalSectionItemSchema).default([]),
+});
+
+export type UpdatePrivacyPageInput = z.infer<typeof updatePrivacyPageSchema>;
+
+
 
