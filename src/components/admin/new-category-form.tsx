@@ -83,16 +83,16 @@ export function NewCategoryForm() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       {/* Formulário Principal */}
-      <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-borda shadow-xs space-y-6">
-        <div className="flex items-center gap-3 pb-4 border-b border-borda/60">
-          <div className="w-10 h-10 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
+      <div className="lg:col-span-7 bg-white dark:bg-[#1E1518] p-6 sm:p-8 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-6">
+        <div className="flex items-center gap-3 pb-4 border-b border-borda/60 dark:border-[#38262C]/60">
+          <div className="w-10 h-10 rounded-xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center shrink-0">
             <Plus className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-serif text-lg font-bold text-texto-escuro">
+            <h2 className="font-serif text-lg font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Dados da Categoria
             </h2>
-            <p className="text-xs text-texto-claro">
+            <p className="text-xs text-texto-claro dark:text-[#988087]">
               Defina o nome, URL amigável e descrição para organizar produtos
             </p>
           </div>
@@ -119,7 +119,7 @@ export function NewCategoryForm() {
         <form onSubmit={handleSubmit} className="space-y-5 text-xs">
           {/* Nome */}
           <div>
-            <label className="block font-semibold text-texto-escuro mb-1.5">
+            <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Nome da Categoria *
             </label>
             <Input
@@ -130,7 +130,7 @@ export function NewCategoryForm() {
               placeholder="Ex: Vestidos, Joias de Ouro, Calçados"
               className="text-xs h-10"
             />
-            <p className="text-[11px] text-texto-claro mt-1">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087] mt-1">
               Nome público que será exibido no menu e nos filtros da vitrine.
             </p>
           </div>
@@ -138,7 +138,7 @@ export function NewCategoryForm() {
           {/* Slug */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block font-semibold text-texto-escuro">
+              <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                 Slug (URL Amigável) *
               </label>
               <button
@@ -150,7 +150,7 @@ export function NewCategoryForm() {
               </button>
             </div>
             <div className="flex items-center">
-              <span className="px-3 py-2 bg-fundo border border-r-0 border-borda rounded-l-xl text-xs text-texto-claro font-mono">
+              <span className="px-3 py-2 bg-fundo dark:bg-[#251A1E] border border-r-0 border-borda dark:border-[#38262C] rounded-l-xl text-xs text-texto-claro dark:text-[#988087] font-mono">
                 /categoria/
               </span>
               <Input
@@ -167,7 +167,7 @@ export function NewCategoryForm() {
 
           {/* Descrição */}
           <div>
-            <label className="block font-semibold text-texto-escuro mb-1.5">
+            <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Descrição do Departamento (Opcional)
             </label>
             <textarea
@@ -175,14 +175,14 @@ export function NewCategoryForm() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Descreva esta linha para orientar os clientes e melhorar SEO..."
               rows={3}
-              className="w-full rounded-xl border border-borda p-3 text-xs bg-white text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria resize-none transition-all"
+              className="w-full rounded-xl border border-borda dark:border-[#38262C] p-3 text-xs bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria resize-none transition-all"
             />
           </div>
 
           {/* Ordem de Exibição e Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-borda/40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-borda/40 dark:border-[#38262C]/40">
             <div>
-              <label className="block font-semibold text-texto-escuro mb-1.5">
+              <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
                 Ordem de Exibição
               </label>
               <Input
@@ -192,13 +192,13 @@ export function NewCategoryForm() {
                 min={0}
                 className="text-xs h-10 font-mono"
               />
-              <p className="text-[10px] text-texto-claro mt-1">
+              <p className="text-[10px] text-texto-claro dark:text-[#988087] mt-1">
                 Menor número aparece primeiro no menu.
               </p>
             </div>
 
             <div className="flex flex-col justify-center">
-              <label className="font-semibold text-texto-escuro mb-2">
+              <label className="font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-2">
                 Visibilidade
               </label>
               <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -206,9 +206,9 @@ export function NewCategoryForm() {
                   type="checkbox"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="rounded border-borda text-primaria focus:ring-primaria w-4 h-4 accent-primaria"
+                  className="rounded border-borda dark:border-[#38262C] text-primaria focus:ring-primaria w-4 h-4 accent-primaria"
                 />
-                <span className="text-xs text-texto-escuro font-medium">
+                <span className="text-xs text-texto-escuro dark:text-[#F8EFF1] font-medium">
                   Categoria ativa e visível no site
                 </span>
               </label>
@@ -216,10 +216,10 @@ export function NewCategoryForm() {
           </div>
 
           {/* Botões de Ação */}
-          <div className="pt-4 flex items-center justify-end gap-3 border-t border-borda/60">
+          <div className="pt-4 flex items-center justify-end gap-3 border-t border-borda/60 dark:border-[#38262C]/60">
             <Link
               href="/admin/categorias"
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-texto-medio hover:text-texto-escuro hover:bg-fundo transition-colors"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
             >
               Cancelar
             </Link>
@@ -247,44 +247,44 @@ export function NewCategoryForm() {
 
       {/* Card de Pré-visualização Ao Vivo */}
       <div className="lg:col-span-5 space-y-4">
-        <div className="bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+        <div className="bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
             <Eye className="w-4 h-4 text-primaria" />
-            <h3 className="font-serif text-sm font-bold text-texto-escuro">
+            <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Pré-visualização na Loja
             </h3>
           </div>
 
-          <p className="text-xs text-texto-claro">
+          <p className="text-xs text-texto-claro dark:text-[#988087]">
             Veja como esta categoria será apresentada para os clientes da Isis Store:
           </p>
 
           {/* Demonstração da Pill de Categoria */}
-          <div className="p-4 rounded-xl bg-fundo/50 border border-borda/60 space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-texto-claro">
+          <div className="p-4 rounded-xl bg-fundo/50 dark:bg-[#151012] border border-borda/60 dark:border-[#38262C]/60 space-y-2">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-texto-claro dark:text-[#988087]">
               Pill de Navegação
             </p>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-secundaria/35 text-texto-escuro font-semibold text-xs shadow-2xs">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-[#1E1518] border border-secundaria/35 dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] font-semibold text-xs shadow-2xs">
               <Layers className="w-3.5 h-3.5 text-primaria" />
               <span>{name.trim() || "Nome da Categoria"}</span>
             </div>
           </div>
 
           {/* Card Detalhado */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF5F6] via-[#FDF2F4] to-[#FCEEF1] border border-secundaria/35 space-y-2 shadow-xs">
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FFF5F6] via-[#FDF2F4] to-[#FCEEF1] dark:from-[#251A1E] dark:via-[#201518] dark:to-[#1A1114] border border-secundaria/35 dark:border-[#38262C] space-y-2 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-bold uppercase tracking-wider text-primaria flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
                 Departamento
               </span>
-              <span className="text-[10px] font-mono text-texto-claro">
+              <span className="text-[10px] font-mono text-texto-claro dark:text-[#988087]">
                 /{slug || "slug-categoria"}
               </span>
             </div>
-            <h4 className="font-serif text-base font-bold text-texto-escuro">
+            <h4 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
               {name.trim() || "Nova Categoria"}
             </h4>
-            <p className="text-xs text-texto-claro/90 italic">
+            <p className="text-xs text-texto-claro/90 dark:text-[#988087] italic">
               {description.trim() || "A descrição da categoria será exibida aqui para seus clientes."}
             </p>
           </div>

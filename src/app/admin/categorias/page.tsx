@@ -118,21 +118,21 @@ export default async function AdminCategoriasPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Header com Breadcrumb e Ações */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Categorias</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Categorias</span>
           </div>
 
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro flex items-center gap-2.5">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2.5">
             <Layers className="w-6 h-6 text-primaria" />
             <span>Categorias da Loja</span>
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Gerencie departamentos, produtos vinculados e acompanhe acessos reais contabilizados na vitrine.
           </p>
         </div>
@@ -169,87 +169,87 @@ export default async function AdminCategoriasPage() {
       {/* Grid de KPIs Reais */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total de Categorias */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center shrink-0">
             <Layers className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Total de Categorias
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {categoriesWithStats.length}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               {activeCount} ativas no catálogo
             </p>
           </div>
         </div>
 
         {/* Categoria em Destaque */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/40 flex items-center justify-center shrink-0">
             <TrendingUp className="w-6 h-6" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
               {topCategoryByAccess ? "Mais Acessada" : "Maior Catálogo"}
             </p>
             {topCategoryByAccess ? (
               <>
-                <p className="font-semibold text-sm text-texto-escuro truncate mt-0.5" title={topCategoryByAccess.name}>
+                <p className="font-semibold text-sm text-texto-escuro dark:text-[#F8EFF1] truncate mt-0.5" title={topCategoryByAccess.name}>
                   {topCategoryByAccess.name}
                 </p>
-                <p className="text-[11px] text-texto-claro font-mono">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                   {topCategoryByAccess.accessCount} acessos reais ({topCategoryByAccess.accessShare}%)
                 </p>
               </>
             ) : topCategoryByProducts && topCategoryByProducts.productCount > 0 ? (
               <>
-                <p className="font-semibold text-sm text-texto-escuro truncate mt-0.5" title={topCategoryByProducts.name}>
+                <p className="font-semibold text-sm text-texto-escuro dark:text-[#F8EFF1] truncate mt-0.5" title={topCategoryByProducts.name}>
                   {topCategoryByProducts.name}
                 </p>
-                <p className="text-[11px] text-texto-claro font-mono">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                   {topCategoryByProducts.productCount} produto(s) vinculados
                 </p>
               </>
             ) : (
-              <p className="text-xs text-texto-claro mt-1">Aguardando produtos e visitas</p>
+              <p className="text-xs text-texto-claro dark:text-[#988087] mt-1">Aguardando produtos e visitas</p>
             )}
           </div>
         </div>
 
         {/* Produtos Vinculados */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center justify-center shrink-0">
             <Package className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Produtos no Catálogo
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {totalProducts}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Total de itens vinculados
             </p>
           </div>
         </div>
 
         {/* Acessos Registrados Reais */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center shrink-0">
             <Eye className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Acessos Registrados
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {totalRecordedAccesses}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               {totalRecordedAccesses === 0
                 ? "Contabilizados via vitrine pública"
                 : "Total de visitas reais registradas"}

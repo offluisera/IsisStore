@@ -133,7 +133,7 @@ export function CategoriesListView({
       )}
 
       {/* Barra de Filtros, Abas e Pesquisa */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-borda shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E1518] p-4 sm:p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Abas */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -143,7 +143,7 @@ export function CategoriesListView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "all"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#2F2126]"
             )}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -157,7 +157,7 @@ export function CategoriesListView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "most-accessed"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#2F2126]"
             )}
           >
             <TrendingUp className="w-3.5 h-3.5" />
@@ -171,7 +171,7 @@ export function CategoriesListView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "most-products"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#2F2126]"
             )}
           >
             <Package className="w-3.5 h-3.5" />
@@ -182,13 +182,13 @@ export function CategoriesListView({
         {/* Campo de Busca & Ação Nova */}
         <div className="flex items-center gap-2.5">
           <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar categoria ou slug..."
-              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 border border-borda rounded-xl text-xs text-texto-escuro placeholder:text-texto-claro/70 focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl text-xs text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#988087] focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white dark:focus:bg-[#1E1518] transition-all"
             />
           </div>
 
@@ -203,10 +203,10 @@ export function CategoriesListView({
       </div>
 
       {/* Tabela de Categorias com Dados 100% Reais */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#251A1E] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#A89299] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5 w-14 text-center">Pos.</th>
                 <th className="px-5 py-3.5">Categoria &amp; Slug</th>
@@ -219,7 +219,7 @@ export function CategoriesListView({
                 <th className="px-5 py-3.5 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {filteredCategories.length > 0 ? (
                 filteredCategories.map((cat, index) => {
                   const rank = index + 1;
@@ -234,13 +234,13 @@ export function CategoriesListView({
                       className={cn(
                         "transition-colors",
                         isTopAccess
-                          ? "bg-amber-50/20 hover:bg-amber-50/40"
-                          : "hover:bg-fundo/30"
+                          ? "bg-amber-50/20 dark:bg-amber-950/20 hover:bg-amber-50/40 dark:hover:bg-amber-950/30"
+                          : "hover:bg-fundo/30 dark:hover:bg-[#251A1E]/40"
                       )}
                     >
                       {/* Posição no Ranking */}
                       <td className="px-5 py-4 text-center">
-                        <span className="font-mono font-bold text-xs text-texto-claro">
+                        <span className="font-mono font-bold text-xs text-texto-claro dark:text-[#A89299]">
                           {rank}
                         </span>
                       </td>
@@ -248,21 +248,21 @@ export function CategoriesListView({
                       {/* Nome e Slug */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0 border border-primaria/20">
+                          <div className="w-9 h-9 rounded-xl bg-primaria/10 dark:bg-primaria/20 text-primaria flex items-center justify-center shrink-0 border border-primaria/20 dark:border-primaria/30">
                             <Layers className="w-4 h-4" />
                           </div>
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <p className="font-semibold text-texto-escuro text-sm">
+                              <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1] text-sm">
                                 {cat.name}
                               </p>
                               {isTopAccess && (
-                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700/60">
                                   Mais Acessada
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               /{cat.slug}
                             </p>
                           </div>
@@ -270,9 +270,9 @@ export function CategoriesListView({
                       </td>
 
                       {/* Descrição */}
-                      <td className="px-5 py-4 text-texto-medio max-w-xs truncate">
+                      <td className="px-5 py-4 text-texto-medio dark:text-[#D4BFC5] max-w-xs truncate">
                         {cat.description || (
-                          <span className="italic text-texto-claro/50">Sem descrição</span>
+                          <span className="italic text-texto-claro/50 dark:text-[#988087]/50">Sem descrição</span>
                         )}
                       </td>
 
@@ -282,8 +282,8 @@ export function CategoriesListView({
                           className={cn(
                             "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold",
                             cat.productCount > 0
-                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                              : "bg-fundo text-texto-claro border border-borda"
+                              ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40"
+                              : "bg-fundo dark:bg-[#251A1E] text-texto-claro dark:text-[#988087] border border-borda dark:border-[#38262C]"
                           )}
                         >
                           {cat.productCount} {cat.productCount === 1 ? "item" : "itens"}
@@ -293,7 +293,7 @@ export function CategoriesListView({
                       {/* Vendas Reais */}
                       <td className="px-5 py-4 text-center">
                         <div className="inline-flex flex-col items-center">
-                          <span className="font-mono font-bold text-xs text-texto-escuro">
+                          <span className="font-mono font-bold text-xs text-texto-escuro dark:text-[#F8EFF1]">
                             {cat.salesCount} {cat.salesCount === 1 ? "un." : "un."}
                           </span>
                           {cat.revenueCents > 0 && (
@@ -306,7 +306,7 @@ export function CategoriesListView({
 
                       {/* Acessos Reais (Sem estimativas inventadas) */}
                       <td className="px-5 py-4 text-center">
-                        <div className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-texto-escuro">
+                        <div className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-texto-escuro dark:text-[#F8EFF1]">
                           <Eye className="w-3.5 h-3.5 text-primaria" />
                           <span>{cat.accessCount}</span>
                         </div>
@@ -316,10 +316,10 @@ export function CategoriesListView({
                       <td className="px-5 py-4 text-center">
                         {totalRecordedAccesses > 0 ? (
                           <div className="flex flex-col gap-1 items-center">
-                            <span className="text-xs font-mono font-semibold text-texto-escuro">
+                            <span className="text-xs font-mono font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                               {cat.accessShare}%
                             </span>
-                            <div className="w-24 h-1.5 bg-fundo rounded-full overflow-hidden border border-borda/40">
+                            <div className="w-24 h-1.5 bg-fundo dark:bg-[#251A1E] rounded-full overflow-hidden border border-borda/40 dark:border-[#38262C]">
                               <div
                                 className="h-full bg-primaria rounded-full"
                                 style={{ width: `${Math.max(cat.accessShare, 2)}%` }}
@@ -327,7 +327,7 @@ export function CategoriesListView({
                             </div>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-texto-claro/60">0%</span>
+                          <span className="text-[11px] text-texto-claro/60 dark:text-[#988087]/60">0%</span>
                         )}
                       </td>
 
@@ -337,8 +337,8 @@ export function CategoriesListView({
                           className={cn(
                             "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
                             cat.is_active
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-slate-100 text-slate-700"
+                              ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                           )}
                         >
                           {cat.is_active ? "Ativa" : "Inativa"}
@@ -350,7 +350,7 @@ export function CategoriesListView({
                         <div className="flex items-center justify-end gap-1.5">
                           <Link
                             href={`/admin/categorias/editar?id=${cat.id}`}
-                            className="p-1.5 rounded-lg text-texto-medio hover:text-primaria hover:bg-primaria/10 transition-colors"
+                            className="p-1.5 rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-primaria hover:bg-primaria/10 dark:hover:bg-primaria/20 transition-colors"
                             title="Editar esta categoria"
                           >
                             <Edit3 className="w-4 h-4" />
@@ -359,7 +359,7 @@ export function CategoriesListView({
                           <Link
                             href={`/produtos?categoria=${cat.slug}`}
                             target="_blank"
-                            className="p-1.5 rounded-lg text-texto-medio hover:text-primaria hover:bg-primaria/10 transition-colors"
+                            className="p-1.5 rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-primaria hover:bg-primaria/10 dark:hover:bg-primaria/20 transition-colors"
                             title="Ver produtos desta categoria na vitrine"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -369,7 +369,7 @@ export function CategoriesListView({
                             type="button"
                             disabled={deletingId === cat.id || cat.productCount > 0}
                             onClick={() => handleDelete(cat.id, cat.name)}
-                            className="p-1.5 rounded-lg text-texto-claro hover:text-erro hover:bg-erro/10 disabled:opacity-20 transition-colors"
+                            className="p-1.5 rounded-lg text-texto-claro dark:text-[#988087] hover:text-erro hover:bg-erro/10 disabled:opacity-20 transition-colors"
                             title={
                               cat.productCount > 0
                                 ? "Não é possível excluir: existem produtos vinculados"
@@ -389,9 +389,9 @@ export function CategoriesListView({
                 })
               ) : (
                 <tr>
-                  <td colSpan={9} className="px-5 py-12 text-center text-texto-claro space-y-1">
+                  <td colSpan={9} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087] space-y-1">
                     <Layers className="w-8 h-8 text-primaria/30 mx-auto mb-2" />
-                    <p className="font-semibold text-texto-escuro">
+                    <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       Nenhuma categoria encontrada com os filtros atuais.
                     </p>
                   </td>

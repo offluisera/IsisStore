@@ -106,16 +106,16 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       {/* Formulário de Nova Categoria */}
-      <div className="lg:col-span-4 bg-white p-6 rounded-2xl border border-borda shadow-xs space-y-4">
-        <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
-          <div className="w-8 h-8 rounded-lg bg-primaria-soft text-primaria flex items-center justify-center">
+      <div className="lg:col-span-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-4">
+        <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
+          <div className="w-8 h-8 rounded-lg bg-primaria-soft dark:bg-primaria-soft/30 text-primaria flex items-center justify-center">
             <Plus className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="font-serif text-sm font-bold text-texto-escuro">
+            <h2 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Nova Categoria
             </h2>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Adicione departamentos ao catálogo
             </p>
           </div>
@@ -140,7 +140,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
 
         <form onSubmit={handleCreate} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-texto-escuro mb-1">
+            <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
               Nome da Categoria *
             </label>
             <Input
@@ -149,12 +149,12 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Vestidos, Joias, Calçados"
-              className="text-xs"
+              className="text-xs dark:bg-[#151012] dark:border-[#38262C] dark:text-[#F8EFF1]"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-texto-escuro mb-1">
+            <label className="block font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
               Descrição (Opcional)
             </label>
             <textarea
@@ -162,7 +162,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Breve descrição da linha de produtos..."
               rows={3}
-              className="w-full rounded-xl border border-borda p-3 text-xs bg-white text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria resize-none"
+              className="w-full rounded-xl border border-borda dark:border-[#38262C] p-3 text-xs bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria resize-none"
             />
           </div>
 
@@ -187,37 +187,37 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
       </div>
 
       {/* Lista de Categorias Cadastradas */}
-      <div className="lg:col-span-8 bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
-        <div className="p-5 border-b border-borda/60 flex items-center justify-between">
+      <div className="lg:col-span-8 bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
+        <div className="p-5 border-b border-borda/60 dark:border-[#38262C]/60 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-primaria" />
-            <h2 className="font-serif text-sm font-bold text-texto-escuro">
+            <h2 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Categorias Existentes ({categories.length})
             </h2>
           </div>
         </div>
 
-        <div className="divide-y divide-borda/60 text-xs">
+        <div className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-xs">
           {categories.length > 0 ? (
             categories.map((cat) => (
               <div
                 key={cat.id}
-                className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-fundo/40 transition-colors"
+                className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-fundo/40 dark:hover:bg-[#251A1E]/50 transition-colors"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-texto-escuro text-sm">
+                    <span className="font-semibold text-texto-escuro dark:text-[#F8EFF1] text-sm">
                       {cat.name}
                     </span>
-                    <Badge variant="secondary" className="text-[10px]">
+                    <Badge variant="secondary" className="text-[10px] dark:bg-[#251A1E] dark:text-[#D4BFC5] dark:border-[#38262C]">
                       /{cat.slug}
                     </Badge>
-                    <span className="text-[11px] text-texto-claro font-medium">
+                    <span className="text-[11px] text-texto-claro dark:text-[#988087] font-medium">
                       ({cat.productCount} {cat.productCount === 1 ? "produto" : "produtos"})
                     </span>
                   </div>
                   {cat.description && (
-                    <p className="text-texto-claro text-[11px] max-w-lg">
+                    <p className="text-texto-claro dark:text-[#988087] text-[11px] max-w-lg">
                       {cat.description}
                     </p>
                   )}
@@ -228,7 +228,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
                     type="button"
                     disabled={deletingId === cat.id || cat.productCount > 0}
                     onClick={() => handleDelete(cat.id, cat.name)}
-                    className="p-2 rounded-xl text-texto-claro hover:text-erro hover:bg-erro/10 disabled:opacity-20 transition-colors"
+                    className="p-2 rounded-xl text-texto-claro dark:text-[#988087] hover:text-erro hover:bg-erro/10 disabled:opacity-20 transition-colors"
                     title={
                       cat.productCount > 0
                         ? "Não pode excluir categoria com produtos vinculados"
@@ -245,7 +245,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
               </div>
             ))
           ) : (
-            <div className="p-8 text-center text-texto-claro">
+            <div className="p-8 text-center text-texto-claro dark:text-[#988087]">
               Nenhuma categoria cadastrada.
             </div>
           )}

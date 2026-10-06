@@ -395,19 +395,19 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
   return (
     <div className="flex flex-col gap-6 w-full max-w-full">
       {/* Header com Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
             <span>/</span>
-            <span className="text-texto-escuro font-medium">Configurações Gerais</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Configurações Gerais</span>
           </div>
-          <h1 className="font-serif text-2xl font-bold text-texto-escuro tracking-tight">
+          <h1 className="font-serif text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] tracking-tight">
             Configurações da Loja
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Gerencie identidade de marca, favicons, SEO, tags de busca, contato e operação comercial.
           </p>
         </div>
@@ -416,11 +416,11 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
           <Link
             href="/"
             target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-texto-medio bg-fundo hover:bg-neutral-100 rounded-xl border border-borda transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-texto-medio dark:text-[#D4BFC5] bg-fundo dark:bg-[#251A1E] hover:bg-neutral-100 dark:hover:bg-[#2D1F24] rounded-xl border border-borda dark:border-[#38262C] transition-colors"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Ver Loja</span>
-            <ExternalLink className="w-3 h-3 text-texto-claro" />
+            <ExternalLink className="w-3 h-3 text-texto-claro dark:text-[#988087]" />
           </Link>
         </div>
       </div>
@@ -430,14 +430,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
         <div
           className={`p-4 rounded-2xl text-xs flex items-center gap-3 transition-all animate-fade-in shadow-xs ${
             feedback.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-              : "bg-rose-50 text-rose-800 border border-rose-200"
+              ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/50"
+              : "bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-800/50"
           }`}
         >
           {feedback.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
           )}
           <span className="font-medium">{feedback.message}</span>
         </div>
@@ -661,17 +661,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
           {/* ABA 1: Identidade & Marca */}
           {activeTab === "general" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+            <div className="lg:col-span-2 bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                 <Store className="w-4 h-4 text-primaria" />
-                <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   Dados Institucionais da Loja
                 </h3>
               </div>
 
               {/* Nome da Loja */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-texto-escuro block">
+                <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                   Nome da Loja <span className="text-primaria">*</span>
                 </label>
                 <Input
@@ -679,17 +679,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   value={storeName}
                   onChange={(e) => setStoreName(e.target.value)}
                   placeholder="Ex: Isis Store"
-                  className="bg-white font-medium"
+                  className="bg-white dark:bg-[#151012] font-medium"
                   required
                 />
-                <span className="text-[11px] text-texto-claro block">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                   Nome exibido no cabeçalho, rodapé, aba do navegador e comunicações.
                 </span>
               </div>
 
               {/* Slogan */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-texto-escuro block">
+                <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                   Slogan / Subtítulo
                 </label>
                 <Input
@@ -697,16 +697,16 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   value={storeTagline}
                   onChange={(e) => setStoreTagline(e.target.value)}
                   placeholder="Ex: Semijoias & Presentes Especiais"
-                  className="bg-white"
+                  className="bg-white dark:bg-[#151012]"
                 />
-                <span className="text-[11px] text-texto-claro block">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                   Subtítulo exibido abaixo da logo e no título da aba do navegador.
                 </span>
               </div>
 
               {/* Descrição */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-texto-escuro block">
+                <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                   Descrição da Loja
                 </label>
                 <textarea
@@ -714,14 +714,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   onChange={(e) => setStoreDescription(e.target.value)}
                   rows={3}
                   placeholder="Conte um pouco sobre sua marca e diferencial..."
-                  className="w-full text-xs p-3 rounded-xl border border-borda focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none"
+                  className="w-full text-xs p-3 rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none"
                 />
               </div>
 
               {/* URLs de Favicon e Logo */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     URL do Favicon (.svg, .png, .ico)
                   </label>
                   <Input
@@ -729,27 +729,27 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     value={faviconUrl}
                     onChange={(e) => setFaviconUrl(e.target.value)}
                     placeholder="/favicon-isis.svg ou https://..."
-                    className="font-mono text-xs bg-white"
+                    className="font-mono text-xs bg-white dark:bg-[#151012]"
                   />
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     <button
                       type="button"
                       onClick={() => setFaviconUrl("/favicon-isis.svg")}
-                      className="text-[10px] px-2 py-0.5 rounded-md bg-primaria-soft text-primaria font-semibold hover:bg-primaria/20 transition-colors"
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-primaria-soft dark:bg-primaria-soft/30 text-primaria font-semibold hover:bg-primaria/20 transition-colors"
                     >
                       Usar Ícone Isis (SVG)
                     </button>
                     <button
                       type="button"
                       onClick={() => setFaviconUrl("/images/logo/logo.jpeg")}
-                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo text-texto-medio font-semibold hover:bg-neutral-200 transition-colors border border-borda"
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] font-semibold hover:bg-neutral-200 dark:hover:bg-[#302127] transition-colors border border-borda dark:border-[#38262C]"
                     >
                       Usar Foto Logo
                     </button>
                     <button
                       type="button"
                       onClick={() => setFaviconUrl("/favicon.ico")}
-                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo text-texto-claro hover:bg-neutral-200 transition-colors border border-borda"
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo dark:bg-[#251A1E] text-texto-claro dark:text-[#988087] hover:bg-neutral-200 dark:hover:bg-[#302127] transition-colors border border-borda dark:border-[#38262C]"
                     >
                       Padrão .ico
                     </button>
@@ -757,7 +757,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     URL da Logo Principal
                   </label>
                   <Input
@@ -765,13 +765,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     value={logoUrl}
                     onChange={(e) => setLogoUrl(e.target.value)}
                     placeholder="/images/logo/logo.jpeg ou https://..."
-                    className="font-mono text-xs bg-white"
+                    className="font-mono text-xs bg-white dark:bg-[#151012]"
                   />
                   <div className="flex items-center gap-1.5 pt-1">
                     <button
                       type="button"
                       onClick={() => setLogoUrl("/images/logo/logo.jpeg")}
-                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo text-texto-medio font-semibold hover:bg-neutral-200 transition-colors border border-borda"
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] font-semibold hover:bg-neutral-200 dark:hover:bg-[#302127] transition-colors border border-borda dark:border-[#38262C]"
                     >
                       Logo Padrão Isis
                     </button>
@@ -783,23 +783,23 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
             {/* Painel Lateral: Previews de Identidade em Tempo Real */}
             <div className="space-y-6">
               {/* Preview da Aba do Navegador */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primaria" />
-                    <h4 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Preview da Aba do Navegador
                     </h4>
                   </div>
-                  <span className="text-[10px] bg-primaria-soft text-primaria font-semibold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-primaria-soft dark:bg-primaria-soft/30 text-primaria font-semibold px-2 py-0.5 rounded-full">
                     Tempo Real
                   </span>
                 </div>
 
                 {/* Aba Simulada do Chrome/Edge/Safari */}
-                <div className="p-3 bg-neutral-100 rounded-2xl border border-borda space-y-2.5">
-                  <div className="bg-white rounded-xl p-2.5 flex items-center gap-2.5 shadow-2xs border border-borda/60">
-                    <div className="w-5 h-5 relative shrink-0 overflow-hidden rounded bg-fundo border border-borda/50 flex items-center justify-center">
+                <div className="p-3 bg-neutral-100 dark:bg-[#151012] rounded-2xl border border-borda dark:border-[#38262C] space-y-2.5">
+                  <div className="bg-white dark:bg-[#1E1518] rounded-xl p-2.5 flex items-center gap-2.5 shadow-2xs border border-borda/60 dark:border-[#38262C]/60">
+                    <div className="w-5 h-5 relative shrink-0 overflow-hidden rounded bg-fundo dark:bg-[#251A1E] border border-borda/50 dark:border-[#38262C]/50 flex items-center justify-center">
                       <Image
                         key={displayFavicon}
                         src={displayFavicon}
@@ -813,14 +813,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-texto-escuro truncate max-w-[210px]">
+                    <span className="text-xs font-medium text-texto-escuro dark:text-[#F8EFF1] truncate max-w-[210px]">
                       {browserTabTitle}
                     </span>
-                    <span className="text-neutral-400 text-xs ml-auto font-sans">✕</span>
+                    <span className="text-neutral-400 dark:text-[#988087] text-xs ml-auto font-sans">✕</span>
                   </div>
-                  <div className="text-[11px] text-texto-claro px-1 break-all flex items-center gap-1.5">
-                    <span className="text-texto-medio font-semibold">Favicon ativo:</span>
-                    <span className="font-mono text-[10px] bg-white px-1.5 py-0.5 rounded border border-borda">
+                  <div className="text-[11px] text-texto-claro dark:text-[#988087] px-1 break-all flex items-center gap-1.5">
+                    <span className="text-texto-medio dark:text-[#D4BFC5] font-semibold">Favicon ativo:</span>
+                    <span className="font-mono text-[10px] bg-white dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] px-1.5 py-0.5 rounded border border-borda dark:border-[#38262C]">
                       {displayFavicon}
                     </span>
                   </div>
@@ -828,14 +828,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               </div>
 
               {/* Preview da Logo */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-3">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-serif text-sm font-bold text-texto-escuro">
+                  <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Preview da Logo no Cabeçalho
                   </h4>
-                  <span className="text-[10px] text-texto-claro">Exibição real</span>
+                  <span className="text-[10px] text-texto-claro dark:text-[#988087]">Exibição real</span>
                 </div>
-                <div className="h-28 bg-fundo rounded-2xl flex items-center justify-center p-4 border border-dashed border-borda overflow-hidden">
+                <div className="h-28 bg-fundo dark:bg-[#151012] rounded-2xl flex items-center justify-center p-4 border border-dashed border-borda dark:border-[#38262C] overflow-hidden">
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 rounded-full overflow-hidden border border-primaria/30 shadow-xs relative shrink-0">
                       <Image
@@ -851,10 +851,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-serif text-base font-bold text-texto-escuro leading-tight">
+                      <span className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1] leading-tight">
                         {storeName.trim() || "Isis Store"}
                       </span>
-                      <span className="text-[10px] text-texto-claro tracking-wider uppercase mt-0.5">
+                      <span className="text-[10px] text-texto-claro dark:text-[#988087] tracking-wider uppercase mt-0.5">
                         {storeTagline.trim() || "Tudo o que você ama"}
                       </span>
                     </div>
@@ -868,10 +868,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
         {/* ABA 2: SEO & Indexação Google */}
         {activeTab === "seo" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+            <div className="lg:col-span-2 bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                 <Search className="w-4 h-4 text-primaria" />
-                <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   Otimização para Mecanismos de Busca (SEO)
                 </h3>
               </div>
@@ -879,12 +879,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               {/* Meta Title */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     Meta Title (Título SEO)
                   </label>
                   <span
                     className={`text-[10px] font-mono ${
-                      metaTitle.length > 60 ? "text-amber-600 font-bold" : "text-texto-claro"
+                      metaTitle.length > 60 ? "text-amber-600 dark:text-amber-400 font-bold" : "text-texto-claro dark:text-[#988087]"
                     }`}
                   >
                     {metaTitle.length}/60 caracteres recomendados
@@ -895,9 +895,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   value={metaTitle}
                   onChange={(e) => setMetaTitle(e.target.value)}
                   placeholder="Ex: Isis Store — Semijoias Exclusivas & Presentes"
-                  className="bg-white text-xs"
+                  className="bg-white dark:bg-[#151012] text-xs"
                 />
-                <span className="text-[11px] text-texto-claro block">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                   Aparece em destaque na primeira linha azul dos resultados do Google.
                 </span>
               </div>
@@ -905,12 +905,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               {/* Meta Description */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     Meta Description (Descrição nos Buscadores)
                   </label>
                   <span
                     className={`text-[10px] font-mono ${
-                      metaDescription.length > 160 ? "text-amber-600 font-bold" : "text-texto-claro"
+                      metaDescription.length > 160 ? "text-amber-600 dark:text-amber-400 font-bold" : "text-texto-claro dark:text-[#988087]"
                     }`}
                   >
                     {metaDescription.length}/160 caracteres
@@ -921,13 +921,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   onChange={(e) => setMetaDescription(e.target.value)}
                   rows={3}
                   placeholder="Ex: Encontre semijoias banhadas a ouro 18k e prata 925 com garantia..."
-                  className="w-full text-xs p-3 rounded-xl border border-borda focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none"
+                  className="w-full text-xs p-3 rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none"
                 />
               </div>
 
               {/* Palavras-chave / Tags de Busca */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-texto-escuro block">
+                <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                   Tags de Busca & Keywords (separadas por vírgula)
                 </label>
                 <Input
@@ -935,9 +935,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   value={seoKeywords}
                   onChange={(e) => setSeoKeywords(e.target.value)}
                   placeholder="semijoias, colares femininos, brincos banhados, presentes finos, moda feminina"
-                  className="bg-white text-xs"
+                  className="bg-white dark:bg-[#151012] text-xs"
                 />
-                <span className="text-[11px] text-texto-claro block">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                   Tags utilizadas para alimentar a indexação e pesquisas do catálogo interno.
                 </span>
               </div>
@@ -945,7 +945,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               {/* Imagem de Compartilhamento (Open Graph) e URL Canônica */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     URL da Imagem Open Graph (WhatsApp / Facebook)
                   </label>
                   <Input
@@ -953,12 +953,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     value={ogImageUrl}
                     onChange={(e) => setOgImageUrl(e.target.value)}
                     placeholder="/images/logo/logo.jpeg ou https://..."
-                    className="font-mono text-xs bg-white"
+                    className="font-mono text-xs bg-white dark:bg-[#151012]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     URL Canônica da Loja
                   </label>
                   <Input
@@ -966,7 +966,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     value={canonicalUrl}
                     onChange={(e) => setCanonicalUrl(e.target.value)}
                     placeholder="https://isisstore.com.br"
-                    className="font-mono text-xs bg-white"
+                    className="font-mono text-xs bg-white dark:bg-[#151012]"
                   />
                 </div>
               </div>
@@ -974,17 +974,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
             {/* Painel Lateral: Preview Google SERP */}
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
                   <Search className="w-4 h-4 text-primaria" />
-                  <h4 className="font-serif text-sm font-bold text-texto-escuro">
+                  <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Preview no Google (SERP)
                   </h4>
                 </div>
 
-                <div className="p-4 bg-[#f8f9fa] rounded-2xl border border-borda space-y-2">
+                <div className="p-4 bg-[#f8f9fa] dark:bg-[#151012] rounded-2xl border border-borda dark:border-[#38262C] space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full overflow-hidden bg-white border border-neutral-300 relative flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full overflow-hidden bg-white dark:bg-[#1E1518] border border-neutral-300 dark:border-[#38262C] relative flex items-center justify-center">
                       <Image
                         key={displayFavicon}
                         src={displayFavicon}
@@ -999,32 +999,32 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[11px] text-[#202124] font-medium leading-none">
+                      <span className="text-[11px] text-[#202124] dark:text-[#e8eaed] font-medium leading-none">
                         {storeName || "Isis Store"}
                       </span>
-                      <span className="text-[10px] text-[#5f6368] font-mono leading-none mt-0.5 truncate max-w-[200px]">
+                      <span className="text-[10px] text-[#5f6368] dark:text-[#9aa0a6] font-mono leading-none mt-0.5 truncate max-w-[200px]">
                         {canonicalUrl || "https://isisstore.com.br"}
                       </span>
                     </div>
                   </div>
 
-                  <h5 className="text-sm font-medium text-[#1a0dab] hover:underline cursor-pointer leading-snug line-clamp-2">
+                  <h5 className="text-sm font-medium text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer leading-snug line-clamp-2">
                     {metaTitle || browserTabTitle}
                   </h5>
 
-                  <p className="text-xs text-[#4d5156] leading-relaxed line-clamp-3">
+                  <p className="text-xs text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-3">
                     {displayDescription}
                   </p>
                 </div>
               </div>
 
               {/* Preview Card WhatsApp / Redes Sociais */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-3">
-                <h4 className="font-serif text-sm font-bold text-texto-escuro">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-3">
+                <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   Preview de Compartilhamento Social
                 </h4>
-                <div className="bg-fundo rounded-2xl border border-borda overflow-hidden shadow-2xs">
-                  <div className="h-32 w-full relative bg-neutral-200">
+                <div className="bg-fundo dark:bg-[#151012] rounded-2xl border border-borda dark:border-[#38262C] overflow-hidden shadow-2xs">
+                  <div className="h-32 w-full relative bg-neutral-200 dark:bg-[#251A1E]">
                     <Image
                       key={displayOgImage}
                       src={displayOgImage}
@@ -1037,14 +1037,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       }}
                     />
                   </div>
-                  <div className="p-3 space-y-1 bg-white">
-                    <span className="text-[10px] uppercase font-mono text-texto-claro block">
+                  <div className="p-3 space-y-1 bg-white dark:bg-[#1E1518]">
+                    <span className="text-[10px] uppercase font-mono text-texto-claro dark:text-[#988087] block">
                       isisstore.com.br
                     </span>
-                    <h6 className="text-xs font-bold text-texto-escuro truncate">
+                    <h6 className="text-xs font-bold text-texto-escuro dark:text-[#F8EFF1] truncate">
                       {metaTitle || browserTabTitle}
                     </h6>
-                    <p className="text-[11px] text-texto-medio line-clamp-2 leading-snug">
+                    <p className="text-[11px] text-texto-medio dark:text-[#D4BFC5] line-clamp-2 leading-snug">
                       {displayDescription}
                     </p>
                   </div>
@@ -1060,10 +1060,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
             {/* Coluna Formulário */}
             <div className="lg:col-span-7 space-y-6">
               {/* Card 1: Canais de Atendimento */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <Mail className="w-4 h-4 text-primaria" />
-                  <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                  <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Canais de Atendimento ao Cliente
                   </h3>
                 </div>
@@ -1071,7 +1071,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* E-mail de Suporte */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1.5">
                       <Mail className="w-3.5 h-3.5 text-primaria" />
                       <span>E-mail de Atendimento</span>
                     </label>
@@ -1080,14 +1080,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={supportEmail}
                       onChange={(e) => setSupportEmail(e.target.value)}
                       placeholder="contato@isisstore.com.br"
-                      className="bg-white text-xs"
+                      className="bg-white dark:bg-[#151012] text-xs"
                     />
                   </div>
 
                   {/* Telefone / WhatsApp */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>Telefone / WhatsApp Comercial</span>
                     </label>
                     <Input
@@ -1095,14 +1095,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={supportPhone}
                       onChange={(e) => setSupportPhone(e.target.value)}
                       placeholder="5517992495308"
-                      className="bg-white text-xs font-mono"
+                      className="bg-white dark:bg-[#151012] text-xs font-mono"
                     />
                   </div>
 
                   {/* Instagram */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1.5">
-                      <InstagramIcon className="w-3.5 h-3.5 text-pink-600" />
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1.5">
+                      <InstagramIcon className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
                       <span>Perfil do Instagram (@usuario)</span>
                     </label>
                     <Input
@@ -1110,13 +1110,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={instagramHandle}
                       onChange={(e) => setInstagramHandle(e.target.value)}
                       placeholder="@isisstoreoficial"
-                      className="bg-white text-xs"
+                      className="bg-white dark:bg-[#151012] text-xs"
                     />
                   </div>
 
                   {/* Horário de Atendimento */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-primaria" />
                       <span>Horário de Atendimento da Equipe</span>
                     </label>
@@ -1125,9 +1125,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={supportHours}
                       onChange={(e) => setSupportHours(e.target.value)}
                       placeholder="Segunda a Sexta: 09h às 18h | Sábado: 09h às 13h"
-                      className="bg-white text-xs"
+                      className="bg-white dark:bg-[#151012] text-xs"
                     />
-                    <span className="text-[11px] text-texto-claro block">
+                    <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                       Exibido na coluna de Atendimento do rodapé da loja.
                     </span>
                   </div>
@@ -1135,10 +1135,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               </div>
 
               {/* Card 2: Dados Fiscais & Rodapé Oficial */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <FileText className="w-4 h-4 text-primaria" />
-                  <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                  <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Dados Fiscais & Informações do Rodapé (Footer)
                   </h3>
                 </div>
@@ -1146,9 +1146,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 <div className="space-y-4">
                   {/* CNPJ */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1.5">
                       <span>CNPJ da Empresa</span>
-                      <span className="text-[10px] text-primaria font-bold bg-primaria-soft px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] text-primaria font-bold bg-primaria-soft dark:bg-primaria-soft/30 px-2 py-0.5 rounded-full">
                         Exibido no Rodapé
                       </span>
                     </label>
@@ -1157,16 +1157,16 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={cnpj}
                       onChange={(e) => setCnpj(e.target.value)}
                       placeholder="58.123.456/0001-78"
-                      className="bg-white text-xs font-mono"
+                      className="bg-white dark:bg-[#151012] text-xs font-mono"
                     />
-                    <span className="text-[11px] text-texto-claro block">
+                    <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                       Obrigatoriedade legal do E-commerce (Decreto Federal nº 7.962/2013).
                     </span>
                   </div>
 
                   {/* Texto Institucional / Endereço do Rodapé */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Texto Institucional / Endereço da Empresa
                     </label>
                     <textarea
@@ -1174,9 +1174,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       onChange={(e) => setFooterText(e.target.value)}
                       rows={3}
                       placeholder="Isis Store — Semijoias, Brinquedos e Presentes Finos. Envio para todo o Brasil."
-                      className="w-full text-xs p-3 rounded-xl border border-borda focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none bg-white"
+                      className="w-full text-xs p-3 rounded-xl border border-borda dark:border-[#38262C] focus:border-primaria focus:ring-1 focus:ring-primaria/20 outline-none transition-all resize-none bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1]"
                     />
-                    <span className="text-[11px] text-texto-claro block">
+                    <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                       Frase institucional ou endereço da sede exibido na coluna da marca no rodapé.
                     </span>
                   </div>
@@ -1186,23 +1186,23 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
             {/* Coluna Preview: Live Preview do Rodapé */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-4 sticky top-6">
-                <div className="flex items-center justify-between pb-2 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-4 sticky top-6">
+                <div className="flex items-center justify-between pb-2 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <Eye className="w-4 h-4 text-primaria" />
-                    <h4 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Preview do Rodapé Oficial (Footer)
                     </h4>
                   </div>
-                  <span className="text-[10px] font-mono bg-primaria-soft text-primaria px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] font-mono bg-primaria-soft dark:bg-primaria-soft/30 text-primaria px-2 py-0.5 rounded-full font-bold">
                     Ao Vivo
                   </span>
                 </div>
 
                 {/* Miniatura do Rodapé */}
-                <div className="p-4 bg-fundo-card rounded-2xl border border-borda space-y-4 text-xs">
+                <div className="p-4 bg-fundo-card dark:bg-[#151012] rounded-2xl border border-borda dark:border-[#38262C] space-y-4 text-xs">
                   {/* Topo da Miniatura */}
-                  <div className="space-y-2 border-b border-borda/60 pb-3">
+                  <div className="space-y-2 border-b border-borda/60 dark:border-[#38262C]/60 pb-3">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full overflow-hidden border border-primaria-border relative shrink-0">
                         <Image
@@ -1213,37 +1213,37 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                           unoptimized
                         />
                       </div>
-                      <span className="font-serif font-bold text-texto-escuro text-sm">
+                      <span className="font-serif font-bold text-texto-escuro dark:text-[#F8EFF1] text-sm">
                         {storeName || "Isis Store"}
                       </span>
                     </div>
-                    <p className="text-[11px] text-texto-claro leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087] leading-relaxed line-clamp-2">
                       {storeDescription || "Tudo o que você ama em um só lugar! ♡"}
                     </p>
                     {footerText && (
-                      <p className="text-[10px] text-texto-claro italic border-l-2 border-primaria/40 pl-2">
+                      <p className="text-[10px] text-texto-claro dark:text-[#988087] italic border-l-2 border-primaria/40 pl-2">
                         {footerText}
                       </p>
                     )}
                   </div>
 
                   {/* Atendimento da Miniatura */}
-                  <div className="space-y-1.5 text-[11px] border-b border-borda/60 pb-3">
-                    <span className="font-serif font-bold text-texto-escuro block">Atendimento</span>
-                    <p className="text-texto-claro flex items-center gap-1.5">
+                  <div className="space-y-1.5 text-[11px] border-b border-borda/60 dark:border-[#38262C]/60 pb-3">
+                    <span className="font-serif font-bold text-texto-escuro dark:text-[#F8EFF1] block">Atendimento</span>
+                    <p className="text-texto-claro dark:text-[#988087] flex items-center gap-1.5">
                       <Clock className="w-3 h-3 text-primaria" />
                       <span>{supportHours || "Segunda a Sexta: 09h às 18h"}</span>
                     </p>
-                    <p className="text-texto-claro flex items-center gap-1.5 truncate">
+                    <p className="text-texto-claro dark:text-[#988087] flex items-center gap-1.5 truncate">
                       <Mail className="w-3 h-3 text-primaria" />
                       <span className="truncate">{supportEmail || "contato@isisstore.com.br"}</span>
                     </p>
-                    <p className="text-texto-claro flex items-center gap-1.5 font-semibold text-emerald-700">
-                      <Phone className="w-3 h-3 text-emerald-600" />
+                    <p className="text-texto-claro dark:text-[#988087] flex items-center gap-1.5 font-semibold text-emerald-700 dark:text-emerald-400">
+                      <Phone className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       <span>WhatsApp: {supportPhone || "(17) 99249-5308"}</span>
                     </p>
                     {instagramHandle && (
-                      <p className="text-texto-claro flex items-center gap-1.5 text-pink-600">
+                      <p className="text-texto-claro dark:text-[#988087] flex items-center gap-1.5 text-pink-600 dark:text-pink-400">
                         <InstagramIcon className="w-3 h-3" />
                         <span>{instagramHandle}</span>
                       </p>
@@ -1251,8 +1251,8 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   </div>
 
                   {/* Copyright e CNPJ da Miniatura */}
-                  <div className="pt-1 text-[10px] text-texto-claro leading-snug">
-                    <p className="font-medium text-texto-escuro">
+                  <div className="pt-1 text-[10px] text-texto-claro dark:text-[#988087] leading-snug">
+                    <p className="font-medium text-texto-escuro dark:text-[#F8EFF1]">
                       © {new Date().getFullYear()} {storeName || "Isis Store"}. Todos os direitos reservados.
                     </p>
                     <p className="font-mono mt-0.5 text-primaria font-bold">
@@ -1271,17 +1271,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
             {/* Coluna da Esquerda: Formulários de Configuração (6 colunas) */}
             <div className="lg:col-span-6 space-y-6">
               {/* Card 1: Status & Textos Principais */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
                       <Gift className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                      <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                         Banner Editorial de Presentes
                       </h3>
-                      <p className="text-[11px] text-texto-claro">
+                      <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                         Configurações visuais, chamada e textos de destaque
                       </p>
                     </div>
@@ -1294,8 +1294,8 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       onChange={(e) => setEditorialBannerActive(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria" />
-                    <span className="ml-2 text-xs font-semibold text-texto-escuro">
+                    <div className="w-11 h-6 bg-neutral-200 dark:bg-[#251A1E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria" />
+                    <span className="ml-2 text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       {editorialBannerActive ? "Ativo no Site" : "Desativado"}
                     </span>
                   </label>
@@ -1303,9 +1303,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                 {/* Badge Superior */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                     <span>Badge Superior</span>
-                    <span className="text-[10px] text-texto-claro font-normal">Exibido com ícone de brilho</span>
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087] font-normal">Exibido com ícone de brilho</span>
                   </label>
                   <Input
                     type="text"
@@ -1313,13 +1313,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     onChange={(e) => setEditorialBannerBadge(e.target.value)}
                     placeholder="Ex: Experiência Exclusiva de Compra"
                     maxLength={100}
-                    className="h-10 text-xs rounded-xl"
+                    className="h-10 text-xs rounded-xl bg-white dark:bg-[#151012]"
                   />
                 </div>
 
                 {/* Título */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     Título Principal <span className="text-primaria">*</span>
                   </label>
                   <Input
@@ -1328,17 +1328,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     onChange={(e) => setEditorialBannerTitle(e.target.value)}
                     placeholder="Ex: A Arte de Presentear quem você mais Ama"
                     maxLength={200}
-                    className="h-10 text-xs rounded-xl font-medium"
+                    className="h-10 text-xs rounded-xl font-medium bg-white dark:bg-[#151012]"
                   />
                 </div>
 
                 {/* Descrição */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Descrição do Banner
                     </label>
-                    <span className="text-[10px] text-texto-claro">
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087]">
                       {editorialBannerDescription.length}/800
                     </span>
                   </div>
@@ -1348,23 +1348,23 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     rows={4}
                     maxLength={800}
                     placeholder="Escreva a mensagem inspiradora sobre os presentes e embalagens..."
-                    className="w-full text-xs p-3 rounded-2xl border border-borda focus:outline-none focus:ring-2 focus:ring-primaria/20 focus:border-primaria resize-none leading-relaxed"
+                    className="w-full text-xs p-3 rounded-2xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-2 focus:ring-primaria/20 focus:border-primaria resize-none leading-relaxed"
                   />
                 </div>
               </div>
 
               {/* Card 2: Cupom de Boas-Vindas */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
                       <Tag className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                      <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                         Cupom de Boas-Vindas
                       </h3>
-                      <p className="text-[11px] text-texto-claro">
+                      <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                         Exibir ou ocultar cupom promocional neste banner
                       </p>
                     </div>
@@ -1377,8 +1377,8 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       onChange={(e) => setEditorialBannerCouponActive(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria" />
-                    <span className="ml-2 text-xs font-semibold text-texto-escuro">
+                    <div className="w-11 h-6 bg-neutral-200 dark:bg-[#251A1E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria" />
+                    <span className="ml-2 text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       {editorialBannerCouponActive ? "Cupom Ativo" : "Cupom Oculto"}
                     </span>
                   </label>
@@ -1387,7 +1387,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 {editorialBannerCouponActive && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-texto-escuro block">
+                      <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                         Código do Cupom
                       </label>
                       <Input
@@ -1396,12 +1396,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         onChange={(e) => setEditorialBannerCouponCode(e.target.value.toUpperCase())}
                         placeholder="Ex: ISIS10"
                         maxLength={50}
-                        className="h-10 text-xs font-mono font-bold tracking-wider rounded-xl uppercase"
+                        className="h-10 text-xs font-mono font-bold tracking-wider rounded-xl uppercase bg-white dark:bg-[#151012]"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-texto-escuro block">
+                      <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                         Texto de Desconto
                       </label>
                       <Input
@@ -1410,7 +1410,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         onChange={(e) => setEditorialBannerCouponText(e.target.value)}
                         placeholder="Ex: 10% OFF em todo o catálogo"
                         maxLength={150}
-                        className="h-10 text-xs rounded-xl"
+                        className="h-10 text-xs rounded-xl bg-white dark:bg-[#151012]"
                       />
                     </div>
                   </div>
@@ -1418,16 +1418,16 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               </div>
 
               {/* Card 3: Botões de Ação */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Botões de Ação (CTAs)
                     </h3>
-                    <p className="text-[11px] text-texto-claro">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                       Personalize os textos e links dos botões principal e WhatsApp
                     </p>
                   </div>
@@ -1435,73 +1435,73 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                 <div className="space-y-4">
                   {/* Botão Principal */}
-                  <div className="p-4 rounded-2xl bg-fundo border border-borda/70 space-y-3">
-                    <div className="text-xs font-semibold text-texto-escuro flex items-center gap-2">
+                  <div className="p-4 rounded-2xl bg-fundo dark:bg-[#151012] border border-borda/70 dark:border-[#38262C]/70 space-y-3">
+                    <div className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-primaria" />
                       Botão Principal (Destaque)
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <label className="text-[11px] text-texto-medio block">Texto do Botão</label>
+                        <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Texto do Botão</label>
                         <Input
                           type="text"
                           value={editorialBannerButtonText}
                           onChange={(e) => setEditorialBannerButtonText(e.target.value)}
                           placeholder="Ex: Explorar Coleção Completa"
                           maxLength={100}
-                          className="h-9 text-xs rounded-xl bg-white"
+                          className="h-9 text-xs rounded-xl bg-white dark:bg-[#1E1518]"
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[11px] text-texto-medio block">Link de Destino</label>
+                        <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Link de Destino</label>
                         <Input
                           type="text"
                           value={editorialBannerButtonLink}
                           onChange={(e) => setEditorialBannerButtonLink(e.target.value)}
                           placeholder="Ex: /produtos ou /categoria/semijoias"
                           maxLength={300}
-                          className="h-9 text-xs rounded-xl bg-white font-mono"
+                          className="h-9 text-xs rounded-xl bg-white dark:bg-[#1E1518] font-mono"
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Botão Secundário WhatsApp */}
-                  <div className="p-4 rounded-2xl bg-fundo border border-borda/70 space-y-3">
-                    <div className="text-xs font-semibold text-texto-escuro flex items-center gap-2">
+                  <div className="p-4 rounded-2xl bg-fundo dark:bg-[#151012] border border-borda/70 dark:border-[#38262C]/70 space-y-3">
+                    <div className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-emerald-500" />
                       Botão Secundário (Personal Shopper WhatsApp)
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] text-texto-medio block">Texto do Botão WhatsApp</label>
+                      <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Texto do Botão WhatsApp</label>
                       <Input
                         type="text"
                         value={editorialBannerWhatsappButtonText}
                         onChange={(e) => setEditorialBannerWhatsappButtonText(e.target.value)}
                         placeholder="Ex: Personal Shopper no WhatsApp"
                         maxLength={100}
-                        className="h-9 text-xs rounded-xl bg-white"
+                        className="h-9 text-xs rounded-xl bg-white dark:bg-[#1E1518]"
                       />
                     </div>
-                    <p className="text-[11px] text-texto-claro">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                       O botão abre diretamente uma conversa no número de WhatsApp da loja (
-                      <span className="font-mono font-medium text-texto-medio">{supportPhone || "5517992495308"}</span>).
+                      <span className="font-mono font-medium text-texto-medio dark:text-[#D4BFC5]">{supportPhone || "5517992495308"}</span>).
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Card 4: Imagem & Detalhes do Produto */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="w-8 h-8 rounded-xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
                     <ImageIcon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Imagem de Destaque
                     </h3>
-                    <p className="text-[11px] text-texto-claro">
+                    <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                       Carregue uma imagem do seu computador ou escolha do catálogo
                     </p>
                   </div>
@@ -1519,7 +1519,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                   {/* Dropzone de Upload do Computador */}
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
                       <span>Adicionar Imagem do Computador</span>
                       <span className="text-[10px] text-primaria font-semibold">Upload Direto</span>
                     </label>
@@ -1529,7 +1529,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       className={`relative group border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-all ${
                         isUploadingAsset
                           ? "bg-primaria/5 border-primaria/40 cursor-wait"
-                          : "bg-fundo hover:bg-primaria-soft/20 border-borda hover:border-primaria"
+                          : "bg-fundo dark:bg-[#151012] hover:bg-primaria-soft/20 dark:hover:bg-primaria-soft/10 border-borda dark:border-[#38262C] hover:border-primaria"
                       }`}
                     >
                       <div className="flex flex-col items-center justify-center gap-2">
@@ -1542,12 +1542,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         </div>
 
                         <div>
-                          <p className="text-xs font-bold text-texto-escuro">
+                          <p className="text-xs font-bold text-texto-escuro dark:text-[#F8EFF1]">
                             {isUploadingAsset
                               ? "Enviando e otimizando imagem..."
                               : "Clique para escolher uma imagem do seu computador"}
                           </p>
-                          <p className="text-[11px] text-texto-claro mt-0.5">
+                          <p className="text-[11px] text-texto-claro dark:text-[#988087] mt-0.5">
                             Formatos aceitos: JPG, PNG, WebP ou AVIF até 5MB
                           </p>
                         </div>
@@ -1565,7 +1565,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     </div>
 
                     {uploadAssetError && (
-                      <p className="text-[11px] font-medium text-rose-600 flex items-center gap-1.5 pt-1">
+                      <p className="text-[11px] font-medium text-rose-600 dark:text-rose-400 flex items-center gap-1.5 pt-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         {uploadAssetError}
                       </p>
@@ -1574,7 +1574,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                   {/* URL da Imagem Atual (editável) */}
                   <div className="space-y-1.5 pt-1">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       URL ou Caminho da Imagem
                     </label>
                     <div className="flex items-center gap-2">
@@ -1583,7 +1583,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         value={editorialBannerImageUrl}
                         onChange={(e) => setEditorialBannerImageUrl(e.target.value)}
                         placeholder="Ex: /images/products/colar-coracao-delicado-ouro-rosa.jpg"
-                        className="h-10 text-xs rounded-xl font-mono flex-1"
+                        className="h-10 text-xs rounded-xl font-mono flex-1 bg-white dark:bg-[#151012]"
                       />
                       <Button
                         type="button"
@@ -1602,7 +1602,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                   {/* Atalhos de imagens do catálogo */}
                   <div className="space-y-1.5">
-                    <span className="text-[11px] text-texto-claro block">
+                    <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                       Ou escolha uma sugestão do catálogo de semijoias:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -1645,7 +1645,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                             setEditorialBannerImageTitle(item.title);
                             setEditorialBannerImageSubtitle(item.sub);
                           }}
-                          className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-fundo hover:bg-primaria/10 hover:text-primaria border border-borda transition-colors"
+                          className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-fundo dark:bg-[#151012] hover:bg-primaria/10 hover:text-primaria border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] transition-colors"
                         >
                           {item.name}
                         </button>
@@ -1655,36 +1655,36 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] text-texto-medio block">Tag Superior</label>
+                      <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Tag Superior</label>
                       <Input
                         type="text"
                         value={editorialBannerImageTag}
                         onChange={(e) => setEditorialBannerImageTag(e.target.value)}
                         placeholder="Ex: Destaque da Coleção"
                         maxLength={100}
-                        className="h-9 text-xs rounded-xl"
+                        className="h-9 text-xs rounded-xl bg-white dark:bg-[#151012]"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] text-texto-medio block">Título do Produto</label>
+                      <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Título do Produto</label>
                       <Input
                         type="text"
                         value={editorialBannerImageTitle}
                         onChange={(e) => setEditorialBannerImageTitle(e.target.value)}
                         placeholder="Ex: Colar Coração Delicado"
                         maxLength={150}
-                        className="h-9 text-xs rounded-xl font-medium"
+                        className="h-9 text-xs rounded-xl font-medium bg-white dark:bg-[#151012]"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] text-texto-medio block">Subtítulo / Material</label>
+                      <label className="text-[11px] text-texto-medio dark:text-[#D4BFC5] block">Subtítulo / Material</label>
                       <Input
                         type="text"
                         value={editorialBannerImageSubtitle}
                         onChange={(e) => setEditorialBannerImageSubtitle(e.target.value)}
                         placeholder="Ex: Banho em Ouro Rosa"
                         maxLength={200}
-                        className="h-9 text-xs rounded-xl"
+                        className="h-9 text-xs rounded-xl bg-white dark:bg-[#151012]"
                       />
                     </div>
                   </div>
@@ -1695,11 +1695,11 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
             {/* Coluna da Direita: Live Preview em Tempo Real (6 colunas) */}
             <div className="lg:col-span-6 space-y-4">
               <div className="sticky top-6 space-y-4">
-                <div className="bg-white p-5 rounded-3xl border border-borda shadow-xs space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+                <div className="bg-white dark:bg-[#1E1518] p-5 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                     <div className="flex items-center gap-2">
                       <Eye className="w-4 h-4 text-primaria" />
-                      <h4 className="font-serif text-sm font-bold text-texto-escuro">
+                      <h4 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                         Pré-visualização em Tempo Real (Home)
                       </h4>
                     </div>
@@ -1709,8 +1709,8 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   </div>
 
                   {!editorialBannerActive && (
-                    <div className="p-3 rounded-2xl bg-amber-50 text-amber-900 border border-amber-200 text-xs flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                    <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-800/50 text-xs flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                       <span>
                         <strong>Aviso:</strong> Este banner está marcado como <strong>Desativado</strong> e ficará oculto para os clientes na Home.
                       </span>
@@ -1718,7 +1718,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   )}
 
                   {/* Componente idêntico ao da Home */}
-                  <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-primaria-soft/40 via-fundo-card to-primaria-soft/20 border border-primaria/30 p-6 sm:p-8 shadow-sm transition-all ${!editorialBannerActive ? "opacity-60 saturate-50" : ""}`}>
+                  <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-primaria-soft/40 via-fundo-card to-primaria-soft/20 dark:from-[#251A1E] dark:via-[#1A1114] dark:to-[#22171B] border border-primaria/30 p-6 sm:p-8 shadow-sm transition-all ${!editorialBannerActive ? "opacity-60 saturate-50" : ""}`}>
                     <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center">
                       <div className="xl:col-span-7 space-y-3.5 text-left">
                         {editorialBannerBadge && (
@@ -1728,26 +1728,26 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                           </div>
                         )}
 
-                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-texto-escuro leading-tight">
+                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] leading-tight">
                           {editorialBannerTitle || "Título do Banner"}
                         </h3>
 
-                        <p className="text-xs text-texto-claro leading-relaxed line-clamp-4">
+                        <p className="text-xs text-texto-claro dark:text-[#988087] leading-relaxed line-clamp-4">
                           {editorialBannerDescription || "Descrição do banner configurável..."}
                         </p>
 
                         {/* Bloco de Cupom */}
                         {editorialBannerCouponActive && (
                           <div className="pt-1 flex flex-wrap items-center gap-2.5">
-                            <div className="flex items-center gap-2 bg-fundo px-3 py-1.5 rounded-2xl border border-borda-suave shadow-2xs">
-                              <span className="text-[11px] font-medium text-texto-claro">Cupom 1ª Compra:</span>
+                            <div className="flex items-center gap-2 bg-fundo dark:bg-[#151012] px-3 py-1.5 rounded-2xl border border-borda-suave dark:border-[#38262C] shadow-2xs">
+                              <span className="text-[11px] font-medium text-texto-claro dark:text-[#988087]">Cupom 1ª Compra:</span>
                               <span className="font-mono font-bold text-primaria text-xs sm:text-sm tracking-wider">
                                 {editorialBannerCouponCode || "ISIS10"}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => handlePreviewCopyCoupon(editorialBannerCouponCode || "ISIS10")}
-                                className="ml-1 p-1 rounded-md hover:bg-primaria-soft text-texto-claro hover:text-primaria transition-colors"
+                                className="ml-1 p-1 rounded-md hover:bg-primaria-soft dark:hover:bg-primaria-soft/20 text-texto-claro dark:text-[#988087] hover:text-primaria transition-colors"
                                 title="Copiar cupom (teste)"
                               >
                                 {previewCopiedCoupon ? (
@@ -1758,7 +1758,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                               </button>
                             </div>
                             {editorialBannerCouponText && (
-                              <span className="text-[11px] text-texto-claro">
+                              <span className="text-[11px] text-texto-claro dark:text-[#988087]">
                                 {editorialBannerCouponText}
                               </span>
                             )}
@@ -1777,9 +1777,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                           <button
                             type="button"
-                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-white border border-borda text-texto-escuro text-xs font-medium hover:bg-primaria-soft/30 transition-colors shadow-2xs"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] text-texto-escuro dark:text-[#F8EFF1] text-xs font-medium hover:bg-primaria-soft/30 dark:hover:bg-primaria-soft/10 transition-colors shadow-2xs"
                           >
-                            <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                            <MessageCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             <span>{editorialBannerWhatsappButtonText || "Personal Shopper no WhatsApp"}</span>
                           </button>
                         </div>
@@ -1787,7 +1787,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                       {/* Card de Imagem do Destaque */}
                       <div className="xl:col-span-5 flex justify-center">
-                        <div className="relative w-full max-w-[220px] aspect-square rounded-2xl overflow-hidden border border-borda shadow-md bg-neutral-100">
+                        <div className="relative w-full max-w-[220px] aspect-square rounded-2xl overflow-hidden border border-borda dark:border-[#38262C] shadow-md bg-neutral-100 dark:bg-[#151012]">
                           <Image
                             src={editorialBannerImageUrl || "/images/products/colar-coracao-delicado-ouro-rosa.jpg"}
                             alt={editorialBannerImageTitle || "Imagem de destaque"}
@@ -1827,9 +1827,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-texto-claro flex items-center justify-between pt-2">
-                    <span>Destino do botão: <strong className="font-mono text-texto-medio">{editorialBannerButtonLink || "/produtos"}</strong></span>
-                    <span>Status: <strong className={editorialBannerActive ? "text-emerald-600" : "text-neutral-500"}>{editorialBannerActive ? "Visível" : "Oculto"}</strong></span>
+                  <div className="text-[11px] text-texto-claro dark:text-[#988087] flex items-center justify-between pt-2">
+                    <span>Destino do botão: <strong className="font-mono text-texto-medio dark:text-[#D4BFC5]">{editorialBannerButtonLink || "/produtos"}</strong></span>
+                    <span>Status: <strong className={editorialBannerActive ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-500 dark:text-[#988087]"}>{editorialBannerActive ? "Visível" : "Oculto"}</strong></span>
                   </div>
                 </div>
               </div>
@@ -1843,17 +1843,17 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
             {/* Coluna 1: Configurações de Frete e Anúncio */}
             <div className="space-y-6">
               {/* Card de Configuração das Ofertas do Dia */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
-                      <Zap className="w-4 h-4 fill-orange-600" />
+                    <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                      <Zap className="w-4 h-4 fill-orange-600 dark:fill-orange-400" />
                     </div>
                     <div>
-                      <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                      <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                         Ofertas do Dia
                       </h3>
-                      <p className="text-[11px] text-texto-claro">
+                      <p className="text-[11px] text-texto-claro dark:text-[#988087]">
                         Sorteio diário automático de produtos com desconto promocional na vitrine principal.
                       </p>
                     </div>
@@ -1866,13 +1866,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       onChange={(e) => setDailyDealsActive(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                    <div className="w-11 h-6 bg-neutral-200 dark:bg-[#251A1E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
                   </label>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Título da Faixa Promocional
                     </label>
                     <Input
@@ -1880,12 +1880,12 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       value={dailyDealsTitle}
                       onChange={(e) => setDailyDealsTitle(e.target.value)}
                       placeholder="Ofertas do dia"
-                      className="bg-white text-xs"
+                      className="bg-white dark:bg-[#151012] text-xs"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Desconto Diário (%)
                     </label>
                     <div className="relative">
@@ -1895,19 +1895,19 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         max="99"
                         value={dailyDealsDiscount}
                         onChange={(e) => setDailyDealsDiscount(Number(e.target.value) || 15)}
-                        className="bg-white text-xs font-bold"
+                        className="bg-white dark:bg-[#151012] text-xs font-bold"
                       />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-orange-600">
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-orange-600 dark:text-orange-400">
                         % OFF
                       </span>
                     </div>
-                    <span className="text-[10px] text-texto-claro block">
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
                       Desconto aplicado automaticamente aos produtos sorteados do dia.
                     </span>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Quantidade de Produtos
                     </label>
                     <Input
@@ -1916,21 +1916,21 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       max="50"
                       value={dailyDealsLimit}
                       onChange={(e) => setDailyDealsLimit(Number(e.target.value) || 15)}
-                      className="bg-white text-xs font-bold"
+                      className="bg-white dark:bg-[#151012] text-xs font-bold"
                     />
-                    <span className="text-[10px] text-texto-claro block">
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
                       Total de itens sorteados aleatoriamente todo dia (padrão: 15).
                     </span>
                   </div>
                 </div>
 
                 {/* Seleção da Cor de Fundo da Faixa */}
-                <div className="space-y-2 pt-2 border-t border-borda/40">
+                <div className="space-y-2 pt-2 border-t border-borda/40 dark:border-[#38262C]/40">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Cor de Fundo da Faixa
                     </label>
-                    <span className="text-[10px] font-mono text-texto-claro">
+                    <span className="text-[10px] font-mono text-texto-claro dark:text-[#988087]">
                       {dailyDealsBgColor || "#D9480F"}
                     </span>
                   </div>
@@ -1951,7 +1951,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         onClick={() => setDailyDealsBgColor(preset.hex)}
                         className={`w-7 h-7 rounded-xl transition-all flex items-center justify-center border-2 ${
                           (dailyDealsBgColor || "#D9480F").toLowerCase() === preset.hex.toLowerCase()
-                            ? "border-texto-escuro scale-110 shadow-xs"
+                            ? "border-texto-escuro dark:border-white scale-110 shadow-xs"
                             : "border-transparent hover:scale-105"
                         }`}
                         style={{ backgroundColor: preset.hex }}
@@ -1968,7 +1968,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         type="color"
                         value={dailyDealsBgColor || "#D9480F"}
                         onChange={(e) => setDailyDealsBgColor(e.target.value)}
-                        className="w-7 h-7 rounded-lg border border-borda cursor-pointer p-0.5 bg-white"
+                        className="w-7 h-7 rounded-lg border border-borda dark:border-[#38262C] cursor-pointer p-0.5 bg-white dark:bg-[#151012]"
                         title="Escolher cor personalizada"
                       />
                       <Input
@@ -1976,7 +1976,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         value={dailyDealsBgColor}
                         onChange={(e) => setDailyDealsBgColor(e.target.value)}
                         placeholder="#D9480F"
-                        className="w-24 text-xs font-mono h-7 uppercase bg-white"
+                        className="w-24 text-xs font-mono h-7 uppercase bg-white dark:bg-[#151012]"
                       />
                     </div>
                   </div>
@@ -1984,7 +1984,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
                 {/* Preview em Tempo Real da Faixa de Ofertas */}
                 <div className="pt-2">
-                  <span className="text-[11px] font-semibold text-texto-claro block mb-1.5">
+                  <span className="text-[11px] font-semibold text-texto-claro dark:text-[#988087] block mb-1.5">
                     Preview da Faixa de Destaque
                   </span>
                   <div
@@ -2012,11 +2012,11 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               </div>
 
               {/* Barra de Aviso Superior */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <Megaphone className="w-4 h-4 text-primaria" />
-                    <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Barra de Avisos Superior (Topo da Loja)
                     </h3>
                   </div>
@@ -2028,13 +2028,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       onChange={(e) => setAnnouncementActive(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria"></div>
+                    <div className="w-11 h-6 bg-neutral-200 dark:bg-[#251A1E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaria"></div>
                   </label>
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-texto-escuro block">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                       Texto do Comunicado Superior
                     </label>
                     <button
@@ -2051,9 +2051,9 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     value={announcementText}
                     onChange={(e) => setAnnouncementText(e.target.value)}
                     placeholder="Ex: Frete Grátis para todo o Brasil acima de R$ 199,00"
-                    className="bg-white text-xs"
+                    className="bg-white dark:bg-[#151012] text-xs"
                   />
-                  <span className="text-[11px] text-texto-claro block">
+                  <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                     Mensagem de destaque com ícone que percorre o topo em todas as páginas da loja.
                   </span>
                 </div>
@@ -2061,14 +2061,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 {/* Preview em Tempo Real da Barra Superior */}
                 <div className="space-y-1.5 pt-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-texto-claro block">
+                    <span className="text-[11px] font-semibold text-texto-claro dark:text-[#988087] block">
                       Preview em Tempo Real do Topo
                     </span>
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                         announcementActive
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : "bg-neutral-100 text-neutral-500 border border-neutral-300"
+                          ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50"
+                          : "bg-neutral-100 dark:bg-[#251A1E] text-neutral-500 dark:text-[#988087] border border-neutral-300 dark:border-[#38262C]"
                       }`}
                     >
                       {announcementActive ? "Visível no Site" : "Oculto no Site"}
@@ -2076,14 +2076,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   </div>
 
                   {announcementActive ? (
-                    <div className="bg-fundo border border-borda-suave rounded-xl p-2.5 text-center text-xs text-texto-medio flex items-center justify-center gap-2 shadow-2xs">
+                    <div className="bg-fundo dark:bg-[#151012] border border-borda-suave dark:border-[#38262C] rounded-xl p-2.5 text-center text-xs text-texto-medio dark:text-[#D4BFC5] flex items-center justify-center gap-2 shadow-2xs">
                       <Truck className="w-3.5 h-3.5 text-primaria shrink-0" />
                       <span className="font-medium text-[11px] truncate">
                         {announcementText || "Frete Grátis para todo o Brasil acima de R$ 199,00"}
                       </span>
                     </div>
                   ) : (
-                    <div className="bg-neutral-50 border border-dashed border-neutral-300 rounded-xl p-3 text-center text-xs text-neutral-400">
+                    <div className="bg-neutral-50 dark:bg-[#151012] border border-dashed border-neutral-300 dark:border-[#38262C] rounded-xl p-3 text-center text-xs text-neutral-400 dark:text-[#988087]">
                       Barra de anúncio superior desativada (não aparecerá para os clientes)
                     </div>
                   )}
@@ -2091,21 +2091,21 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
               </div>
 
               {/* Regras Comerciais de Frete & Modo de Manutenção */}
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center gap-2 pb-3 border-b border-borda/60">
-                  <Truck className="w-4 h-4 text-emerald-600" />
-                  <h3 className="font-serif text-sm font-bold text-texto-escuro">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
+                  <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Regra Oficial de Frete Grátis
                   </h3>
                 </div>
 
                 {/* Frete Grátis Threshold */}
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-texto-escuro block">
+                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
                     Valor Mínimo para Frete Grátis (R$)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-texto-claro">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-texto-claro dark:text-[#988087]">
                       R$
                     </span>
                     <Input
@@ -2114,10 +2114,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       min="0"
                       value={freeShippingReais}
                       onChange={(e) => setFreeShippingReais(e.target.value)}
-                      className="pl-9 bg-white text-xs font-semibold text-texto-escuro"
+                      className="pl-9 bg-white dark:bg-[#151012] text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]"
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-texto-claro">
+                  <div className="flex items-center justify-between text-[11px] text-texto-claro dark:text-[#988087]">
                     <span>Pedidos com subtotal igual ou maior ganham frete grátis via PAC.</span>
                     <button
                       type="button"
@@ -2130,13 +2130,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 </div>
 
                 {/* Modo de Manutenção */}
-                <div className="pt-4 border-t border-borda space-y-3">
+                <div className="pt-4 border-t border-borda dark:border-[#38262C] space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-semibold text-xs text-texto-escuro block">
+                      <span className="font-semibold text-xs text-texto-escuro dark:text-[#F8EFF1] block">
                         Modo de Manutenção
                       </span>
-                      <span className="text-[11px] text-texto-claro block">
+                      <span className="text-[11px] text-texto-claro dark:text-[#988087] block">
                         Bloqueia compras temporariamente para atualização da loja
                       </span>
                     </div>
@@ -2148,14 +2148,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         onChange={(e) => setMaintenanceMode(e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                      <div className="w-11 h-6 bg-neutral-200 dark:bg-[#251A1E] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
                     </label>
                   </div>
 
                   {maintenanceMode && (
                     <div className="space-y-1.5 pt-2 animate-fade-in">
-                      <label className="text-xs font-semibold text-amber-900 block flex items-center gap-1.5">
-                        <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+                      <label className="text-xs font-semibold text-amber-900 dark:text-amber-200 block flex items-center gap-1.5">
+                        <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Mensagem Exibida aos Clientes</span>
                       </label>
                       <textarea
@@ -2163,7 +2163,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         onChange={(e) => setMaintenanceMessage(e.target.value)}
                         rows={2}
                         placeholder="Estamos preparando novidades incríveis para você. Voltamos em breve!"
-                        className="w-full text-xs p-2.5 rounded-xl border border-amber-300 bg-amber-50/50 text-amber-950 focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
+                        className="w-full text-xs p-2.5 rounded-xl border border-amber-300 dark:border-amber-600/50 bg-amber-50/50 dark:bg-amber-950/20 text-amber-950 dark:text-amber-200 focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
                       />
                     </div>
                   )}
@@ -2173,27 +2173,27 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
             {/* Coluna 2: Preview Interativo da Barra de Frete do Carrinho */}
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-3xl border border-borda shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-borda/60">
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2">
                     <ShoppingBag className="w-4 h-4 text-primaria" />
-                    <h3 className="font-serif text-sm font-bold text-texto-escuro">
+                    <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Preview da Barra de Frete no Carrinho
                     </h3>
                   </div>
-                  <span className="text-[10px] bg-primaria-soft text-primaria font-semibold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-primaria-soft dark:bg-primaria-soft/30 text-primaria font-semibold px-2 py-0.5 rounded-full">
                     Simulador Interativo
                   </span>
                 </div>
 
-                <p className="text-xs text-texto-claro">
+                <p className="text-xs text-texto-claro dark:text-[#988087]">
                   Veja exatamente como a barra de progresso se comportará para a cliente dentro da sacola e na página do carrinho conforme ela adiciona produtos:
                 </p>
 
                 {/* Seletor de Simulação */}
-                <div className="space-y-2 bg-fundo p-4 rounded-2xl border border-borda">
+                <div className="space-y-2 bg-fundo dark:bg-[#151012] p-4 rounded-2xl border border-borda dark:border-[#38262C]">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-texto-escuro">
+                    <span className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       Simular valor no carrinho:
                     </span>
                     <span className="font-bold font-mono text-primaria">
@@ -2213,7 +2213,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         className={`py-1.5 px-2 rounded-xl text-[11px] font-semibold transition-all border ${
                           simulatedCartSubtotal === val
                             ? "bg-primaria text-white border-primaria shadow-2xs"
-                            : "bg-white text-texto-medio hover:text-texto-escuro border-borda hover:bg-neutral-50"
+                            : "bg-white dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] border-borda dark:border-[#38262C] hover:bg-neutral-50 dark:hover:bg-[#302127]"
                         }`}
                       >
                         R$ {val}
@@ -2223,14 +2223,14 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 </div>
 
                 {/* Componente Simulado da Barra de Frete */}
-                <div className="p-4 bg-fundo rounded-2xl border border-borda-suave shadow-2xs space-y-2">
+                <div className="p-4 bg-fundo dark:bg-[#151012] rounded-2xl border border-borda-suave dark:border-[#38262C] shadow-2xs space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     {isSimulatedFreeShipping ? (
                       <p className="font-semibold text-sucesso flex items-center gap-1.5">
                         🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!
                       </p>
                     ) : (
-                      <p className="text-texto-medio">
+                      <p className="text-texto-medio dark:text-[#D4BFC5]">
                         Faltam apenas{" "}
                         <strong className="text-primaria">
                           {missingForSimulatedFreeShipping.toLocaleString("pt-BR", {
@@ -2241,13 +2241,13 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                         para <strong>Frete Grátis</strong>!
                       </p>
                     )}
-                    <span className="text-[10px] font-mono text-texto-claro font-semibold">
+                    <span className="text-[10px] font-mono text-texto-claro dark:text-[#988087] font-semibold">
                       {Math.round(simulatedProgress)}%
                     </span>
                   </div>
 
                   {/* Barra de Progresso */}
-                  <div className="h-2 w-full rounded-full bg-borda overflow-hidden">
+                  <div className="h-2 w-full rounded-full bg-borda dark:bg-[#251A1E] overflow-hidden">
                     <div
                       className={`h-full transition-all duration-300 rounded-full ${
                         isSimulatedFreeShipping ? "bg-emerald-500" : "bg-primaria"
@@ -2258,16 +2258,16 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 </div>
 
                 {/* Resumo da Regra Vigente */}
-                <div className="text-[11px] text-texto-claro space-y-1 bg-white p-3 rounded-xl border border-borda/60">
+                <div className="text-[11px] text-texto-claro dark:text-[#988087] space-y-1 bg-white dark:bg-[#151012] p-3 rounded-xl border border-borda/60 dark:border-[#38262C]/60">
                   <div className="flex items-center justify-between">
                     <span>Regra atual configurada:</span>
-                    <strong className="text-texto-escuro font-mono">
+                    <strong className="text-texto-escuro dark:text-[#F8EFF1] font-mono">
                       Frete Grátis acima de R$ {freeShippingReais}
                     </strong>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Modalidade do Frete Grátis:</span>
-                    <span className="text-emerald-700 font-semibold">PAC Correios (Brasil)</span>
+                    <span className="text-emerald-700 dark:text-emerald-400 font-semibold">PAC Correios (Brasil)</span>
                   </div>
                 </div>
               </div>
@@ -2276,8 +2276,8 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
         )}
 
         {/* Botão de Gravação Sticky Inferior */}
-        <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-[#1C1417] rounded-2xl border border-borda dark:border-[#38262C] shadow-sm">
-          <div className="text-xs text-texto-claro dark:text-[#A8969B] hidden sm:block">
+        <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-sm">
+          <div className="text-xs text-texto-claro dark:text-[#988087] hidden sm:block">
             As alterações gravadas serão sincronizadas imediatamente no cabeçalho, carrinho, checkout e SEO da loja.
           </div>
 

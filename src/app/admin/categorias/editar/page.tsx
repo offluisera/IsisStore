@@ -54,9 +54,9 @@ export default async function AdminEditarCategoriaPage({
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
@@ -68,14 +68,14 @@ export default async function AdminEditarCategoriaPage({
               Categorias
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Editar</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Editar</span>
           </div>
 
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro flex items-center gap-2.5">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2.5">
             <Edit3 className="w-6 h-6 text-primaria" />
             <span>Editar Categoria</span>
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Altere nomes, slugs, visibilidade e departamentos do catálogo da Isis Store.
           </p>
         </div>

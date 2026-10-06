@@ -164,17 +164,17 @@ export function BrandFeaturesManager({
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Top Banner de Controles */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-primaria-soft text-primaria">
+            <span className="p-2 rounded-xl bg-primaria-soft dark:bg-primaria-soft/20 text-primaria">
               <Sparkles className="w-5 h-5" />
             </span>
-            <h2 className="font-serif text-xl font-bold text-texto-escuro">
+            <h2 className="font-serif text-xl font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Editor de Diferenciais da Marca (Padrão de Excelência)
             </h2>
           </div>
-          <p className="text-xs text-texto-claro mt-1">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-1">
             Personalize textos, badges, ícones e adicione novos cards com visualização ao vivo.
           </p>
         </div>
@@ -219,8 +219,8 @@ export function BrandFeaturesManager({
         <div
           className={`p-4 rounded-xl flex items-center gap-3 text-sm animate-in fade-in duration-200 ${
             feedback.type === "success"
-              ? "bg-sucesso-fundo text-sucesso border border-sucesso/30"
-              : "bg-erro-fundo text-erro border border-erro/30"
+              ? "bg-sucesso-fundo dark:bg-sucesso-fundo/30 text-sucesso border border-sucesso/30"
+              : "bg-erro-fundo dark:bg-erro-fundo/30 text-erro border border-erro/30"
           }`}
         >
           {feedback.type === "success" ? (
@@ -240,19 +240,19 @@ export function BrandFeaturesManager({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            <span className="text-xs font-semibold text-texto-escuro uppercase tracking-wider">
+            <span className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] uppercase tracking-wider">
               Preview em Tempo Real — Exatamente como visto na Home
             </span>
           </div>
 
-          <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200 text-xs">
+          <div className="flex items-center bg-gray-100 dark:bg-[#151012] p-1 rounded-xl border border-gray-200 dark:border-[#38262C] text-xs">
             <button
               type="button"
               onClick={() => setPreviewDevice("desktop")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition-all ${
                 previewDevice === "desktop"
-                  ? "bg-white text-texto-escuro shadow-2xs"
-                  : "text-texto-claro hover:text-texto-escuro"
+                  ? "bg-white dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] shadow-2xs"
+                  : "text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -263,8 +263,8 @@ export function BrandFeaturesManager({
               onClick={() => setPreviewDevice("mobile")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition-all ${
                 previewDevice === "mobile"
-                  ? "bg-white text-texto-escuro shadow-2xs"
-                  : "text-texto-claro hover:text-texto-escuro"
+                  ? "bg-white dark:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1] shadow-2xs"
+                  : "text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
               }`}
             >
               <Smartphone className="w-3.5 h-3.5" />
@@ -274,11 +274,11 @@ export function BrandFeaturesManager({
         </div>
 
         {/* Quadro de Simulação da Home */}
-        <div className="p-4 sm:p-8 rounded-3xl bg-fundo border-2 border-dashed border-primaria/30 overflow-hidden shadow-inner">
+        <div className="p-4 sm:p-8 rounded-3xl bg-fundo dark:bg-[#151012] border-2 border-dashed border-primaria/30 overflow-hidden shadow-inner">
           <div
             className={`transition-all duration-300 mx-auto ${
               previewDevice === "mobile"
-                ? "max-w-sm bg-white p-4 rounded-3xl shadow-xl border border-borda"
+                ? "max-w-sm bg-white dark:bg-[#1E1518] p-4 rounded-3xl shadow-xl border border-borda dark:border-[#38262C]"
                 : "max-w-7xl"
             }`}
           >
@@ -292,11 +292,11 @@ export function BrandFeaturesManager({
                   {badgeText}
                 </Badge>
               )}
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-texto-escuro">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 {titleText || "Título da Seção"}
               </h2>
               {subtitleText && (
-                <p className="text-xs sm:text-sm text-texto-claro mt-2 leading-relaxed">
+                <p className="text-xs sm:text-sm text-texto-claro dark:text-[#988087] mt-2 leading-relaxed">
                   {subtitleText}
                 </p>
               )}
@@ -319,16 +319,16 @@ export function BrandFeaturesManager({
               {cards.map((card, i) => (
                 <div
                   key={card.id || i}
-                  className="p-6 rounded-3xl bg-fundo-card border border-borda shadow-xs hover:border-primaria/40 hover:shadow-md transition-all duration-300 flex flex-col items-start gap-4 text-left"
+                  className="p-6 rounded-3xl bg-fundo-card dark:bg-[#20171A] border border-borda dark:border-[#38262C] shadow-xs hover:border-primaria/40 hover:shadow-md transition-all duration-300 flex flex-col items-start gap-4 text-left"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-primaria-soft text-primaria flex items-center justify-center shadow-xs shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-primaria-soft dark:bg-primaria-soft/20 text-primaria flex items-center justify-center shadow-xs shrink-0">
                     <FeatureIcon name={card.icon} className="w-6 h-6" />
                   </div>
                   <div className="w-full">
-                    <h3 className="font-serif text-lg font-bold text-texto-escuro">
+                    <h3 className="font-serif text-lg font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       {card.title || "Título do Diferencial"}
                     </h3>
-                    <p className="text-xs sm:text-sm text-texto-claro mt-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-texto-claro dark:text-[#988087] mt-2 leading-relaxed">
                       {card.description || "Descrição do diferencial..."}
                     </p>
                   </div>
@@ -350,16 +350,16 @@ export function BrandFeaturesManager({
       {/* Formulário de Edição Completa */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Coluna 1: Textos da Seção */}
-        <div className="lg:col-span-4 p-6 bg-white rounded-2xl border border-borda shadow-xs space-y-5">
-          <div className="flex items-center gap-2 pb-3 border-b border-borda-suave">
+        <div className="lg:col-span-4 p-6 bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-borda-suave dark:border-[#38262C]/60">
             <Palette className="w-4 h-4 text-primaria" />
-            <h3 className="font-serif text-base font-bold text-texto-escuro">
+            <h3 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
               Textos Principais da Seção
             </h3>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Tag / Badge Superior
             </label>
             <Input
@@ -367,13 +367,13 @@ export function BrandFeaturesManager({
               onChange={(e) => setBadgeText(e.target.value)}
               placeholder="Ex: Padrão de Excelência"
             />
-            <span className="text-[10px] text-texto-claro mt-1 block">
+            <span className="text-[10px] text-texto-claro dark:text-[#988087] mt-1 block">
               Pílula de destaque exibida acima do título principal.
             </span>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Título da Seção
             </label>
             <Input
@@ -384,7 +384,7 @@ export function BrandFeaturesManager({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-texto-escuro mb-1.5">
+            <label className="block text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
               Subtítulo / Descrição da Seção
             </label>
             <textarea
@@ -392,7 +392,7 @@ export function BrandFeaturesManager({
               onChange={(e) => setSubtitleText(e.target.value)}
               rows={3}
               placeholder="Descreva o propósito e compromisso com o cliente..."
-              className="w-full text-xs p-3 rounded-xl border border-borda bg-fundo focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-primaria/40 transition-colors"
+              className="w-full text-xs p-3 rounded-xl border border-borda dark:border-[#38262C] bg-fundo dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:bg-white dark:focus:bg-[#1E1518] focus:outline-hidden focus:ring-2 focus:ring-primaria/40 transition-colors"
             />
           </div>
         </div>
@@ -402,7 +402,7 @@ export function BrandFeaturesManager({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-primaria" />
-              <h3 className="font-serif text-base font-bold text-texto-escuro">
+              <h3 className="font-serif text-base font-bold text-texto-escuro dark:text-[#F8EFF1]">
                 Cards de Destaque ({cards.length})
               </h3>
             </div>
@@ -422,15 +422,15 @@ export function BrandFeaturesManager({
             {cards.map((card, index) => (
               <div
                 key={card.id || index}
-                className="p-5 bg-white rounded-2xl border border-borda shadow-xs flex flex-col gap-4 transition-all hover:border-primaria/30"
+                className="p-5 bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex flex-col gap-4 transition-all hover:border-primaria/30"
               >
                 {/* Header do Card com Botões de Posição & Remoção */}
-                <div className="flex items-center justify-between pb-3 border-b border-borda-suave">
+                <div className="flex items-center justify-between pb-3 border-b border-borda-suave dark:border-[#38262C]/60">
                   <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-primaria-soft text-primaria font-bold text-xs flex items-center justify-center">
+                    <span className="w-6 h-6 rounded-full bg-primaria-soft dark:bg-primaria-soft/20 text-primaria font-bold text-xs flex items-center justify-center">
                       {index + 1}
                     </span>
-                    <span className="font-serif font-bold text-sm text-texto-escuro">
+                    <span className="font-serif font-bold text-sm text-texto-escuro dark:text-[#F8EFF1]">
                       {card.title || `Card #${index + 1}`}
                     </span>
                   </div>
@@ -440,7 +440,7 @@ export function BrandFeaturesManager({
                       type="button"
                       disabled={index === 0}
                       onClick={() => handleMoveCard(index, "up")}
-                      className="p-1.5 rounded-lg border border-borda hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent text-texto-escuro transition-colors"
+                      className="p-1.5 rounded-lg border border-borda dark:border-[#38262C] hover:bg-gray-100 dark:hover:bg-[#251A1E] disabled:opacity-30 disabled:hover:bg-transparent text-texto-escuro dark:text-[#F8EFF1] transition-colors"
                       title="Mover para cima"
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
@@ -449,7 +449,7 @@ export function BrandFeaturesManager({
                       type="button"
                       disabled={index === cards.length - 1}
                       onClick={() => handleMoveCard(index, "down")}
-                      className="p-1.5 rounded-lg border border-borda hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent text-texto-escuro transition-colors"
+                      className="p-1.5 rounded-lg border border-borda dark:border-[#38262C] hover:bg-gray-100 dark:hover:bg-[#251A1E] disabled:opacity-30 disabled:hover:bg-transparent text-texto-escuro dark:text-[#F8EFF1] transition-colors"
                       title="Mover para baixo"
                     >
                       <ArrowDown className="w-3.5 h-3.5" />
@@ -457,7 +457,7 @@ export function BrandFeaturesManager({
                     <button
                       type="button"
                       onClick={() => handleRemoveCard(index)}
-                      className="p-1.5 rounded-lg border border-erro/30 text-erro hover:bg-erro-fundo transition-colors ml-1"
+                      className="p-1.5 rounded-lg border border-erro/30 text-erro hover:bg-erro-fundo dark:hover:bg-erro-fundo/30 transition-colors ml-1"
                       title="Excluir card"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -467,7 +467,7 @@ export function BrandFeaturesManager({
 
                 {/* Seletor de Ícone Visual */}
                 <div>
-                  <label className="block text-[11px] font-semibold text-texto-escuro mb-1.5">
+                  <label className="block text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1.5">
                     Ícone do Card
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -482,8 +482,8 @@ export function BrandFeaturesManager({
                           }
                           className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs transition-all ${
                             isSelected
-                              ? "bg-primaria-soft border-primaria text-primaria font-bold shadow-2xs"
-                              : "bg-fundo border-borda hover:bg-white text-texto-claro hover:text-texto-escuro"
+                              ? "bg-primaria-soft dark:bg-primaria-soft/30 border-primaria text-primaria font-bold shadow-2xs"
+                              : "bg-fundo dark:bg-[#151012] border-borda dark:border-[#38262C] hover:bg-white dark:hover:bg-[#251A1E] text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1]"
                           }`}
                         >
                           <FeatureIcon name={iconOpt.id} className="w-4 h-4" />
@@ -497,7 +497,7 @@ export function BrandFeaturesManager({
                 {/* Campos de Título e Descrição */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-semibold text-texto-escuro mb-1">
+                    <label className="block text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
                       Título do Card
                     </label>
                     <Input
@@ -510,7 +510,7 @@ export function BrandFeaturesManager({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-texto-escuro mb-1">
+                    <label className="block text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
                       Texto do Badge Inferior
                     </label>
                     <Input
@@ -525,7 +525,7 @@ export function BrandFeaturesManager({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                   <div>
-                    <label className="block text-[11px] font-semibold text-texto-escuro mb-1">
+                    <label className="block text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
                       Descrição Detalhada
                     </label>
                     <textarea
@@ -535,12 +535,12 @@ export function BrandFeaturesManager({
                       }
                       rows={2}
                       placeholder="Detalhes sobre este benefício..."
-                      className="w-full text-xs p-2.5 rounded-xl border border-borda bg-fundo focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-primaria/40 transition-colors"
+                      className="w-full text-xs p-2.5 rounded-xl border border-borda dark:border-[#38262C] bg-fundo dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] focus:bg-white dark:focus:bg-[#1E1518] focus:outline-hidden focus:ring-2 focus:ring-primaria/40 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-texto-escuro mb-1">
+                    <label className="block text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] mb-1">
                       Estilo do Badge
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-1">
@@ -558,8 +558,8 @@ export function BrandFeaturesManager({
                           }
                           className={`p-2 rounded-xl border text-left flex items-center justify-between text-xs transition-all ${
                             card.badge_variant === v.id
-                              ? "border-primaria bg-primaria-soft/40 font-semibold"
-                              : "border-borda hover:bg-fundo"
+                              ? "border-primaria bg-primaria-soft/40 dark:bg-primaria-soft/20 font-semibold text-texto-escuro dark:text-[#F8EFF1]"
+                              : "border-borda dark:border-[#38262C] hover:bg-fundo dark:hover:bg-[#251A1E] text-texto-escuro dark:text-[#F8EFF1]"
                           }`}
                         >
                           <span className="text-[11px]">{v.label}</span>
