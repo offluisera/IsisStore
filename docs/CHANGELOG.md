@@ -13,6 +13,13 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
   - Criação da documentação oficial de implantação, infraestrutura, DNS/SSL, gateways e runbook de go-live em [docs/DEPLOYMENT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DEPLOYMENT.md).
   - Suite de testes automatizados do Gate 18 em [src/features/production/__tests__/production-readiness.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/production/__tests__/production-readiness.test.ts) (6 testes cobrindo robots, sitemap, healthcheck, envs, hardening e documentação).
   - Aprovação no **Gate 18**: 113 testes em 25 suites aprovados com 100% de sucesso, build Turbopack compilado em 5.1s com 48 rotas geradas, 0 erros no typecheck e 0 erros no lint.
+- **Páginas Institucionais & Conformidade Legal (Contato, Termos e Privacidade)**:
+  - Criação da página [src/app/contato/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/contato/page.tsx) com canais de atendimento (WhatsApp, e-mail, horários), FAQ e formulário interativo de contato [src/components/commerce/contact-form.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/commerce/contact-form.tsx).
+  - Criação dos Termos e Condições de Uso em [src/app/termos/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/termos/page.tsx) em conformidade estrita com o Código de Defesa do Consumidor (CDC - Lei nº 8.078/90), detalhando garantia de banho, política de trocas e direito de arrependimento em 7 dias corridos.
+  - Criação da Política de Privacidade em [src/app/privacidade/page.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/privacidade/page.tsx) em conformidade com a LGPD (Lei nº 13.709/2018), detalhando finalidades de tratamento, direitos do titular e canal do DPO.
+  - Atualização do rodapé da loja [src/components/layout/footer.tsx](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/components/layout/footer.tsx) com links diretos para as 3 páginas institucionais.
+  - Indexação permitida em [src/app/robots.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/robots.ts) e inclusão no mapa do site em [src/app/sitemap.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/sitemap.ts).
+  - Suite de testes automatizados em [src/features/institutional/__tests__/institutional-pages.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/institutional/__tests__/institutional-pages.test.ts) (4 testes aprovados).
 
 ---
 

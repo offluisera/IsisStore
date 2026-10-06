@@ -111,6 +111,14 @@ export function Footer() {
                 Meus Pedidos & Rastreio
               </Link>
             </li>
+            <li>
+              <Link
+                href="/contato"
+                className="hover:text-primaria transition-colors"
+              >
+                Fale Conosco / Suporte
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -223,6 +231,10 @@ export function Footer() {
           {storeSettings.cnpj ? ` • CNPJ: ${storeSettings.cnpj}` : ""}
         </p>
         <div className="flex items-center gap-4">
+          <Link href="/contato" className="hover:text-primaria transition-colors">
+            Fale Conosco
+          </Link>
+          <span>•</span>
           <Link href="/termos" className="hover:text-primaria transition-colors">
             Termos de Uso
           </Link>
