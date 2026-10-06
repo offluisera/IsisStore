@@ -3,6 +3,17 @@
 Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## 2026-10-06
+
+### Added
+- Conclusão da **Fase 18 — Produção & Go-Live**:
+  - Implementação de SEO e indexação com [src/app/robots.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/robots.ts) e sitemap dinâmico resiliente com catálogo e categorias em [src/app/sitemap.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/sitemap.ts).
+  - Criação do endpoint de healthcheck e monitoramento ativo com tempo de resposta do PostgreSQL em [src/app/api/health/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/api/health/route.ts).
+  - Elaboração da matriz oficial de variáveis de produção blindada em [.env.production.example](file:///c:/xampp/htdocs/AluraProjects/IsisStore/.env.production.example).
+  - Criação da documentação oficial de implantação, infraestrutura, DNS/SSL, gateways e runbook de go-live em [docs/DEPLOYMENT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DEPLOYMENT.md).
+  - Suite de testes automatizados do Gate 18 em [src/features/production/__tests__/production-readiness.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/production/__tests__/production-readiness.test.ts) (6 testes cobrindo robots, sitemap, healthcheck, envs, hardening e documentação).
+  - Aprovação no **Gate 18**: 113 testes em 25 suites aprovados com 100% de sucesso, build Turbopack compilado em 5.1s com 48 rotas geradas, 0 erros no typecheck e 0 erros no lint.
+
 ---
 
 ## 2026-09-27

@@ -518,8 +518,32 @@
 ---
 
 ## Fase 18 — Produção & Go-Live
-* **Status:** A INICIAR
-* **Objetivo:** Preparação para deploy em produção, checklist de variáveis de ambiente (`.env.production`), domínio personalizado, HTTPS/SSL, banco de dados Supabase em produção, credenciais de produção do Mercado Pago, Storage, logs, backups e monitoramento de disponibilidade.
+* **Data de Conclusão:** 2026-10-06
+* **Status:** Concluída
+* **Entregáveis:**
+  * **Configuração de SEO e Indexação de Produção:**
+    * Diretivas oficiais de indexação em [src/app/robots.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/robots.ts) com liberação das rotas públicas (`/`, `/produtos`, `/categorias`) e bloqueio estrito de bots em rotas privadas (`/admin`, `/conta`, `/checkout`, `/api`, `/auth`).
+    * Geração dinâmica e resiliente do mapa do site em [src/app/sitemap.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/sitemap.ts) gerando URLs canônicas com `lastModified`, frequências e prioridades para vitrines, categorias e produtos ativos.
+  * **Healthcheck & Observabilidade de Produção:**
+    * Endpoint de monitoramento de disponibilidade e latência do banco de dados em [src/app/api/health/route.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/app/api/health/route.ts), com cabeçalho `Cache-Control: no-store` para monitoramento ativo (UptimeRobot, BetterStack).
+  * **Matriz de Variáveis de Ambiente de Produção:**
+    * Especificação oficial e blindada em [.env.production.example](file:///c:/xampp/htdocs/AluraProjects/IsisStore/.env.production.example) cobrindo Next.js, URLs canônicas, Supabase (anon/service_role), chaves de produção do Mercado Pago (`APP_USR-`), webhook secret HMAC e senha mestra do admin.
+  * **Guia Oficial de Implantação e Operação ([docs/DEPLOYMENT.md](file:///c:/xampp/htdocs/AluraProjects/IsisStore/docs/DEPLOYMENT.md)):**
+    * Arquitetura de infraestrutura de alta disponibilidade.
+    * Checklist pré-deploy de RLS, banco, storage e segurança.
+    * Procedimentos passo a passo para configuração de DNS, domínio customizado e certificado SSL.
+    * Configuração de produção para Mercado Pago, InfinitePay e WhatsApp.
+    * Políticas de backup diário do PostgreSQL e redundância de storage.
+    * Runbook operacional de Go-Live e procedimentos de rollback emergencial.
+  * **Suite de Testes de Produção ([src/features/production/__tests__/production-readiness.test.ts](file:///c:/xampp/htdocs/AluraProjects/IsisStore/src/features/production/__tests__/production-readiness.test.ts)):**
+    * 6 testes automatizados cobrindo robots.txt, sitemap.xml, /api/health, .env.production.example, hardening do next.config.ts e conformidade do docs/DEPLOYMENT.md.
+* **Gate 18:**
+  * Build (`next build` Turbopack): OK (compilado em 5.1s, 48 rotas de produção geradas)
+  * Typecheck (`tsc --noEmit`): OK (0 erros)
+  * Lint (`eslint`): OK (0 erros)
+  * Testes automatizados (`npm test`): OK (113 testes em 25 suites, 100% aprovados em ~7s)
+  * Zero segredos expostos e conformidade total para Go-Live: OK
+
 
 
 

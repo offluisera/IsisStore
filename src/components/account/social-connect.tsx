@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Heart, MessageCircle, Globe } from "lucide-react";
 
 export function SocialConnect() {
@@ -44,13 +45,13 @@ export function SocialConnect() {
         </a>
 
         {/* Site Oficial */}
-        <a
+        <Link
           href="/"
           className="w-10 h-10 rounded-full bg-white dark:bg-[#251A1E] border border-[#F0E5E7] dark:border-[#332228] text-texto-escuro dark:text-[#F8EFF1] hover:bg-primaria hover:text-white transition-all shadow-2xs flex items-center justify-center hover:scale-105"
           aria-label="Loja Virtual"
         >
           <Globe className="w-4 h-4" />
-        </a>
+        </Link>
       </div>
 
       <div className="pt-2 text-[11px] font-serif italic text-primaria">

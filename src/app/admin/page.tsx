@@ -47,6 +47,22 @@ interface RecentLogSummary {
   profiles?: { full_name: string | null } | null;
 }
 
+function formatRelativeTime(iso: string) {
+  try {
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const diffMin = Math.floor(diffMs / (1000 * 60));
+    if (diffMin < 1) return "Agora";
+    if (diffMin < 60) return `${diffMin} min atrás`;
+    const diffHours = Math.floor(diffMin / 60);
+    if (diffHours < 24)
+      return `${diffHours} ${diffHours === 1 ? "hora" : "horas"} atrás`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} ${diffDays === 1 ? "dia" : "dias"} atrás`;
+  } catch {
+    return "Recentemente";
+  }
+}
+
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
 
@@ -356,22 +372,6 @@ export default async function AdminDashboardPage() {
       };
     }
   );
-
-  const formatRelativeTime = (iso: string) => {
-    try {
-      const diffMs = Date.now() - new Date(iso).getTime();
-      const diffMin = Math.floor(diffMs / (1000 * 60));
-      if (diffMin < 1) return "Agora";
-      if (diffMin < 60) return `${diffMin} min atrás`;
-      const diffHours = Math.floor(diffMin / 60);
-      if (diffHours < 24)
-        return `${diffHours} ${diffHours === 1 ? "hora" : "horas"} atrás`;
-      const diffDays = Math.floor(diffHours / 24);
-      return `${diffDays} ${diffDays === 1 ? "dia" : "dias"} atrás`;
-    } catch {
-      return "Recentemente";
-    }
-  };
 
   // Montar notificações em tempo real combinando pedidos, estoque, novos clientes e auditoria
   const assembledNotifications: NotificationFeedItem[] = [];

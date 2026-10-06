@@ -16,10 +16,19 @@ const THEME_STORAGE_KEY = "isis_theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = React.useState<Theme>("light");
-  const [mounted, setMounted] = React.useState(false);
+  const applyTheme = (targetTheme: Theme) => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (targetTheme === "dark") {
+      root.classList.add("dark");
+      root.setAttribute("data-theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      root.setAttribute("data-theme", "light");
+    }
+  };
 
   React.useEffect(() => {
-    setMounted(true);
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     if (savedTheme === "dark" || savedTheme === "light") {
       setThemeState(savedTheme);
@@ -31,17 +40,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       applyTheme(initial);
     }
   }, []);
-
-  const applyTheme = (targetTheme: Theme) => {
-    const root = document.documentElement;
-    if (targetTheme === "dark") {
-      root.classList.add("dark");
-      root.setAttribute("data-theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      root.setAttribute("data-theme", "light");
-    }
-  };
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
