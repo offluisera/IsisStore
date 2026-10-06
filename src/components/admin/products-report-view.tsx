@@ -97,7 +97,8 @@ export function ProductsReportView({
   return (
     <div className="space-y-6">
       {/* Barra de Filtros, Abas e Ações */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-borda shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Barra de Filtros, Abas e Ações */}
+      <div className="bg-white dark:bg-[#1E1518] p-4 sm:p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Abas */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -107,7 +108,7 @@ export function ProductsReportView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "ranking"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#251A1E]/80"
             )}
           >
             <Award className="w-3.5 h-3.5" />
@@ -115,7 +116,7 @@ export function ProductsReportView({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full",
-                activeTab === "ranking" ? "bg-white/20 text-white" : "bg-white text-texto-claro"
+                activeTab === "ranking" ? "bg-white/20 text-white" : "bg-white dark:bg-[#151012] text-texto-claro dark:text-[#988087]"
               )}
             >
               {countSoldProducts}
@@ -129,7 +130,7 @@ export function ProductsReportView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "revenue"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#251A1E]/80"
             )}
           >
             <DollarSign className="w-3.5 h-3.5" />
@@ -143,7 +144,7 @@ export function ProductsReportView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "all"
                 ? "bg-primaria text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#251A1E]/80"
             )}
           >
             <Package className="w-3.5 h-3.5" />
@@ -151,7 +152,7 @@ export function ProductsReportView({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full",
-                activeTab === "all" ? "bg-white/20 text-white" : "bg-white text-texto-claro"
+                activeTab === "all" ? "bg-white/20 text-white" : "bg-white dark:bg-[#151012] text-texto-claro dark:text-[#988087]"
               )}
             >
               {products.length}
@@ -165,7 +166,7 @@ export function ProductsReportView({
               "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "zero"
                 ? "bg-amber-600 text-white shadow-2xs"
-                : "bg-amber-50 text-amber-800 hover:bg-amber-100/70"
+                : "bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 hover:bg-amber-100/70 dark:hover:bg-amber-950/50"
             )}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
@@ -173,7 +174,7 @@ export function ProductsReportView({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
-                activeTab === "zero" ? "bg-white/25 text-white" : "bg-amber-200/80 text-amber-900"
+                activeTab === "zero" ? "bg-white/25 text-white" : "bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200"
               )}
             >
               {countZeroProducts}
@@ -184,33 +185,33 @@ export function ProductsReportView({
         {/* Busca e Botão de Imprimir */}
         <div className="flex items-center gap-2.5">
           <div className="relative flex-1 sm:w-60">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Filtrar por nome, SKU..."
-              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 border border-borda rounded-xl text-xs text-texto-escuro placeholder:text-texto-claro/70 focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl text-xs text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#988087]/70 focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white dark:focus:bg-[#1E1518] transition-all"
             />
           </div>
 
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-borda hover:bg-fundo rounded-xl text-xs font-medium text-texto-escuro transition-colors shadow-2xs shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] hover:bg-fundo dark:hover:bg-[#251A1E] rounded-xl text-xs font-medium text-texto-escuro dark:text-[#F8EFF1] transition-colors shadow-2xs shrink-0"
             title="Imprimir ou exportar relatório em PDF"
           >
-            <Printer className="w-3.5 h-3.5 text-texto-claro" />
+            <Printer className="w-3.5 h-3.5 text-texto-claro dark:text-[#988087]" />
             <span className="hidden sm:inline">Imprimir Relatório</span>
           </button>
         </div>
       </div>
 
       {/* Tabela do Relatório de Vendas */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#151012] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5 w-14 text-center">Pos.</th>
                 <th className="px-5 py-3.5">Produto &amp; SKU</th>
@@ -223,7 +224,7 @@ export function ProductsReportView({
                 <th className="px-5 py-3.5 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((item, index) => {
                   const rank = index + 1;
@@ -238,8 +239,8 @@ export function ProductsReportView({
                       className={cn(
                         "transition-colors",
                         isTop1
-                          ? "bg-amber-50/20 hover:bg-amber-50/40"
-                          : "hover:bg-fundo/30"
+                          ? "bg-amber-50/20 dark:bg-amber-950/15 hover:bg-amber-50/40 dark:hover:bg-amber-950/25"
+                          : "hover:bg-fundo/30 dark:hover:bg-[#251A1E]/30"
                       )}
                     >
                       {/* Posição no Ranking */}
@@ -250,10 +251,10 @@ export function ProductsReportView({
                             isTop1
                               ? "w-6 h-6 bg-amber-400 text-amber-950 font-black shadow-2xs"
                               : isTop2
-                              ? "w-6 h-6 bg-slate-300 text-slate-800 font-bold shadow-2xs"
+                              ? "w-6 h-6 bg-slate-300 dark:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold shadow-2xs"
                               : isTop3
-                              ? "w-6 h-6 bg-amber-600/30 text-amber-900 font-bold"
-                              : "text-texto-claro"
+                              ? "w-6 h-6 bg-amber-600/30 dark:bg-amber-800/40 text-amber-900 dark:text-amber-200 font-bold"
+                              : "text-texto-claro dark:text-[#988087]"
                           )}
                         >
                           {rank}
@@ -263,7 +264,7 @@ export function ProductsReportView({
                       {/* Miniatura + Nome */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl overflow-hidden bg-fundo border border-borda shrink-0 relative flex items-center justify-center">
+                          <div className="w-11 h-11 rounded-xl overflow-hidden bg-fundo dark:bg-[#251A1E] border border-borda dark:border-[#38262C] shrink-0 relative flex items-center justify-center">
                             {item.imageUrl ? (
                               <Image
                                 src={item.imageUrl}
@@ -277,15 +278,15 @@ export function ProductsReportView({
                           </div>
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <p className="font-semibold text-texto-escuro">{item.name}</p>
+                              <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">{item.name}</p>
                               {isTop1 && (
-                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50">
                                   <Sparkles className="w-2.5 h-2.5" />
                                   Top 1
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               SKU: {item.sku}
                             </p>
                           </div>
@@ -293,12 +294,12 @@ export function ProductsReportView({
                       </td>
 
                       {/* Categoria */}
-                      <td className="px-5 py-4 text-texto-medio">
+                      <td className="px-5 py-4 text-texto-medio dark:text-[#D4BFC5]">
                         {item.categoryName}
                       </td>
 
                       {/* Preço Unitário */}
-                      <td className="px-5 py-4 font-mono text-texto-medio">
+                      <td className="px-5 py-4 font-mono text-texto-medio dark:text-[#D4BFC5]">
                         {formatPrice(item.price_cents)}
                       </td>
 
@@ -307,11 +308,11 @@ export function ProductsReportView({
                         <span
                           className={cn(
                             "font-mono font-bold text-sm",
-                            isZeroSales ? "text-texto-claro/60" : "text-texto-escuro"
+                            isZeroSales ? "text-texto-claro/60 dark:text-[#988087]/60" : "text-texto-escuro dark:text-[#F8EFF1]"
                           )}
                         >
                           {item.unitsSold.toLocaleString("pt-BR")}{" "}
-                          <span className="text-[11px] font-normal text-texto-claro">un.</span>
+                          <span className="text-[11px] font-normal text-texto-claro dark:text-[#988087]">un.</span>
                         </span>
                       </td>
 
@@ -322,7 +323,7 @@ export function ProductsReportView({
                             "font-mono font-bold text-xs",
                             item.revenueCents > 0
                               ? "text-primaria"
-                              : "text-texto-claro/60"
+                              : "text-texto-claro/60 dark:text-[#988087]/60"
                           )}
                         >
                           {formatPrice(item.revenueCents)}
@@ -332,11 +333,11 @@ export function ProductsReportView({
                       {/* Barra de Participação Visual */}
                       <td className="px-5 py-4">
                         <div className="flex flex-col gap-1">
-                          <div className="flex items-center justify-between text-[10px] text-texto-claro">
+                          <div className="flex items-center justify-between text-[10px] text-texto-claro dark:text-[#988087]">
                             <span>{item.percentageRevenue}% faturamento</span>
                             <span>{item.percentageUnits}% volume</span>
                           </div>
-                          <div className="w-full h-1.5 bg-fundo rounded-full overflow-hidden border border-borda/40">
+                          <div className="w-full h-1.5 bg-fundo dark:bg-[#151012] rounded-full overflow-hidden border border-borda/40 dark:border-[#38262C]/40">
                             <div
                               className={cn(
                                 "h-full rounded-full transition-all duration-500",
@@ -348,7 +349,7 @@ export function ProductsReportView({
                                 width: `${Math.max(
                                   Math.min(item.percentageRevenue, 100),
                                   item.revenueCents > 0 ? 3 : 0
-                                )}%`,
+                                  )}%`,
                               }}
                             />
                           </div>
@@ -361,10 +362,10 @@ export function ProductsReportView({
                           className={cn(
                             "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold font-mono",
                             item.stock === 0
-                              ? "bg-rose-100 text-rose-700"
+                              ? "bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400"
                               : item.stock <= 5
-                              ? "bg-amber-100 text-amber-800"
-                              : "bg-emerald-100 text-emerald-800"
+                              ? "bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300"
+                              : "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300"
                           )}
                         >
                           {item.stock} un.
@@ -376,7 +377,7 @@ export function ProductsReportView({
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href="/admin/produtos/estoque"
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-texto-medio hover:text-primaria transition-colors"
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-texto-medio dark:text-[#D4BFC5] hover:text-primaria transition-colors"
                             title="Ajustar estoque deste item"
                           >
                             <Boxes className="w-3.5 h-3.5" />
@@ -398,9 +399,9 @@ export function ProductsReportView({
                 })
               ) : (
                 <tr>
-                  <td colSpan={9} className="px-5 py-12 text-center text-texto-claro space-y-1">
+                  <td colSpan={9} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087] space-y-1">
                     <Package className="w-8 h-8 text-primaria/30 mx-auto mb-2" />
-                    <p className="font-semibold text-texto-escuro">
+                    <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       Nenhum produto atende aos filtros selecionados.
                     </p>
                     <p className="text-[11px]">

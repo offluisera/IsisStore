@@ -89,9 +89,9 @@ export default async function AdminEstoquePage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Header com Breadcrumb e Ações */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
@@ -103,14 +103,14 @@ export default async function AdminEstoquePage() {
               Produtos
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Estoque</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Estoque</span>
           </div>
 
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro flex items-center gap-2.5">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2.5">
             <Boxes className="w-6 h-6 text-primaria" />
             <span>Controle &amp; Gestão de Estoque</span>
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Monitore a disponibilidade física, valores de inventário e ajuste quantidades em tempo real.
           </p>
         </div>
@@ -147,72 +147,72 @@ export default async function AdminEstoquePage() {
       {/* Grid de KPIs de Estoque */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total de Itens */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
             <Boxes className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Unidades em Estoque
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {totalPhysicalUnits.toLocaleString("pt-BR")}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Total em {formattedProducts.length} itens do catálogo
             </p>
           </div>
         </div>
 
         {/* Valor do Inventário */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center shrink-0">
             <DollarSign className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Patrimônio em Inventário
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {formatPrice(totalInventoryValueCents)}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Preço de tabela acumulado
             </p>
           </div>
         </div>
 
         {/* Estoque Crítico */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/40 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
               Estoque Crítico (≤ 5)
             </p>
-            <p className="font-mono text-2xl font-bold text-amber-700 mt-0.5">
+            <p className="font-mono text-2xl font-bold text-amber-700 dark:text-amber-400 mt-0.5">
               {lowStockCount}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Produtos precisando de reposição
             </p>
           </div>
         </div>
 
         {/* Produtos Esgotados */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/40 flex items-center justify-center shrink-0">
             <XCircle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-rose-800 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-rose-800 dark:text-rose-300 uppercase tracking-wider">
               Esgotados (0 un.)
             </p>
-            <p className="font-mono text-2xl font-bold text-rose-600 mt-0.5">
+            <p className="font-mono text-2xl font-bold text-rose-600 dark:text-rose-400 mt-0.5">
               {outOfStockCount}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Indisponíveis para compra no site
             </p>
           </div>

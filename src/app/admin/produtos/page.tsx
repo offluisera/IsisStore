@@ -45,19 +45,19 @@ export default async function AdminProdutosPage({
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Produtos</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Produtos</span>
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1]">
             Gerenciamento de Produtos
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Total de {products?.length ?? 0} produtos cadastrados no catálogo.
           </p>
         </div>
@@ -99,10 +99,10 @@ export default async function AdminProdutosPage({
       </div>
 
       {/* Tabela de Produtos */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#151012] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5">Produto</th>
                 <th className="px-5 py-3.5">Categoria</th>
@@ -112,7 +112,7 @@ export default async function AdminProdutosPage({
                 <th className="px-5 py-3.5 text-right">Loja</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {products && products.length > 0 ? (
                 products.map((item) => {
                   const primaryImg =
@@ -120,10 +120,10 @@ export default async function AdminProdutosPage({
                     item.product_images?.[0];
                   const thumb = primaryImg?.public_url;
                   return (
-                    <tr key={item.id} className="hover:bg-fundo/30 transition-colors">
+                    <tr key={item.id} className="hover:bg-fundo/30 dark:hover:bg-[#251A1E]/30 transition-colors">
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-fundo border border-borda shrink-0 relative flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-fundo dark:bg-[#251A1E] border border-borda dark:border-[#38262C] shrink-0 relative flex items-center justify-center">
                             {thumb ? (
                               <Image
                                 src={thumb}
@@ -136,14 +136,14 @@ export default async function AdminProdutosPage({
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold text-texto-escuro">{item.name}</p>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">{item.name}</p>
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               SKU: {item.sku}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-texto-medio">
+                      <td className="px-5 py-4 text-texto-medio dark:text-[#D4BFC5]">
                         {item.categories?.name || "Sem categoria"}
                       </td>
                       <td className="px-5 py-4 font-semibold text-primaria">
@@ -182,7 +182,7 @@ export default async function AdminProdutosPage({
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro">
+                  <td colSpan={6} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087]">
                     Nenhum produto cadastrado no catálogo.
                   </td>
                 </tr>

@@ -158,9 +158,9 @@ export default async function AdminProdutosRelatoriosPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Header com Breadcrumb e Ações */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-borda shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#1E1518] p-6 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-xs text-texto-claro mb-1">
+          <div className="flex items-center gap-2 text-xs text-texto-claro dark:text-[#988087] mb-1">
             <Link href="/admin" className="hover:text-primaria transition-colors">
               Painel
             </Link>
@@ -172,14 +172,14 @@ export default async function AdminProdutosRelatoriosPage() {
               Produtos
             </Link>
             <span>&gt;</span>
-            <span className="text-texto-escuro font-medium">Relatórios</span>
+            <span className="text-texto-escuro dark:text-[#F8EFF1] font-medium">Relatórios</span>
           </div>
 
-          <h1 className="font-serif text-2xl font-semibold text-texto-escuro flex items-center gap-2.5">
+          <h1 className="font-serif text-2xl font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2.5">
             <TrendingUp className="w-6 h-6 text-primaria" />
             <span>Relatórios de Desempenho &amp; Mais Vendidos</span>
           </h1>
-          <p className="text-xs text-texto-claro mt-0.5">
+          <p className="text-xs text-texto-claro dark:text-[#988087] mt-0.5">
             Acompanhe o volume de vendas, faturamento por produto e descubra os destaques de saída da loja.
           </p>
         </div>
@@ -216,80 +216,80 @@ export default async function AdminProdutosRelatoriosPage() {
       {/* Grid de KPIs de Desempenho */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Faturamento em Produtos */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-primaria/10 text-primaria flex items-center justify-center shrink-0">
             <DollarSign className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Receita em Produtos
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {formatPrice(totalRevenueCents)}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Total faturado em itens de pedidos
             </p>
           </div>
         </div>
 
         {/* Peças Vendidas */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center shrink-0">
             <PackageCheck className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Peças Vendidas
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
-              {totalUnitsSold.toLocaleString("pt-BR")} <span className="text-sm font-normal text-texto-claro">un.</span>
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
+              {totalUnitsSold.toLocaleString("pt-BR")} <span className="text-sm font-normal text-texto-claro dark:text-[#988087]">un.</span>
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Volume total de produtos entregues
             </p>
           </div>
         </div>
 
         {/* Ticket Médio por Item */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/40 flex items-center justify-center shrink-0">
             <ShoppingBag className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-texto-claro uppercase tracking-wider">
+            <p className="text-xs font-semibold text-texto-claro dark:text-[#988087] uppercase tracking-wider">
               Preço Médio por Item
             </p>
-            <p className="font-mono text-2xl font-bold text-texto-escuro mt-0.5">
+            <p className="font-mono text-2xl font-bold text-texto-escuro dark:text-[#F8EFF1] mt-0.5">
               {formatPrice(averageItemTicketCents)}
             </p>
-            <p className="text-[11px] text-texto-claro">
+            <p className="text-[11px] text-texto-claro dark:text-[#988087]">
               Média de valor por unidade vendida
             </p>
           </div>
         </div>
 
         {/* Produto Campeão */}
-        <div className="bg-white p-5 rounded-2xl border border-borda shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#1E1518] p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/40 flex items-center justify-center shrink-0">
             <Award className="w-6 h-6" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider flex items-center gap-1">
+            <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1">
               <span>Top 1 em Vendas</span>
               <Sparkles className="w-3 h-3 text-amber-500" />
             </p>
             {topProduct ? (
               <>
-                <p className="font-semibold text-sm text-texto-escuro truncate mt-0.5" title={topProduct.name}>
+                <p className="font-semibold text-sm text-texto-escuro dark:text-[#F8EFF1] truncate mt-0.5" title={topProduct.name}>
                   {topProduct.name}
                 </p>
-                <p className="text-[11px] text-texto-claro font-mono">
+                <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                   {topProduct.unitsSold} un. vendidas ({formatPrice(topProduct.revenueCents)})
                 </p>
               </>
             ) : (
-              <p className="text-xs text-texto-claro mt-1">Aguardando primeiras vendas</p>
+              <p className="text-xs text-texto-claro dark:text-[#988087] mt-1">Aguardando primeiras vendas</p>
             )}
           </div>
         </div>

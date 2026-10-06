@@ -183,7 +183,7 @@ export function ProductImageManager({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-borda bg-white text-texto-medio hover:text-texto-escuro text-xs font-medium hover:border-borda-destaque transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] text-xs font-medium hover:border-borda-destaque transition-colors cursor-pointer"
           title="Ver e gerenciar todas as fotos deste produto"
         >
           <ImageIcon className="w-3.5 h-3.5" />
@@ -193,19 +193,19 @@ export function ProductImageManager({
 
       {/* Modal Completo de Gestão de Imagens */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-texto-escuro/50 backdrop-blur-xs animate-in fade-in">
-          <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-borda shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-texto-escuro/60 backdrop-blur-xs animate-in fade-in">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-[#1E1518] rounded-3xl border border-borda dark:border-[#38262C] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95">
             {/* Modal Header */}
-            <div className="p-5 sm:p-6 border-b border-borda flex items-center justify-between bg-fundo/40">
+            <div className="p-5 sm:p-6 border-b border-borda dark:border-[#38262C] flex items-center justify-between bg-fundo/40 dark:bg-[#151012]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center border border-primaria/20">
                   <ImageIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-texto-escuro">
+                  <h3 className="font-serif text-lg font-bold text-texto-escuro dark:text-[#F8EFF1]">
                     Fotos do Produto
                   </h3>
-                  <p className="text-xs text-texto-claro truncate max-w-sm sm:max-w-md">
+                  <p className="text-xs text-texto-claro dark:text-[#988087] truncate max-w-sm sm:max-w-md">
                     {productName}
                   </p>
                 </div>
@@ -213,7 +213,7 @@ export function ProductImageManager({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-2 rounded-xl text-texto-claro hover:text-texto-escuro hover:bg-fundo transition-colors"
+                className="p-2 rounded-xl text-texto-claro dark:text-[#988087] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
                 aria-label="Fechar"
               >
                 <X className="w-5 h-5" />
@@ -233,7 +233,7 @@ export function ProductImageManager({
               {/* Área de Dropzone / Seleção do PC */}
               <div
                 onClick={() => modalFileInputRef.current?.click()}
-                className="border-2 border-dashed border-borda hover:border-primaria bg-fundo/40 hover:bg-primaria-soft/20 rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 group"
+                className="border-2 border-dashed border-borda dark:border-[#38262C] hover:border-primaria bg-fundo/40 dark:bg-[#151012] hover:bg-primaria-soft/20 dark:hover:bg-primaria/10 rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 group"
               >
                 <input
                   ref={modalFileInputRef}
@@ -245,14 +245,14 @@ export function ProductImageManager({
                   disabled={isProcessing}
                 />
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-white border border-borda flex items-center justify-center text-primaria group-hover:scale-110 transition-transform shadow-xs">
+                  <div className="w-12 h-12 rounded-full bg-white dark:bg-[#251A1E] border border-borda dark:border-[#38262C] flex items-center justify-center text-primaria group-hover:scale-110 transition-transform shadow-xs">
                     <Upload className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-texto-escuro">
+                    <p className="text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                       Clique para selecionar imagens do seu computador
                     </p>
-                    <p className="text-xs text-texto-claro mt-1">
+                    <p className="text-xs text-texto-claro dark:text-[#988087] mt-1">
                       Selecione várias de uma só vez (PNG, JPG, WEBP). Elas serão convertidas automaticamente para <strong>.webp</strong>.
                     </p>
                   </div>
@@ -262,7 +262,7 @@ export function ProductImageManager({
               {/* Grid de Imagens Existentes */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-texto-escuro">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-texto-escuro dark:text-[#F8EFF1]">
                     Imagens Vinculadas ({images.length})
                   </h4>
                   <a
@@ -277,7 +277,7 @@ export function ProductImageManager({
                 </div>
 
                 {images.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-texto-claro bg-fundo rounded-2xl border border-borda">
+                  <div className="py-8 text-center text-xs text-texto-claro dark:text-[#988087] bg-fundo dark:bg-[#151012] rounded-2xl border border-borda dark:border-[#38262C]">
                     Nenhuma foto adicionada ainda. Selecione fotos acima para exibir no catálogo.
                   </div>
                 ) : (
@@ -287,9 +287,9 @@ export function ProductImageManager({
                       return (
                         <div
                           key={img.id}
-                          className="relative group rounded-2xl overflow-hidden border border-borda bg-white shadow-xs flex flex-col"
+                          className="relative group rounded-2xl overflow-hidden border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] shadow-xs flex flex-col"
                         >
-                          <div className="relative aspect-square w-full bg-fundo overflow-hidden">
+                          <div className="relative aspect-square w-full bg-fundo dark:bg-[#251A1E] overflow-hidden">
                             <Image
                               src={img.public_url}
                               alt={`${productName} foto ${index + 1}`}
@@ -312,12 +312,12 @@ export function ProductImageManager({
                           </div>
 
                           {/* Ações da Foto */}
-                          <div className="p-2 flex items-center justify-between gap-1 border-t border-borda/60 bg-white">
+                          <div className="p-2 flex items-center justify-between gap-1 border-t border-borda/60 dark:border-[#38262C]/60 bg-white dark:bg-[#1E1518]">
                             {!isPrimary ? (
                               <button
                                 type="button"
                                 onClick={() => handleSetPrimary(img.id)}
-                                className="text-[11px] text-texto-medio hover:text-primaria font-medium flex items-center gap-1 px-1.5 py-1 rounded hover:bg-fundo transition-colors cursor-pointer"
+                                className="text-[11px] text-texto-medio dark:text-[#D4BFC5] hover:text-primaria font-medium flex items-center gap-1 px-1.5 py-1 rounded hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors cursor-pointer"
                                 title="Definir esta foto como imagem principal"
                               >
                                 <Star className="w-3.5 h-3.5" />
@@ -333,7 +333,7 @@ export function ProductImageManager({
                             <button
                               type="button"
                               onClick={() => handleDeleteImage(img.id)}
-                              className="p-1.5 text-texto-claro hover:text-erro hover:bg-erro/10 rounded-lg transition-colors cursor-pointer"
+                              className="p-1.5 text-texto-claro dark:text-[#988087] hover:text-erro hover:bg-erro/10 rounded-lg transition-colors cursor-pointer"
                               title="Excluir imagem"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -348,8 +348,8 @@ export function ProductImageManager({
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 sm:p-5 border-t border-borda bg-fundo/40 flex items-center justify-between">
-              <span className="text-xs text-texto-claro">
+            <div className="p-4 sm:p-5 border-t border-borda dark:border-[#38262C] bg-fundo/40 dark:bg-[#151012] flex items-center justify-between">
+              <span className="text-xs text-texto-claro dark:text-[#988087]">
                 As fotos adicionadas refletem automaticamente na página do produto.
               </span>
               <Button

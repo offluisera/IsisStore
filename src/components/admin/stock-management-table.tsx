@@ -178,7 +178,7 @@ export function StockManagementTable({
   return (
     <div className="space-y-6">
       {/* Barra de Filtros, Abas e Pesquisa */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-borda shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E1518] p-4 sm:p-5 rounded-2xl border border-borda dark:border-[#38262C] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Abas por Estado de Estoque */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -187,15 +187,15 @@ export function StockManagementTable({
             className={cn(
               "px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "all"
-                ? "bg-texto-escuro text-white shadow-2xs"
-                : "bg-fundo text-texto-medio hover:text-texto-escuro hover:bg-fundo/80"
+                ? "bg-texto-escuro dark:bg-fundo text-white dark:text-texto-escuro shadow-2xs"
+                : "bg-fundo dark:bg-[#251A1E] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo/80 dark:hover:bg-[#251A1E]/80"
             )}
           >
             <span>Todos</span>
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full",
-                activeTab === "all" ? "bg-white/20 text-white" : "bg-white text-texto-claro"
+                activeTab === "all" ? "bg-white/20 dark:bg-black/20 text-white dark:text-texto-escuro" : "bg-white dark:bg-[#151012] text-texto-claro dark:text-[#988087]"
               )}
             >
               {countTotal}
@@ -209,7 +209,7 @@ export function StockManagementTable({
               "px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "out"
                 ? "bg-rose-600 text-white shadow-2xs"
-                : "bg-rose-50 text-rose-700 hover:bg-rose-100/70"
+                : "bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 hover:bg-rose-100/70 dark:hover:bg-rose-950/50"
             )}
           >
             <XCircle className="w-3.5 h-3.5" />
@@ -217,7 +217,7 @@ export function StockManagementTable({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
-                activeTab === "out" ? "bg-white/25 text-white" : "bg-rose-200/80 text-rose-800"
+                activeTab === "out" ? "bg-white/25 text-white" : "bg-rose-200/80 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200"
               )}
             >
               {countOut}
@@ -231,7 +231,7 @@ export function StockManagementTable({
               "px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "low"
                 ? "bg-amber-600 text-white shadow-2xs"
-                : "bg-amber-50 text-amber-800 hover:bg-amber-100/70"
+                : "bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 hover:bg-amber-100/70 dark:hover:bg-amber-950/50"
             )}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
@@ -239,7 +239,7 @@ export function StockManagementTable({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
-                activeTab === "low" ? "bg-white/25 text-white" : "bg-amber-200/80 text-amber-900"
+                activeTab === "low" ? "bg-white/25 text-white" : "bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200"
               )}
             >
               {countLow}
@@ -253,7 +253,7 @@ export function StockManagementTable({
               "px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5",
               activeTab === "healthy"
                 ? "bg-emerald-600 text-white shadow-2xs"
-                : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100/70"
+                : "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/70 dark:hover:bg-emerald-950/50"
             )}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -261,7 +261,7 @@ export function StockManagementTable({
             <span
               className={cn(
                 "text-[10px] px-1.5 py-0.2 rounded-full font-bold",
-                activeTab === "healthy" ? "bg-white/25 text-white" : "bg-emerald-200/80 text-emerald-900"
+                activeTab === "healthy" ? "bg-white/25 text-white" : "bg-emerald-200/80 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200"
               )}
             >
               {countHealthy}
@@ -272,13 +272,13 @@ export function StockManagementTable({
         {/* Campo de Busca & Ordenação */}
         <div className="flex items-center gap-2.5">
           <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro pointer-events-none" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-texto-claro dark:text-[#988087] pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar por produto, SKU..."
-              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 border border-borda rounded-xl text-xs text-texto-escuro placeholder:text-texto-claro/70 focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-fundo/50 dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl text-xs text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro/70 dark:placeholder:text-[#988087]/70 focus:outline-none focus:ring-1 focus:ring-primaria focus:bg-white dark:focus:bg-[#1E1518] transition-all"
             />
           </div>
 
@@ -286,23 +286,23 @@ export function StockManagementTable({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="px-3 py-1.5 bg-white border border-borda rounded-xl text-xs font-medium text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
+              className="px-3 py-1.5 bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl text-xs font-medium text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
               aria-label="Ordenar estoque"
             >
-              <option value="stock-asc">Menor Estoque</option>
-              <option value="stock-desc">Maior Estoque</option>
-              <option value="name-asc">Nome (A - Z)</option>
-              <option value="price-desc">Maior Preço</option>
+              <option value="stock-asc" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Menor Estoque</option>
+              <option value="stock-desc" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Maior Estoque</option>
+              <option value="name-asc" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Nome (A - Z)</option>
+              <option value="price-desc" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Maior Preço</option>
             </select>
           </div>
         </div>
       </div>
 
       {/* Tabela de Produtos com Gestão de Estoque */}
-      <div className="bg-white rounded-2xl border border-borda shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#1E1518] rounded-2xl border border-borda dark:border-[#38262C] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-fundo/60 border-b border-borda text-texto-claro uppercase font-semibold text-[11px] tracking-wider">
+            <thead className="bg-fundo/60 dark:bg-[#151012] border-b border-borda dark:border-[#38262C] text-texto-claro dark:text-[#988087] uppercase font-semibold text-[11px] tracking-wider">
               <tr>
                 <th className="px-5 py-3.5">Produto</th>
                 <th className="px-5 py-3.5">Categoria</th>
@@ -313,7 +313,7 @@ export function StockManagementTable({
                 <th className="px-5 py-3.5 text-right">Vitrine</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borda/60 text-texto-escuro">
+            <tbody className="divide-y divide-borda/60 dark:divide-[#38262C]/60 text-texto-escuro dark:text-[#F8EFF1]">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((item) => {
                   const isLoading = Boolean(loadingIds[item.id]);
@@ -327,16 +327,16 @@ export function StockManagementTable({
                       className={cn(
                         "transition-colors",
                         isOutOfStock
-                          ? "bg-rose-50/25 hover:bg-rose-50/40"
+                          ? "bg-rose-50/25 dark:bg-rose-950/15 hover:bg-rose-50/40 dark:hover:bg-rose-950/25"
                           : isLowStock
-                          ? "bg-amber-50/20 hover:bg-amber-50/35"
-                          : "hover:bg-fundo/30"
+                          ? "bg-amber-50/20 dark:bg-amber-950/15 hover:bg-amber-50/35 dark:hover:bg-amber-950/25"
+                          : "hover:bg-fundo/30 dark:hover:bg-[#251A1E]/30"
                       )}
                     >
                       {/* Miniatura + Identificação */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl overflow-hidden bg-fundo border border-borda shrink-0 relative flex items-center justify-center">
+                          <div className="w-11 h-11 rounded-xl overflow-hidden bg-fundo dark:bg-[#251A1E] border border-borda dark:border-[#38262C] shrink-0 relative flex items-center justify-center">
                             {item.imageUrl ? (
                               <Image
                                 src={item.imageUrl}
@@ -349,8 +349,8 @@ export function StockManagementTable({
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold text-texto-escuro">{item.name}</p>
-                            <p className="text-[11px] text-texto-claro font-mono">
+                            <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">{item.name}</p>
+                            <p className="text-[11px] text-texto-claro dark:text-[#988087] font-mono">
                               SKU: {item.sku}
                             </p>
                           </div>
@@ -358,12 +358,12 @@ export function StockManagementTable({
                       </td>
 
                       {/* Categoria */}
-                      <td className="px-5 py-4 text-texto-medio">
+                      <td className="px-5 py-4 text-texto-medio dark:text-[#D4BFC5]">
                         {item.categoryName}
                       </td>
 
                       {/* Preço Unitário */}
-                      <td className="px-5 py-4 font-semibold text-texto-escuro">
+                      <td className="px-5 py-4 font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                         {formatPrice(item.price_cents)}
                       </td>
 
@@ -375,10 +375,10 @@ export function StockManagementTable({
                               className={cn(
                                 "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-tight",
                                 isOutOfStock
-                                  ? "bg-rose-100 text-rose-700 border border-rose-200"
+                                  ? "bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/50"
                                   : isLowStock
-                                  ? "bg-amber-100 text-amber-800 border border-amber-200"
-                                  : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                                  ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50"
+                                  : "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50"
                               )}
                             >
                               {isOutOfStock ? (
@@ -401,7 +401,7 @@ export function StockManagementTable({
                           </div>
 
                           {/* Valor em inventário deste produto */}
-                          <span className="text-[10px] text-texto-claro font-mono">
+                          <span className="text-[10px] text-texto-claro dark:text-[#988087] font-mono">
                             Valor total: {formatPrice(item.stock * item.price_cents)}
                           </span>
                         </div>
@@ -410,12 +410,12 @@ export function StockManagementTable({
                       {/* Controle Interativo de Estoque (+ / - / input) */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="flex items-center border border-borda rounded-xl bg-white p-0.5 shadow-2xs">
+                          <div className="flex items-center border border-borda dark:border-[#38262C] rounded-xl bg-white dark:bg-[#151012] p-0.5 shadow-2xs">
                             <button
                               type="button"
                               disabled={isLoading || item.stock <= 0}
                               onClick={() => handleStockUpdate(item.id, item.stock - 1)}
-                              className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio hover:text-texto-escuro hover:bg-fundo disabled:opacity-30 transition-colors"
+                              className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] disabled:opacity-30 transition-colors"
                               title="Diminuir estoque (-1)"
                             >
                               <Minus className="w-3 h-3" />
@@ -451,12 +451,12 @@ export function StockManagementTable({
                                 }
                               }}
                               className={cn(
-                                "w-12 text-center font-mono font-bold text-xs bg-transparent focus:outline-none focus:bg-fundo/40 rounded-sm",
+                                "w-12 text-center font-mono font-bold text-xs bg-transparent focus:outline-none focus:bg-fundo/40 dark:focus:bg-[#251A1E] rounded-sm",
                                 isOutOfStock
-                                  ? "text-rose-600"
+                                  ? "text-rose-600 dark:text-rose-400"
                                   : isLowStock
-                                  ? "text-amber-600"
-                                  : "text-texto-escuro"
+                                  ? "text-amber-600 dark:text-amber-400"
+                                  : "text-texto-escuro dark:text-[#F8EFF1]"
                               )}
                               aria-label={`Estoque de ${item.name}`}
                             />
@@ -465,7 +465,7 @@ export function StockManagementTable({
                               type="button"
                               disabled={isLoading}
                               onClick={() => handleStockUpdate(item.id, item.stock + 1)}
-                              className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio hover:text-texto-escuro hover:bg-fundo transition-colors"
+                              className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
                               title="Aumentar estoque (+1)"
                             >
                               <Plus className="w-3 h-3" />
@@ -506,11 +506,11 @@ export function StockManagementTable({
                               e.target.value as "published" | "draft" | "archived"
                             )
                           }
-                          className="bg-white border border-borda rounded-xl px-2.5 py-1.5 text-[11px] font-semibold text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
+                          className="bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl px-2.5 py-1.5 text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
                         >
-                          <option value="published">Publicado</option>
-                          <option value="draft">Rascunho</option>
-                          <option value="archived">Arquivado</option>
+                          <option value="published" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Publicado</option>
+                          <option value="draft" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Rascunho</option>
+                          <option value="archived" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Arquivado</option>
                         </select>
                       </td>
 
@@ -530,9 +530,9 @@ export function StockManagementTable({
                 })
               ) : (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-texto-claro space-y-1">
+                  <td colSpan={7} className="px-5 py-12 text-center text-texto-claro dark:text-[#988087] space-y-1">
                     <Package className="w-8 h-8 text-primaria/30 mx-auto mb-2" />
-                    <p className="font-semibold text-texto-escuro">
+                    <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1]">
                       Nenhum produto encontrado com os filtros atuais.
                     </p>
                     <p className="text-[11px]">

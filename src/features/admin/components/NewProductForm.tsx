@@ -128,7 +128,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
         <div className="flex flex-col gap-1.5 text-left">
           <label
             htmlFor="categoryId"
-            className="text-xs font-semibold text-texto-escuro flex items-center gap-1 select-none"
+            className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-1 select-none"
           >
             Categoria <span className="text-erro font-bold">*</span>
           </label>
@@ -137,11 +137,11 @@ export function NewProductForm({ categories }: NewProductFormProps) {
             name="categoryId"
             required
             disabled={isPending}
-            className="h-11 w-full rounded-xl border border-borda bg-white px-3.5 py-2 text-sm text-texto-escuro outline-none focus:border-primaria focus:ring-2 focus:ring-primaria/20"
+            className="h-11 w-full rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] px-3.5 py-2 text-sm text-texto-escuro dark:text-[#F8EFF1] outline-none focus:border-primaria focus:ring-2 focus:ring-primaria/20"
           >
-            <option value="">Selecione uma categoria...</option>
+            <option value="" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Selecione uma categoria...</option>
             {categories.map((c) => (
-              <option key={c.id} value={c.id}>
+              <option key={c.id} value={c.id} className="dark:bg-[#151012] dark:text-[#F8EFF1]">
                 {c.name}
               </option>
             ))}
@@ -187,12 +187,12 @@ export function NewProductForm({ categories }: NewProductFormProps) {
 
         {/* Upload de Fotos do PC com conversão .webp */}
         <div className="md:col-span-2 flex flex-col gap-3">
-          <label className="text-xs font-semibold text-texto-escuro flex items-center justify-between">
+          <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-primaria" />
               <span>Fotos do Produto (Upload do Computador)</span>
             </span>
-            <span className="text-[11px] text-texto-claro font-normal">
+            <span className="text-[11px] text-texto-claro dark:text-[#988087] font-normal">
               Conversão automática para <strong>.webp</strong>
             </span>
           </label>
@@ -200,7 +200,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
           {/* Área Dropzone / Botão de Seleção */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-borda hover:border-primaria bg-fundo/40 hover:bg-primaria-soft/20 rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 group"
+            className="border-2 border-dashed border-borda dark:border-[#38262C] hover:border-primaria bg-fundo/40 dark:bg-[#151012] hover:bg-primaria-soft/20 dark:hover:bg-primaria/10 rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 group"
           >
             <input
               ref={fileInputRef}
@@ -213,7 +213,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
             />
 
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-white border border-borda flex items-center justify-center text-primaria group-hover:scale-110 transition-transform shadow-xs">
+              <div className="w-12 h-12 rounded-full bg-white dark:bg-[#251A1E] border border-borda dark:border-[#38262C] flex items-center justify-center text-primaria group-hover:scale-110 transition-transform shadow-xs">
                 {isConverting ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
@@ -221,12 +221,12 @@ export function NewProductForm({ categories }: NewProductFormProps) {
                 )}
               </div>
               <div>
-                <p className="text-sm font-bold text-texto-escuro">
+                <p className="text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
                   {isConverting
                     ? "Convertendo imagens para .webp..."
                     : "Clique para selecionar fotos do seu computador"}
                 </p>
-                <p className="text-xs text-texto-claro mt-1">
+                <p className="text-xs text-texto-claro dark:text-[#988087] mt-1">
                   Você pode selecionar várias fotos de uma só vez (PNG, JPG, WEBP, etc.)
                 </p>
               </div>
@@ -236,9 +236,9 @@ export function NewProductForm({ categories }: NewProductFormProps) {
           {/* Grid de Prévia das Imagens Convertidas */}
           {convertedImages.length > 0 && (
             <div className="space-y-2 mt-2">
-              <div className="flex items-center justify-between text-xs text-texto-medio">
+              <div className="flex items-center justify-between text-xs text-texto-medio dark:text-[#D4BFC5]">
                 <span>{convertedImages.length} foto(s) pronta(s) para o produto:</span>
-                <span className="text-[11px] text-texto-claro">
+                <span className="text-[11px] text-texto-claro dark:text-[#988087]">
                   A foto marcada com estrela será a capa
                 </span>
               </div>
@@ -249,9 +249,9 @@ export function NewProductForm({ categories }: NewProductFormProps) {
                   return (
                     <div
                       key={img.id}
-                      className="relative group rounded-xl overflow-hidden border border-borda bg-white shadow-xs flex flex-col"
+                      className="relative group rounded-xl overflow-hidden border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] shadow-xs flex flex-col"
                     >
-                      <div className="relative aspect-square w-full bg-fundo overflow-hidden">
+                      <div className="relative aspect-square w-full bg-fundo dark:bg-[#251A1E] overflow-hidden">
                         <Image
                           src={img.previewUrl}
                           alt={img.name}
@@ -273,12 +273,12 @@ export function NewProductForm({ categories }: NewProductFormProps) {
                       </div>
 
                       {/* Ações da Foto */}
-                      <div className="p-1.5 flex items-center justify-between border-t border-borda/60 bg-white">
+                      <div className="p-1.5 flex items-center justify-between border-t border-borda/60 dark:border-[#38262C]/60 bg-white dark:bg-[#1E1518]">
                         {!isPrimary ? (
                           <button
                             type="button"
                             onClick={() => setPrimaryIndex(index)}
-                            className="text-[10px] text-texto-medio hover:text-primaria font-medium flex items-center gap-1 px-1 py-0.5 rounded hover:bg-fundo transition-colors cursor-pointer"
+                            className="text-[10px] text-texto-medio dark:text-[#D4BFC5] hover:text-primaria font-medium flex items-center gap-1 px-1 py-0.5 rounded hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors cursor-pointer"
                             title="Definir esta foto como imagem principal"
                           >
                             <Star className="w-3 h-3" />
@@ -294,7 +294,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(index)}
-                          className="p-1 text-texto-claro hover:text-erro hover:bg-erro/10 rounded transition-colors cursor-pointer"
+                          className="p-1 text-texto-claro dark:text-[#988087] hover:text-erro hover:bg-erro/10 rounded transition-colors cursor-pointer"
                           title="Remover foto"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -350,7 +350,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
         <div className="md:col-span-2 flex flex-col gap-1.5 text-left">
           <label
             htmlFor="description"
-            className="text-xs font-semibold text-texto-escuro select-none"
+            className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] select-none"
           >
             Descrição Completa do Produto
           </label>
@@ -360,7 +360,7 @@ export function NewProductForm({ categories }: NewProductFormProps) {
             rows={4}
             placeholder="Detalhes sobre materiais, dimensões, cuidados e acabamentos especiais..."
             disabled={isPending}
-            className="w-full rounded-xl border border-borda bg-white p-3.5 text-sm text-texto-escuro placeholder:text-texto-claro outline-none focus:border-primaria focus:ring-2 focus:ring-primaria/20 resize-y"
+            className="w-full rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] p-3.5 text-sm text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] outline-none focus:border-primaria focus:ring-2 focus:ring-primaria/20 resize-y"
           />
         </div>
 
@@ -370,16 +370,16 @@ export function NewProductForm({ categories }: NewProductFormProps) {
             type="checkbox"
             id="featured"
             name="featured"
-            className="h-4 w-4 rounded border-borda text-primaria focus:ring-primaria/20 accent-primaria"
+            className="h-4 w-4 rounded border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-primaria focus:ring-primaria/20 accent-primaria"
           />
-          <label htmlFor="featured" className="text-xs font-medium text-texto-escuro select-none">
+          <label htmlFor="featured" className="text-xs font-medium text-texto-escuro dark:text-[#F8EFF1] select-none">
             Destacar este produto na vitrine principal da loja
           </label>
         </div>
       </div>
 
       {/* Ações */}
-      <div className="flex items-center justify-end gap-3 pt-6 border-t border-borda">
+      <div className="flex items-center justify-end gap-3 pt-6 border-t border-borda dark:border-[#38262C]">
         <Link
           href="/admin/produtos"
           className={buttonVariants({ variant: "white", size: "default" })}

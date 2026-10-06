@@ -67,12 +67,12 @@ export function QuickProductEditor({
   return (
     <div className="flex items-center gap-4 text-xs">
       {/* Controle Rápido de Estoque */}
-      <div className="flex items-center border border-borda rounded-xl bg-white p-0.5 shadow-2xs">
+      <div className="flex items-center border border-borda dark:border-[#38262C] rounded-xl bg-white dark:bg-[#151012] p-0.5 shadow-2xs">
         <button
           type="button"
           disabled={loadingStock || stock <= 0}
           onClick={() => handleStockChange(stock - 1)}
-          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio hover:text-texto-escuro hover:bg-fundo disabled:opacity-30 transition-colors"
+          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] disabled:opacity-30 transition-colors"
           title="Diminuir estoque"
         >
           <Minus className="w-3 h-3" />
@@ -83,8 +83,8 @@ export function QuickProductEditor({
             stock <= 0
               ? "text-erro"
               : stock <= 5
-              ? "text-amber-600"
-              : "text-texto-escuro"
+              ? "text-amber-600 dark:text-amber-400"
+              : "text-texto-escuro dark:text-[#F8EFF1]"
           }`}
         >
           {loadingStock ? (
@@ -98,7 +98,7 @@ export function QuickProductEditor({
           type="button"
           disabled={loadingStock}
           onClick={() => handleStockChange(stock + 1)}
-          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio hover:text-texto-escuro hover:bg-fundo transition-colors"
+          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
           title="Aumentar estoque"
         >
           <Plus className="w-3 h-3" />
@@ -114,11 +114,11 @@ export function QuickProductEditor({
             e.target.value as "published" | "draft" | "archived"
           )
         }
-        className="bg-white border border-borda rounded-xl px-2.5 py-1.5 text-[11px] font-semibold text-texto-escuro focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
+        className="bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl px-2.5 py-1.5 text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
       >
-        <option value="published">Publicado</option>
-        <option value="draft">Rascunho</option>
-        <option value="archived">Arquivado</option>
+        <option value="published" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Publicado</option>
+        <option value="draft" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Rascunho</option>
+        <option value="archived" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Arquivado</option>
       </select>
 
       {feedback && (
