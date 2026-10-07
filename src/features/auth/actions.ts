@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   loginSchema,
   registerSchema,
@@ -63,6 +64,40 @@ export async function loginAction(
         error.message ||
         "Erro ao realizar login. Tente novamente mais tarde.",
     };
+  }
+
+  // Auto-sincroniza initial_address caso exista em metadata e a tabela addresses esteja sem registro
+  try {
+    const {
+      data: { user: loggedInUser },
+    } = await supabase.auth.getUser();
+
+    if (loggedInUser?.user_metadata?.initial_address) {
+      const addr = loggedInUser.user_metadata.initial_address;
+      if (addr.postal_code && addr.street && addr.number) {
+        const { count } = await supabase
+          .from("addresses")
+          .select("*", { count: "exact", head: true })
+          .eq("profile_id", loggedInUser.id);
+
+        if (!count || count === 0) {
+          await supabase.from("addresses").insert({
+            profile_id: loggedInUser.id,
+            recipient_name: loggedInUser.user_metadata.full_name || "Principal",
+            postal_code: String(addr.postal_code).replace(/\D/g, ""),
+            street: addr.street,
+            number: addr.number,
+            complement: addr.complement || null,
+            neighborhood: addr.neighborhood || "",
+            city: addr.city || "",
+            state: addr.state || "",
+            is_default: true,
+          });
+        }
+      }
+    }
+  } catch (syncErr) {
+    console.warn("Aviso na sincronização de endereço pós-login:", syncErr);
   }
 
   revalidatePath("/", "layout");
@@ -144,21 +179,46 @@ export async function registerAction(
     };
   }
 
-  // Se o usuário foi criado e informou endereço, insere na tabela addresses
+  // Se o usuário foi criado e informou endereço, insere na tabela addresses com privilégio de admin para contornar RLS
   if (data.user && validation.data.postalCode && validation.data.street && validation.data.number) {
     try {
-      await supabase.from("addresses").insert({
-        profile_id: data.user.id,
-        recipient_name: validation.data.fullName,
-        postal_code: validation.data.postalCode.replace(/\D/g, ""),
-        street: validation.data.street,
-        number: validation.data.number,
-        complement: validation.data.complement || null,
-        neighborhood: validation.data.neighborhood || "",
-        city: validation.data.city || "",
-        state: validation.data.state || "",
-        is_default: true,
-      });
+      const adminClient = createAdminClient();
+
+      // Garante que o profile existe
+      await adminClient.from("profiles").upsert(
+        {
+          id: data.user.id,
+          full_name: validation.data.fullName,
+          email: validation.data.email,
+          role: "customer",
+        },
+        { onConflict: "id" }
+      );
+
+      // Insere o endereço inicial se ainda não existir (caso trigger já tenha inserido)
+      const { count } = await adminClient
+        .from("addresses")
+        .select("*", { count: "exact", head: true })
+        .eq("profile_id", data.user.id);
+
+      if (!count || count === 0) {
+        const { error: insertError } = await adminClient.from("addresses").insert({
+          profile_id: data.user.id,
+          recipient_name: validation.data.fullName,
+          postal_code: validation.data.postalCode.replace(/\D/g, ""),
+          street: validation.data.street,
+          number: validation.data.number,
+          complement: validation.data.complement || null,
+          neighborhood: validation.data.neighborhood || "",
+          city: validation.data.city || "",
+          state: validation.data.state || "",
+          is_default: true,
+        });
+
+        if (insertError) {
+          console.error("Erro ao salvar endereço com adminClient:", insertError);
+        }
+      }
     } catch (addrErr) {
       console.warn("Aviso ao persistir endereço no cadastro:", addrErr);
     }

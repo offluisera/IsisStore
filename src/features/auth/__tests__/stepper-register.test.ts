@@ -70,4 +70,16 @@ describe("Tela de Registro Multi-Step com ReUI Stepper", () => {
     const result = registerSchema.safeParse(validData);
     assert.ok(result.success, "Schema deve validar com sucesso os dados completos");
   });
+
+  test("4. registerAction deve utilizar createAdminClient para persistir endereços contornando RLS", () => {
+    const actionsPath = path.join(rootDir, "src", "features", "auth", "actions.ts");
+    assert.ok(fs.existsSync(actionsPath), "src/features/auth/actions.ts deve existir");
+
+    const content = fs.readFileSync(actionsPath, "utf-8");
+    assert.ok(content.includes("createAdminClient"), "Deve importar e usar createAdminClient");
+    assert.ok(content.includes('adminClient.from("addresses").insert'), "Deve inserir endereço via adminClient");
+
+    const migrationPath = path.join(rootDir, "supabase", "migrations", "20261006000000_register_address_trigger.sql");
+    assert.ok(fs.existsSync(migrationPath), "Migration de persistência de initial_address deve existir");
+  });
 });
