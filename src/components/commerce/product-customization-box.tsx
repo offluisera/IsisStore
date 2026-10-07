@@ -113,7 +113,7 @@ export function ProductCustomizationBox({
           </div>
           <div>
             <h3 className="font-serif text-sm sm:text-base font-bold text-texto-escuro dark:text-[#F8EFF1] flex items-center gap-2">
-              <span>Personalize sua Joia</span>
+              <span>Personalize seu produto</span>
               <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full bg-primaria text-white font-sans font-semibold">
                 Sob Medida
               </span>

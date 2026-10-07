@@ -169,7 +169,7 @@ describe("Produtos Personalizados (Gravação de Nome, Frase ou Imagem)", () => 
     assert.ok(fs.existsSync(cardPath), "ProductCard deve existir");
 
     const boxContent = fs.readFileSync(boxPath, "utf-8");
-    assert.ok(boxContent.includes("Personalize sua Joia"), "Deve conter título de joalheria sob medida");
+    assert.ok(boxContent.includes("Personalize seu produto"), "Deve conter título de personalização");
     assert.ok(boxContent.includes("uploadCustomizationImageAction"), "Deve acionar server action de upload de foto");
     assert.ok(boxContent.includes("custom-text"), "Deve ter campo de texto/frase/iniciais");
 
