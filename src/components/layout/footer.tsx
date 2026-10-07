@@ -245,7 +245,7 @@ export function Footer() {
             </a>
             <span>e</span>
             <a
-              href="https://instagram.com/@off.luisera"
+              href="https://www.instagram.com/off.luisera/"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-texto-medio hover:text-pink-600 transition-colors underline-offset-2 hover:underline"
