@@ -289,6 +289,159 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
     }
   };
 
+  // Upload do Favicon do Computador
+  const faviconFileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploadingFavicon, setIsUploadingFavicon] = React.useState(false);
+  const [uploadFaviconError, setUploadFaviconError] = React.useState<string | null>(null);
+
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadFaviconError("O arquivo de favicon deve ter no máximo 5MB.");
+      return;
+    }
+
+    setUploadFaviconError(null);
+    setIsUploadingFavicon(true);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const previewUrl = event.target?.result as string;
+      if (previewUrl) {
+        setFaviconUrl(previewUrl);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "favicons");
+      const res = await uploadStoreAssetAction(fd);
+      if (res.success && res.url) {
+        setFaviconUrl(res.url);
+        setFeedback({
+          type: "success",
+          message: "Favicon enviado do computador com sucesso!",
+        });
+        setTimeout(() => setFeedback(null), 4000);
+      } else if (!res.success) {
+        setUploadFaviconError(res.message || "Erro ao salvar favicon.");
+      }
+    } catch {
+      setUploadFaviconError("Falha de conexão durante o upload do favicon.");
+    } finally {
+      setIsUploadingFavicon(false);
+      if (faviconFileInputRef.current) {
+        faviconFileInputRef.current.value = "";
+      }
+    }
+  };
+
+  // Upload da Logo Principal do Computador
+  const logoFileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = React.useState(false);
+  const [uploadLogoError, setUploadLogoError] = React.useState<string | null>(null);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadLogoError("A imagem da logo deve ter no máximo 5MB.");
+      return;
+    }
+
+    setUploadLogoError(null);
+    setIsUploadingLogo(true);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const previewUrl = event.target?.result as string;
+      if (previewUrl) {
+        setLogoUrl(previewUrl);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "brand");
+      const res = await uploadStoreAssetAction(fd);
+      if (res.success && res.url) {
+        setLogoUrl(res.url);
+        setFeedback({
+          type: "success",
+          message: "Logo enviada do computador com sucesso!",
+        });
+        setTimeout(() => setFeedback(null), 4000);
+      } else if (!res.success) {
+        setUploadLogoError(res.message || "Erro ao salvar logo.");
+      }
+    } catch {
+      setUploadLogoError("Falha de conexão durante o upload da logo.");
+    } finally {
+      setIsUploadingLogo(false);
+      if (logoFileInputRef.current) {
+        logoFileInputRef.current.value = "";
+      }
+    }
+  };
+
+  // Upload da Imagem Open Graph (SEO) do Computador
+  const ogFileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploadingOg, setIsUploadingOg] = React.useState(false);
+  const [uploadOgError, setUploadOgError] = React.useState<string | null>(null);
+
+  const handleOgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadOgError("A imagem Open Graph deve ter no máximo 5MB.");
+      return;
+    }
+
+    setUploadOgError(null);
+    setIsUploadingOg(true);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const previewUrl = event.target?.result as string;
+      if (previewUrl) {
+        setOgImageUrl(previewUrl);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "seo");
+      const res = await uploadStoreAssetAction(fd);
+      if (res.success && res.url) {
+        setOgImageUrl(res.url);
+        setFeedback({
+          type: "success",
+          message: "Imagem Open Graph enviada com sucesso!",
+        });
+        setTimeout(() => setFeedback(null), 4000);
+      } else if (!res.success) {
+        setUploadOgError(res.message || "Erro ao salvar imagem Open Graph.");
+      }
+    } catch {
+      setUploadOgError("Falha de conexão durante o upload da imagem Open Graph.");
+    } finally {
+      setIsUploadingOg(false);
+      if (ogFileInputRef.current) {
+        ogFileInputRef.current.value = "";
+      }
+    }
+  };
+
   // Simulação de Carrinho para teste em tempo real do Frete
   const [simulatedCartSubtotal, setSimulatedCartSubtotal] = React.useState<number>(150);
 
@@ -727,20 +880,59 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 />
               </div>
 
-              {/* URLs de Favicon e Logo */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
-                    URL do Favicon (.svg, .png, .ico)
-                  </label>
-                  <Input
-                    type="text"
-                    value={faviconUrl}
-                    onChange={(e) => setFaviconUrl(e.target.value)}
-                    placeholder="/favicon-isis.svg ou https://..."
-                    className="font-mono text-xs bg-white dark:bg-[#151012]"
-                  />
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              {/* Input ocultos para seleção de arquivo do PC */}
+              <input
+                ref={faviconFileInputRef}
+                type="file"
+                accept=".ico,image/x-icon,image/vnd.microsoft.icon,image/svg+xml,image/png,image/webp,image/jpeg"
+                onChange={handleFaviconUpload}
+                className="hidden"
+              />
+              <input
+                ref={logoFileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif"
+                onChange={handleLogoUpload}
+                className="hidden"
+              />
+
+              {/* URLs de Favicon e Logo com Upload do PC e Recomendações em Pixel */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                {/* Bloco do Favicon */}
+                <div className="space-y-2 p-4 rounded-2xl bg-white dark:bg-[#1A1316] border border-borda dark:border-[#38262C]">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                      URL do Favicon (.svg, .png, .ico)
+                    </label>
+                    <span className="text-[10px] font-semibold text-primaria bg-primaria-soft dark:bg-primaria-soft/30 px-2 py-0.5 rounded-full">
+                      Recomendado: 32×32px ou 48×48px
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => !isUploadingFavicon && faviconFileInputRef.current?.click()}
+                      disabled={isUploadingFavicon}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-primaria text-white hover:bg-primaria-hover active:scale-[0.98] transition-all shadow-xs disabled:opacity-60 shrink-0 cursor-pointer"
+                    >
+                      {isUploadingFavicon ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Upload className="w-3.5 h-3.5" />
+                      )}
+                      <span>{isUploadingFavicon ? "Enviando..." : "Upload do PC"}</span>
+                    </button>
+                    <Input
+                      type="text"
+                      value={faviconUrl}
+                      onChange={(e) => setFaviconUrl(e.target.value)}
+                      placeholder="/favicon-isis.svg ou https://..."
+                      className="font-mono text-xs bg-white dark:bg-[#151012] flex-1"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                     <button
                       type="button"
                       onClick={() => setFaviconUrl("/favicon-isis.svg")}
@@ -763,20 +955,60 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                       Padrão .ico
                     </button>
                   </div>
+
+                  {uploadFaviconError && (
+                    <p className="text-[11px] text-red-500 font-medium">{uploadFaviconError}</p>
+                  )}
+
+                  {/* Guia de Tamanho em Pixels para Favicon */}
+                  <div className="p-2.5 rounded-xl bg-primaria/5 dark:bg-primaria/10 border border-primaria/15 text-[11px] text-texto-medio dark:text-[#D4BFC5] space-y-1">
+                    <div className="flex items-center gap-1.5 font-semibold text-primaria">
+                      <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                      <span>Recomendações de Tamanho em Pixel:</span>
+                    </div>
+                    <ul className="space-y-0.5 text-[10.5px] text-texto-claro dark:text-[#A0888F] leading-relaxed">
+                      <li>• <strong>32×32 px</strong> ou <strong>48×48 px</strong>: tamanho padrão para navegadores desktop.</li>
+                      <li>• <strong>Formato SVG (.svg)</strong>: nitidez infinita em monitores Retina e telas 4K.</li>
+                      <li>• Formatos aceitos: <code>.ico</code>, <code>.svg</code>, <code>.png</code>, <code>.webp</code> (máx. 5MB).</li>
+                    </ul>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
-                    URL da Logo Principal
-                  </label>
-                  <Input
-                    type="text"
-                    value={logoUrl}
-                    onChange={(e) => setLogoUrl(e.target.value)}
-                    placeholder="/images/logo/logo.jpeg ou https://..."
-                    className="font-mono text-xs bg-white dark:bg-[#151012]"
-                  />
-                  <div className="flex items-center gap-1.5 pt-1">
+                {/* Bloco da Logo Principal */}
+                <div className="space-y-2 p-4 rounded-2xl bg-white dark:bg-[#1A1316] border border-borda dark:border-[#38262C]">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                      URL da Logo Principal
+                    </label>
+                    <span className="text-[10px] font-semibold text-primaria bg-primaria-soft dark:bg-primaria-soft/30 px-2 py-0.5 rounded-full">
+                      Recomendado: 512×512px (1:1)
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => !isUploadingLogo && logoFileInputRef.current?.click()}
+                      disabled={isUploadingLogo}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-primaria text-white hover:bg-primaria-hover active:scale-[0.98] transition-all shadow-xs disabled:opacity-60 shrink-0 cursor-pointer"
+                    >
+                      {isUploadingLogo ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Upload className="w-3.5 h-3.5" />
+                      )}
+                      <span>{isUploadingLogo ? "Enviando..." : "Upload do PC"}</span>
+                    </button>
+                    <Input
+                      type="text"
+                      value={logoUrl}
+                      onChange={(e) => setLogoUrl(e.target.value)}
+                      placeholder="/images/logo/logo.jpeg ou https://..."
+                      className="font-mono text-xs bg-white dark:bg-[#151012] flex-1"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-1.5 pt-0.5">
                     <button
                       type="button"
                       onClick={() => setLogoUrl("/images/logo/logo.jpeg")}
@@ -784,6 +1016,23 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     >
                       Logo Padrão Isis
                     </button>
+                  </div>
+
+                  {uploadLogoError && (
+                    <p className="text-[11px] text-red-500 font-medium">{uploadLogoError}</p>
+                  )}
+
+                  {/* Guia de Tamanho em Pixels para Logo */}
+                  <div className="p-2.5 rounded-xl bg-primaria/5 dark:bg-primaria/10 border border-primaria/15 text-[11px] text-texto-medio dark:text-[#D4BFC5] space-y-1">
+                    <div className="flex items-center gap-1.5 font-semibold text-primaria">
+                      <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                      <span>Recomendações de Tamanho em Pixel:</span>
+                    </div>
+                    <ul className="space-y-0.5 text-[10.5px] text-texto-claro dark:text-[#A0888F] leading-relaxed">
+                      <li>• <strong>512×512 px</strong> (Quadrado 1:1): perfeito para o avatar arredondado do topo e rodapé.</li>
+                      <li>• <strong>800×300 px</strong> (Horizontal): ideal caso sua marca possua tipografia retangular.</li>
+                      <li>• Prefira formato com fundo transparente (<code>.png</code>, <code>.webp</code>, <code>.svg</code>).</li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -951,19 +1200,58 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                 </span>
               </div>
 
+              {/* Input oculto para upload de imagem Open Graph */}
+              <input
+                ref={ogFileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleOgUpload}
+                className="hidden"
+              />
+
               {/* Imagem de Compartilhamento (Open Graph) e URL Canônica */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
-                    URL da Imagem Open Graph (WhatsApp / Facebook)
-                  </label>
-                  <Input
-                    type="text"
-                    value={ogImageUrl}
-                    onChange={(e) => setOgImageUrl(e.target.value)}
-                    placeholder="/images/logo/logo.jpeg ou https://..."
-                    className="font-mono text-xs bg-white dark:bg-[#151012]"
-                  />
+                <div className="space-y-2 p-4 rounded-2xl bg-white dark:bg-[#1A1316] border border-borda dark:border-[#38262C]">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                      URL da Imagem Open Graph (WhatsApp / Facebook)
+                    </label>
+                    <span className="text-[10px] font-semibold text-primaria bg-primaria-soft dark:bg-primaria-soft/30 px-2 py-0.5 rounded-full">
+                      Recomendado: 1200×630px
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => !isUploadingOg && ogFileInputRef.current?.click()}
+                      disabled={isUploadingOg}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-primaria text-white hover:bg-primaria-hover active:scale-[0.98] transition-all shadow-xs disabled:opacity-60 shrink-0 cursor-pointer"
+                    >
+                      {isUploadingOg ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Upload className="w-3.5 h-3.5" />
+                      )}
+                      <span>{isUploadingOg ? "Enviando..." : "Upload do PC"}</span>
+                    </button>
+                    <Input
+                      type="text"
+                      value={ogImageUrl}
+                      onChange={(e) => setOgImageUrl(e.target.value)}
+                      placeholder="/images/logo/logo.jpeg ou https://..."
+                      className="font-mono text-xs bg-white dark:bg-[#151012] flex-1"
+                    />
+                  </div>
+
+                  {uploadOgError && (
+                    <p className="text-[11px] text-red-500 font-medium">{uploadOgError}</p>
+                  )}
+
+                  <div className="p-2.5 rounded-xl bg-primaria/5 dark:bg-primaria/10 border border-primaria/15 text-[10.5px] text-texto-claro dark:text-[#A0888F] space-y-0.5 leading-relaxed">
+                    <span className="font-semibold text-primaria block">Recomendação de Tamanho em Pixel:</span>
+                    <span>• <strong>1200×630 px</strong> (Proporção 1.91:1 horizontal): padrão oficial para pré-visualização no WhatsApp, Facebook, iMessage e Twitter.</span>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">

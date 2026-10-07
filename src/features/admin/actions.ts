@@ -859,26 +859,45 @@ export async function uploadStoreAssetAction(
     "image/webp",
     "image/gif",
     "image/avif",
+    "image/svg+xml",
+    "image/x-icon",
+    "image/vnd.microsoft.icon",
+    "image/ico",
   ];
-  if (!allowedTypes.includes(file.type)) {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "webp";
+  const allowedExtensions = ["jpg", "jpeg", "png", "webp", "gif", "avif", "svg", "ico"];
+
+  if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(extension)) {
     return {
       success: false,
-      message: "Formato inválido. Use JPEG, PNG, WebP, GIF ou AVIF.",
+      message: "Formato inválido. Use JPEG, PNG, WebP, SVG, ICO, GIF ou AVIF.",
     };
   }
 
-  const extension = file.name.split(".").pop()?.toLowerCase() || "webp";
+  const folderRaw = (formData.get("folder") as string) || "brand";
+  const folder = folderRaw.replace(/[^a-zA-Z0-9_-]/g, "") || "brand";
   const timestamp = Date.now();
   const randomSuffix = Math.random().toString(36).substring(2, 8);
-  const storagePath = `banners/editorial-${timestamp}-${randomSuffix}.${extension}`;
+  const storagePath = `${folder}/${timestamp}-${randomSuffix}.${extension}`;
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
 
+    const isIco = extension === "ico";
+    const isSvg = extension === "svg";
+    const contentType =
+      file.type && file.type !== "application/octet-stream"
+        ? file.type
+        : isIco
+        ? "image/x-icon"
+        : isSvg
+        ? "image/svg+xml"
+        : `image/${extension}`;
+
     const { error: uploadError } = await auth.supabase.storage
       .from("products")
       .upload(storagePath, buffer, {
-        contentType: file.type,
+        contentType,
         upsert: true,
       });
 

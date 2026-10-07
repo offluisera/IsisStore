@@ -284,4 +284,30 @@ describe("Gate de Configurações Gerais da Loja (SEO, Identidade, Favicon, Oper
       assert.strictEqual(parsed.data.editorial_banner_image_title, "Brinco Gota Cristal");
     }
   });
+
+  it("8. Deve disponibilizar upload do PC e recomendações em pixel para Favicon, Logo e Open Graph", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    const viewPath = path.join(process.cwd(), "src/components/admin/store-settings-view.tsx");
+    assert.ok(fs.existsSync(viewPath), "store-settings-view.tsx deve existir.");
+    const viewContent = fs.readFileSync(viewPath, "utf-8");
+
+    // Valida botões e inputs de upload do PC
+    assert.ok(viewContent.includes("Upload do PC"), "Deve conter botão 'Upload do PC'");
+    assert.ok(viewContent.includes("faviconFileInputRef"), "Deve possuir ref de arquivo para Favicon");
+    assert.ok(viewContent.includes("logoFileInputRef"), "Deve possuir ref de arquivo para Logo");
+    assert.ok(viewContent.includes("ogFileInputRef"), "Deve possuir ref de arquivo para Open Graph");
+
+    // Valida recomendações explícitas de tamanho em pixel
+    assert.ok(viewContent.includes("32×32px") || viewContent.includes("32×32"), "Deve recomendar dimensões em pixel para Favicon (32x32px)");
+    assert.ok(viewContent.includes("512×512px") || viewContent.includes("512×512"), "Deve recomendar dimensões em pixel para Logo (512x512px)");
+    assert.ok(viewContent.includes("1200×630px") || viewContent.includes("1200×630"), "Deve recomendar dimensões em pixel para Open Graph (1200x630px)");
+
+    // Valida suporte de tipos no backend
+    const actionsPath = path.join(process.cwd(), "src/features/admin/actions.ts");
+    const actionsContent = fs.readFileSync(actionsPath, "utf-8");
+    assert.ok(actionsContent.includes("image/svg+xml"), "uploadStoreAssetAction deve suportar SVG");
+    assert.ok(actionsContent.includes("image/x-icon"), "uploadStoreAssetAction deve suportar ICO");
+  });
 });
