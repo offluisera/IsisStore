@@ -71,6 +71,20 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+  // 2.1 Redirecionamento da Rota de Favoritos (/favoritos)
+  if (pathname === "/favoritos") {
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      loginUrl.searchParams.set("next", "/conta/favoritos");
+      return NextResponse.redirect(loginUrl);
+    } else {
+      const favoritosUrl = request.nextUrl.clone();
+      favoritosUrl.pathname = "/conta/favoritos";
+      return NextResponse.redirect(favoritosUrl);
+    }
+  }
+
   // 3. Redirecionamento de usuário autenticado fora de rotas auth públicas
   const authRoutes = ["/login", "/cadastro", "/recuperar-senha"];
   if (user && authRoutes.some((route) => pathname === route)) {

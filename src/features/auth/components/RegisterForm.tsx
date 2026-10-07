@@ -38,7 +38,10 @@ export function RegisterForm() {
           {state.message}
         </p>
         <div className="pt-2">
-          <Link href="/login" className={buttonVariants({ variant: "default", size: "default" })}>
+          <Link
+            href={`/login${next !== "/conta" ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className={buttonVariants({ variant: "default", size: "default" })}
+          >
             Ir para o Login
           </Link>
         </div>
