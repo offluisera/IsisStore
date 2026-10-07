@@ -98,9 +98,25 @@ describe("Páginas Institucionais (Contato, Termos e Privacidade)", () => {
     const settingsViewPath = path.join(process.cwd(), "src", "components", "admin", "store-settings-view.tsx");
 
     const sidebarContent = fs.readFileSync(sidebarPath, "utf-8");
-    assert.ok(sidebarContent.includes("contact-page"), "Sidebar deve ter link para contact-page");
-    assert.ok(sidebarContent.includes("terms-page"), "Sidebar deve ter link para terms-page");
-    assert.ok(sidebarContent.includes("privacy-page"), "Sidebar deve ter link para privacy-page");
+    const requiredTabs = [
+      "general",
+      "slides",
+      "features",
+      "editorial",
+      "seo",
+      "contact",
+      "operation",
+      "contact-page",
+      "terms-page",
+      "privacy-page",
+    ];
+
+    for (const tab of requiredTabs) {
+      assert.ok(
+        sidebarContent.includes(`tab=${tab}`),
+        `Sidebar deve conter link para a aba de configuracoes: tab=${tab}`
+      );
+    }
 
     const settingsViewContent = fs.readFileSync(settingsViewPath, "utf-8");
     assert.ok(settingsViewContent.includes("ContactPageManager"), "StoreSettingsView deve renderizar ContactPageManager");

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   Store,
   Search,
@@ -85,6 +86,10 @@ type TabType =
   | "privacy-page";
 
 export function StoreSettingsView({ settings, initialSlides }: StoreSettingsViewProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [activeTab, setActiveTab] = React.useState<TabType>("general");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [feedback, setFeedback] = React.useState<{
@@ -93,28 +98,32 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
   } | null>(null);
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const tabParam = params.get("tab") as TabType | null;
-      if (
-        tabParam &&
-        [
-          "general",
-          "slides",
-          "features",
-          "editorial",
-          "seo",
-          "contact",
-          "operation",
-          "contact-page",
-          "terms-page",
-          "privacy-page",
-        ].includes(tabParam)
-      ) {
-        setActiveTab(tabParam);
-      }
+    const tabParam = searchParams.get("tab") as TabType | null;
+    if (
+      tabParam &&
+      [
+        "general",
+        "slides",
+        "features",
+        "editorial",
+        "seo",
+        "contact",
+        "operation",
+        "contact-page",
+        "terms-page",
+        "privacy-page",
+      ].includes(tabParam)
+    ) {
+      setActiveTab(tabParam);
+    } else if (!tabParam && pathname === "/admin/configuracoes") {
+      setActiveTab("general");
     }
-  }, []);
+  }, [searchParams, pathname]);
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    router.replace(`/admin/configuracoes?tab=${tab}`, { scroll: false });
+  };
 
   // Form states
   const [storeName, setStoreName] = React.useState(settings.store_name);
@@ -447,7 +456,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
       <div className="flex items-center gap-1 p-1 bg-white dark:bg-[#1C1417] border border-borda dark:border-[#38262C] rounded-2xl overflow-x-auto shadow-2xs">
         <button
           type="button"
-          onClick={() => setActiveTab("general")}
+          onClick={() => handleTabChange("general")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "general"
               ? "bg-primaria text-white shadow-2xs"
@@ -460,7 +469,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("slides")}
+          onClick={() => handleTabChange("slides")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "slides"
               ? "bg-primaria text-white shadow-2xs"
@@ -482,7 +491,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("features")}
+          onClick={() => handleTabChange("features")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "features"
               ? "bg-primaria text-white shadow-2xs"
@@ -504,7 +513,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("editorial")}
+          onClick={() => handleTabChange("editorial")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "editorial"
               ? "bg-primaria text-white shadow-2xs"
@@ -526,7 +535,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("seo")}
+          onClick={() => handleTabChange("seo")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "seo"
               ? "bg-primaria text-white shadow-2xs"
@@ -539,7 +548,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("contact")}
+          onClick={() => handleTabChange("contact")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "contact"
               ? "bg-primaria text-white shadow-2xs"
@@ -552,7 +561,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("operation")}
+          onClick={() => handleTabChange("operation")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "operation"
               ? "bg-primaria text-white shadow-2xs"
@@ -565,7 +574,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("contact-page")}
+          onClick={() => handleTabChange("contact-page")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "contact-page"
               ? "bg-primaria text-white shadow-2xs"
@@ -587,7 +596,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("terms-page")}
+          onClick={() => handleTabChange("terms-page")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "terms-page"
               ? "bg-primaria text-white shadow-2xs"
@@ -609,7 +618,7 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
 
         <button
           type="button"
-          onClick={() => setActiveTab("privacy-page")}
+          onClick={() => handleTabChange("privacy-page")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "privacy-page"
               ? "bg-primaria text-white shadow-2xs"

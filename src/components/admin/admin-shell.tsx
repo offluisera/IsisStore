@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { ShieldCheck, Heart } from "lucide-react";
 import { AdminSidebar } from "./admin-sidebar";
@@ -46,7 +46,9 @@ export function AdminShell({
     <div className="min-h-screen flex bg-[#FFF5F6]/40 dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] selection:bg-secundaria selection:text-texto-escuro transition-colors">
       {/* 1. Sidebar Fixa Desktop (≥ 1024px) */}
       <div className="hidden lg:block h-screen sticky top-0 flex-shrink-0 z-30 shadow-xs">
-        <AdminSidebar />
+        <Suspense fallback={<div className="w-64 xl:w-72 bg-white dark:bg-[#1A1316] h-full" />}>
+          <AdminSidebar />
+        </Suspense>
       </div>
 
       {/* 2. Drawer Mobile / Tablet (< 1024px) */}
@@ -61,10 +63,12 @@ export function AdminShell({
 
           {/* Painel Lateral Deslizante */}
           <div className="relative z-10 animate-in slide-in-from-left duration-200 shadow-2xl">
-            <AdminSidebar
-              isMobile={true}
-              onCloseMobile={() => setIsMobileOpen(false)}
-            />
+            <Suspense fallback={<div className="w-72 bg-white dark:bg-[#1A1316] h-full" />}>
+              <AdminSidebar
+                isMobile={true}
+                onCloseMobile={() => setIsMobileOpen(false)}
+              />
+            </Suspense>
           </div>
         </div>
       )}

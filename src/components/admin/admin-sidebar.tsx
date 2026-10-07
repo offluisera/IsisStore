@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -31,6 +31,9 @@ import {
   MessageCircle,
   FileText,
   Lock,
+  Sparkles,
+  Gift,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -205,9 +208,25 @@ const NAV_ITEMS: NavItem[] = [
         badge: "Novo",
       },
       {
+        label: "Diferenciais da Loja",
+        href: "/admin/configuracoes?tab=features",
+        icon: Sparkles,
+        badge: "Novo",
+      },
+      {
+        label: "Banner de Presentes",
+        href: "/admin/configuracoes?tab=editorial",
+        icon: Gift,
+      },
+      {
         label: "SEO & Busca",
         href: "/admin/configuracoes?tab=seo",
         icon: Search,
+      },
+      {
+        label: "Contato & Rodapé",
+        href: "/admin/configuracoes?tab=contact",
+        icon: Globe,
       },
       {
         label: "Avisos & Operação",
@@ -235,6 +254,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function AdminSidebar({ onCloseMobile, isMobile = false }: AdminSidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // Controle de expansão de submenus
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => {
@@ -391,7 +411,16 @@ export function AdminSidebar({ onCloseMobile, isMobile = false }: AdminSidebarPr
                   >
                     {item.subItems.map((sub) => {
                       const SubIcon = sub.icon;
-                      const isSubActive = pathname === sub.href;
+                      const isSubActive = (() => {
+                        if (sub.href.includes("?tab=")) {
+                          const [base, query] = sub.href.split("?");
+                          if (pathname !== base) return false;
+                          const targetTab = new URLSearchParams(query).get("tab");
+                          const currentTab = searchParams?.get("tab") || "general";
+                          return targetTab === currentTab;
+                        }
+                        return pathname === sub.href;
+                      })();
 
                       return (
                         <Link

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getStoreSettings } from "@/lib/settings/store-settings";
 import { StoreSettingsView } from "@/components/admin/store-settings-view";
 import { createClient } from "@/lib/supabase/server";
@@ -27,6 +28,10 @@ export default async function AdminConfiguracoesPage() {
     console.error("Erro ao carregar slides em AdminConfiguracoesPage:", err);
   }
 
-  return <StoreSettingsView settings={settings} initialSlides={slides} />;
+  return (
+    <Suspense fallback={null}>
+      <StoreSettingsView settings={settings} initialSlides={slides} />
+    </Suspense>
+  );
 }
 
