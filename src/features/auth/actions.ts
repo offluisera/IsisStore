@@ -78,7 +78,18 @@ export async function registerAction(
     email: formData.get("email"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
+    postalCode: (formData.get("postalCode") as string)?.trim() || undefined,
+    street: (formData.get("street") as string)?.trim() || undefined,
+    number: (formData.get("number") as string)?.trim() || undefined,
+    complement: (formData.get("complement") as string)?.trim() || undefined,
+    neighborhood: (formData.get("neighborhood") as string)?.trim() || undefined,
+    city: (formData.get("city") as string)?.trim() || undefined,
+    state: (formData.get("state") as string)?.trim() || undefined,
+    acceptTerms: formData.get("acceptTerms") === "true" || formData.get("acceptTerms") === "on",
+    newsletterOptIn: formData.get("newsletterOptIn") === "true" || formData.get("newsletterOptIn") === "on",
   };
+
+  const next = (formData.get("next") as string) || "/conta";
 
   const validation = registerSchema.safeParse(rawData);
   if (!validation.success) {
@@ -102,6 +113,18 @@ export async function registerAction(
     options: {
       data: {
         full_name: validation.data.fullName,
+        newsletter_opt_in: Boolean(validation.data.newsletterOptIn),
+        initial_address: validation.data.postalCode
+          ? {
+              postal_code: validation.data.postalCode,
+              street: validation.data.street,
+              number: validation.data.number,
+              complement: validation.data.complement,
+              neighborhood: validation.data.neighborhood,
+              city: validation.data.city,
+              state: validation.data.state,
+            }
+          : null,
       },
       emailRedirectTo: `${origin}/auth/callback`,
     },
@@ -121,10 +144,30 @@ export async function registerAction(
     };
   }
 
+  // Se o usuário foi criado e informou endereço, insere na tabela addresses
+  if (data.user && validation.data.postalCode && validation.data.street && validation.data.number) {
+    try {
+      await supabase.from("addresses").insert({
+        profile_id: data.user.id,
+        recipient_name: validation.data.fullName,
+        postal_code: validation.data.postalCode.replace(/\D/g, ""),
+        street: validation.data.street,
+        number: validation.data.number,
+        complement: validation.data.complement || null,
+        neighborhood: validation.data.neighborhood || "",
+        city: validation.data.city || "",
+        state: validation.data.state || "",
+        is_default: true,
+      });
+    } catch (addrErr) {
+      console.warn("Aviso ao persistir endereço no cadastro:", addrErr);
+    }
+  }
+
   // Se o Supabase autenticar imediatamente
   if (data.session) {
     revalidatePath("/", "layout");
-    redirect("/conta");
+    redirect(next.startsWith("/") ? next : "/conta");
   }
 
   return {

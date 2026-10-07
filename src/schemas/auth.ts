@@ -37,6 +37,15 @@ export const registerSchema = z
       .string()
       .min(1, "Confirmação de senha é obrigatória.")
       .min(6, "A confirmação deve ter no mínimo 6 caracteres."),
+    postalCode: z.string().optional(),
+    street: z.string().optional(),
+    number: z.string().optional(),
+    complement: z.string().optional(),
+    neighborhood: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    acceptTerms: z.boolean().optional(),
+    newsletterOptIn: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem.",

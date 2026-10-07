@@ -27,7 +27,7 @@ export default function AuthLayout({
 
       {/* Main Content Card Container */}
       <main className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md sm:max-w-lg transition-all">
           {/* Brand Identity */}
           <div className="text-center mb-8 flex flex-col items-center">
             <Link href="/" className="inline-block relative mb-3 group">
