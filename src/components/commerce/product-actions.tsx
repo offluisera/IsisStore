@@ -198,7 +198,7 @@ export function ProductActions({
             Produto Esgotado
           </Badge>
         ) : stock <= 5 ? (
-          <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 py-1.5 px-3 rounded-lg w-fit">
+          <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 py-1.5 px-3 rounded-lg w-fit">
             <AlertCircle className="w-3.5 h-3.5" />
             <span>Apenas {stock} unidades restantes no estoque!</span>
           </div>
