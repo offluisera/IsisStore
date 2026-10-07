@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useStoreSettings } from "@/lib/settings/store-settings-context";
-import { Mail, Phone, Clock, ShieldCheck } from "lucide-react";
+import { Mail, Phone, Clock, ShieldCheck, Heart } from "lucide-react";
 
 function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
@@ -224,13 +224,38 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Copyright & CNPJ */}
-      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-borda-suave flex flex-col sm:flex-row items-center justify-between text-xs text-texto-claro gap-3">
-        <p>
-          © {new Date().getFullYear()} {storeSettings.store_name || "Isis Store"}. Todos os direitos reservados.
-          {storeSettings.cnpj ? ` • CNPJ: ${storeSettings.cnpj}` : ""}
-        </p>
-        <div className="flex items-center gap-4">
+      {/* Copyright, CNPJ & Créditos */}
+      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-borda-suave flex flex-col md:flex-row items-center justify-between text-xs text-texto-claro gap-4 text-center md:text-left">
+        <div className="space-y-1.5">
+          <p>
+            © {new Date().getFullYear()} {storeSettings.store_name || "Isis Store"}. Todos os direitos reservados.
+            {storeSettings.cnpj ? ` • CNPJ: ${storeSettings.cnpj}` : ""}
+          </p>
+          <p className="text-[11px] text-texto-claro/90 flex items-center justify-center md:justify-start gap-1 flex-wrap">
+            <span>Desenvolvido com</span>
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline shrink-0" aria-label="carinho" />
+            <span>e carinho por:</span>
+            <a
+              href="https://aluracloud.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-texto-medio hover:text-primaria transition-colors underline-offset-2 hover:underline"
+            >
+              AluraCloud
+            </a>
+            <span>e</span>
+            <a
+              href="https://instagram.com/@off.luisera"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-texto-medio hover:text-pink-600 transition-colors underline-offset-2 hover:underline"
+            >
+              offluisera
+            </a>
+          </p>
+        </div>
+
+        <div className="flex items-center gap-4 text-xs">
           <Link href="/contato" className="hover:text-primaria transition-colors">
             Fale Conosco
           </Link>
