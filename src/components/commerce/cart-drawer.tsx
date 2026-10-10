@@ -19,6 +19,8 @@ export interface CartItemData {
     text?: string;
     imageUrl?: string;
     notes?: string;
+    size?: string;
+    color?: string;
   };
 }
 
@@ -72,7 +74,7 @@ export function CartDrawer(props: CartDrawerProps) {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const freeShippingThreshold = storeSettings.free_shipping_threshold_cents || 19900;
+  const freeShippingThreshold = 20000; // R$ 200,00 para demais regiões (Sul/Sudeste é sempre grátis)
   const missingForFreeShipping = Math.max(
     0,
     freeShippingThreshold - subtotalCents
@@ -138,15 +140,14 @@ export function CartDrawer(props: CartDrawerProps) {
           <div className="px-6 py-3.5 bg-fundo border-b border-borda-suave text-xs">
             {missingForFreeShipping === 0 ? (
               <p className="font-semibold text-sucesso flex items-center gap-1.5">
-                🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!
+                🎉 Parabéns! Você atingiu <strong>Frete Grátis</strong> para todo o Brasil!
               </p>
             ) : (
               <p className="text-texto-medio">
-                Faltam apenas{" "}
+                ✨ <strong>Sul e Sudeste: Frete Grátis</strong> &bull; Demais regiões: faltam{" "}
                 <strong className="text-primaria">
                   {formatPrice(missingForFreeShipping)}
-                </strong>{" "}
-                para <strong>Frete Grátis</strong>!
+                </strong>
               </p>
             )}
             <div className="mt-2 h-1.5 w-full rounded-full bg-borda overflow-hidden">
@@ -203,7 +204,24 @@ export function CartDrawer(props: CartDrawerProps) {
                       {formatPrice(item.price)}
                     </p>
 
-                    {item.customization && (
+                    {/* Variações Selecionadas (Tamanho e Cor) */}
+                    {(item.customization?.size || item.customization?.color) && (
+                      <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                        {item.customization.size && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-primaria/10 text-primaria font-bold text-[10px] border border-primaria/20">
+                            Tam: {item.customization.size}
+                          </span>
+                        )}
+                        {item.customization.color && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-fundo border border-borda text-texto-medio font-semibold text-[10px]">
+                            Cor: {item.customization.color}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Personalização (Texto / Imagem / Obs) */}
+                    {item.customization && (item.customization.text || item.customization.imageUrl || item.customization.notes) && (
                       <div className="mt-1.5 p-2 rounded-xl bg-primaria-soft/40 border border-primaria/15 text-[11px] space-y-1">
                         <div className="flex items-center gap-1 font-semibold text-primaria">
                           <Sparkles className="w-3 h-3 shrink-0" />

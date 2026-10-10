@@ -83,6 +83,11 @@ const NAV_ITEMS: NavItem[] = [
         icon: PlusCircle,
       },
       {
+        label: "Rascunhos",
+        href: "/admin/produtos/rascunhos",
+        icon: FileText,
+      },
+      {
         label: "Relatórios",
         href: "/admin/produtos/relatorios",
         icon: BarChart3,

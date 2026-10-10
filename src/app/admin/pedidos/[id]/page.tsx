@@ -45,6 +45,8 @@ interface OrderItemSnapshot {
     text?: string;
     imageUrl?: string;
     notes?: string;
+    size?: string;
+    color?: string;
   } | null;
 }
 
@@ -219,7 +221,23 @@ export default async function AdminPedidoDetalhesPage({
                         SKU: {item.sku} &bull; Qtd: {item.quantity} un.
                       </p>
 
-                      {item.customization && (
+                      {/* Variações de Tamanho e Cor Selecionadas */}
+                      {(item.customization?.size || item.customization?.color) && (
+                        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                          {item.customization.size && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-primaria/10 text-primaria font-bold text-xs border border-primaria/25">
+                              Tamanho: {item.customization.size}
+                            </span>
+                          )}
+                          {item.customization.color && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-fundo dark:bg-[#151012] text-texto-escuro dark:text-[#F8EFF1] font-semibold text-xs border border-borda dark:border-[#38262C]">
+                              Cor: {item.customization.color}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {item.customization && (item.customization.text || item.customization.imageUrl || item.customization.notes) && (
                         <div className="mt-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-50/70 to-primaria-soft/40 dark:from-amber-950/30 dark:to-primaria-soft/10 border border-amber-200/80 dark:border-amber-800/40 max-w-lg space-y-1.5">
                           <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-amber-300 text-xs">
                             <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { productSchema } from "@/schemas/product";
+import { productSchema, updateProductSchema } from "@/schemas/product";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -28,10 +28,25 @@ function parseCurrencyToCents(val: string): number {
   return Math.round(parseFloat(clean) * 100);
 }
 
+function parseListInput(raw: FormDataEntryValue | null, allValues: FormDataEntryValue[]): string[] {
+  if (typeof raw === "string" && raw.trim()) {
+    try {
+      const json = JSON.parse(raw);
+      if (Array.isArray(json)) return json.map(String).map((s) => s.trim()).filter(Boolean);
+    } catch {
+      return raw.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+  }
+  return allValues.map(String).map((s) => s.trim()).filter(Boolean);
+}
+
 export async function createProductAction(
   prevState: AdminActionState,
   formData: FormData
 ): Promise<AdminActionState> {
+  const rawSizes = parseListInput(formData.get("sizes"), formData.getAll("sizes"));
+  const rawColors = parseListInput(formData.get("colors"), formData.getAll("colors"));
+
   const rawData = {
     name: formData.get("name"),
     categoryId: formData.get("categoryId"),
@@ -41,8 +56,15 @@ export async function createProductAction(
     imageUrl: (formData.get("imageUrl") as string) || undefined,
     shortDescription: (formData.get("shortDescription") as string) || undefined,
     description: (formData.get("description") as string) || undefined,
+    status: (formData.get("status") as string) || "published",
     featured:
       formData.get("featured") === "on" || formData.get("featured") === "true",
+    hasSizes:
+      formData.get("hasSizes") === "on" || formData.get("hasSizes") === "true",
+    sizes: rawSizes,
+    hasColors:
+      formData.get("hasColors") === "on" || formData.get("hasColors") === "true",
+    colors: rawColors,
   };
 
   const validation = productSchema.safeParse(rawData);
@@ -86,6 +108,7 @@ export async function createProductAction(
     ? parseCurrencyToCents(validation.data.salePrice)
     : null;
   const stock = parseInt(validation.data.stock, 10);
+  const productStatus = validation.data.status || "published";
 
   const { data: newProduct, error: insertError } = await supabase
     .from("products")
@@ -99,8 +122,12 @@ export async function createProductAction(
       stock,
       short_description: validation.data.shortDescription || null,
       description: validation.data.description || null,
-      status: "published",
+      status: productStatus,
       featured: validation.data.featured,
+      has_sizes: validation.data.hasSizes,
+      sizes: validation.data.sizes,
+      has_colors: validation.data.hasColors,
+      colors: validation.data.colors,
     })
     .select()
     .single();
@@ -180,11 +207,191 @@ export async function createProductAction(
       sku: newProduct.sku,
       price_cents: priceCents,
       stock,
+      status: productStatus,
     },
   });
 
   revalidatePath("/", "layout");
   revalidatePath("/produtos");
   revalidatePath("/admin/produtos");
-  redirect("/admin/produtos?created=1");
+  revalidatePath("/admin/produtos/rascunhos");
+  revalidatePath("/admin/produtos/estoque");
+  revalidatePath("/admin/produtos/relatorios");
+
+  if (productStatus === "draft") {
+    redirect("/admin/produtos/rascunhos?created=1");
+  } else {
+    redirect("/admin/produtos?created=1");
+  }
 }
+
+export async function updateProductAction(
+  prevState: AdminActionState,
+  formData: FormData
+): Promise<AdminActionState> {
+  const rawSizes = parseListInput(formData.get("sizes"), formData.getAll("sizes"));
+  const rawColors = parseListInput(formData.get("colors"), formData.getAll("colors"));
+
+  const rawData = {
+    id: formData.get("id"),
+    name: formData.get("name"),
+    categoryId: formData.get("categoryId"),
+    price: formData.get("price"),
+    salePrice: (formData.get("salePrice") as string) || undefined,
+    stock: formData.get("stock"),
+    status: (formData.get("status") as string) || "published",
+    shortDescription: (formData.get("shortDescription") as string) || undefined,
+    description: (formData.get("description") as string) || undefined,
+    featured:
+      formData.get("featured") === "on" || formData.get("featured") === "true",
+    hasSizes:
+      formData.get("hasSizes") === "on" || formData.get("hasSizes") === "true",
+    sizes: rawSizes,
+    hasColors:
+      formData.get("hasColors") === "on" || formData.get("hasColors") === "true",
+    colors: rawColors,
+  };
+
+  const validation = updateProductSchema.safeParse(rawData);
+  if (!validation.success) {
+    return {
+      success: false,
+      message: "Verifique os dados informados.",
+      fieldErrors: validation.error.flatten().fieldErrors,
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, message: "Acesso não autorizado." };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
+    return {
+      success: false,
+      message: "Apenas administradores podem editar produtos.",
+    };
+  }
+
+  const priceCents = parseCurrencyToCents(validation.data.price);
+  const salePriceCents = validation.data.salePrice
+    ? parseCurrencyToCents(validation.data.salePrice)
+    : null;
+  const stock = parseInt(validation.data.stock, 10);
+  const productStatus = validation.data.status;
+
+  const { data: updatedProduct, error: updateError } = await supabase
+    .from("products")
+    .update({
+      name: validation.data.name,
+      category_id: validation.data.categoryId,
+      price_cents: priceCents,
+      sale_price_cents: salePriceCents,
+      stock,
+      status: productStatus,
+      short_description: validation.data.shortDescription || null,
+      description: validation.data.description || null,
+      featured: validation.data.featured,
+      has_sizes: validation.data.hasSizes,
+      sizes: validation.data.sizes,
+      has_colors: validation.data.hasColors,
+      colors: validation.data.colors,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", validation.data.id)
+    .select()
+    .single();
+
+  if (updateError || !updatedProduct) {
+    return {
+      success: false,
+      message:
+        updateError?.message || "Erro ao atualizar produto no banco de dados.",
+    };
+  }
+
+  // Gravar auditoria administrativa
+  await supabase.from("admin_audit_logs").insert({
+    actor_id: user.id,
+    action: "update_product",
+    entity: "products",
+    entity_id: updatedProduct.id,
+    metadata: {
+      name: updatedProduct.name,
+      sku: updatedProduct.sku,
+      price_cents: priceCents,
+      stock,
+      status: productStatus,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  revalidatePath("/produtos");
+  revalidatePath("/admin/produtos");
+  revalidatePath("/admin/produtos/rascunhos");
+  revalidatePath("/admin/produtos/estoque");
+  revalidatePath("/admin/produtos/relatorios");
+
+  return {
+    success: true,
+    message:
+      productStatus === "draft"
+        ? `Produto "${updatedProduct.name}" salvo como rascunho e movido para a guia Rascunhos!`
+        : `Produto "${updatedProduct.name}" atualizado com sucesso!`,
+  };
+}
+
+export async function updateProductDirectAction(payload: {
+  id: string;
+  name: string;
+  categoryId: string;
+  price: string;
+  salePrice?: string;
+  stock: string;
+  status: "published" | "draft" | "archived";
+  shortDescription?: string;
+  description?: string;
+  featured: boolean;
+  hasSizes?: boolean;
+  sizes?: string[];
+  hasColors?: boolean;
+  colors?: string[];
+}): Promise<{
+  success: boolean;
+  message: string;
+  fieldErrors?: Record<string, string[]>;
+}> {
+  const formData = new FormData();
+  formData.append("id", payload.id);
+  formData.append("name", payload.name);
+  formData.append("categoryId", payload.categoryId);
+  formData.append("price", payload.price);
+  if (payload.salePrice) formData.append("salePrice", payload.salePrice);
+  formData.append("stock", payload.stock);
+  formData.append("status", payload.status);
+  if (payload.shortDescription) formData.append("shortDescription", payload.shortDescription);
+  if (payload.description) formData.append("description", payload.description);
+  if (payload.featured) formData.append("featured", "true");
+  if (payload.hasSizes) formData.append("hasSizes", "true");
+  if (payload.sizes) formData.append("sizes", JSON.stringify(payload.sizes));
+  if (payload.hasColors) formData.append("hasColors", "true");
+  if (payload.colors) formData.append("colors", JSON.stringify(payload.colors));
+
+  const res = await updateProductAction(null, formData);
+  return {
+    success: res?.success ?? false,
+    message: res?.message || (res?.success ? "Produto atualizado com sucesso!" : "Erro ao atualizar produto."),
+    fieldErrors: res?.fieldErrors,
+  };
+}
+

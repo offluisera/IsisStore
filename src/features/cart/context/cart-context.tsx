@@ -68,8 +68,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (item: Omit<CartItem, "quantity">, quantity = 1) => {
       setItems((prev) => {
         const rawProductId = item.productId || item.id;
-        const uniqueId = item.customization
-          ? `${rawProductId}_cust_${(item.customization.text || "").trim().toLowerCase().slice(0, 20).replace(/\s+/g, "-")}_${item.customization.imageUrl ? "img" : "txt"}`
+        const sizePart = item.customization?.size ? `_sz_${encodeURIComponent(item.customization.size)}` : "";
+        const colorPart = item.customization?.color ? `_cl_${encodeURIComponent(item.customization.color)}` : "";
+        const textPart = (item.customization?.text || "").trim().toLowerCase().slice(0, 20).replace(/\s+/g, "-");
+        const hasCustom = item.customization && (item.customization.size || item.customization.color || item.customization.text || item.customization.imageUrl || item.customization.notes);
+        const uniqueId = hasCustom
+          ? `${rawProductId}${sizePart}${colorPart}_cust_${textPart}_${item.customization?.imageUrl ? "img" : "txt"}`
           : item.id;
 
         const resolvedItem: CartItem = {

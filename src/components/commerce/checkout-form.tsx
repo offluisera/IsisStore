@@ -27,6 +27,7 @@ import { useStoreSettings } from "@/lib/settings/store-settings-context";
 import { createOrderAction } from "@/features/checkout/actions";
 import { validateCouponAction } from "@/features/coupons/actions";
 import { AddressForm } from "@/components/account/address-form";
+import { calculateShippingQuoteForState } from "@/lib/shipping/regional-shipping";
 
 interface AddressOption {
   id: string;
@@ -103,12 +104,23 @@ export function CheckoutForm({
     0
   );
 
-  const storeSettings = useStoreSettings();
-  const freeShippingThreshold = storeSettings.free_shipping_threshold_cents || 19900;
-  const isFreeShipping = subtotalCents >= freeShippingThreshold;
+  const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
+  const deliveryState = selectedAddress?.state;
+
+  const shippingQuote = React.useMemo(() => {
+    return calculateShippingQuoteForState({
+      state: deliveryState,
+      city: selectedAddress?.city,
+      subtotalCents,
+    });
+  }, [deliveryState, selectedAddress?.city, subtotalCents]);
 
   const shippingCents =
-    shippingMethod === "sedex" ? 2990 : isFreeShipping ? 0 : 1890;
+    shippingMethod === "sedex"
+      ? shippingQuote.sedex.cents
+      : shippingQuote.pac.cents;
+
+  const isFreeShipping = shippingQuote.isPacFree;
 
   // Desconto dinâmico do cupom validado
   const discountCents = appliedCoupon ? appliedCoupon.discount_cents : 0;
@@ -373,13 +385,32 @@ export function CheckoutForm({
 
         {/* 3. Opções de Frete */}
         <div className="bg-fundo-card rounded-3xl border border-borda p-6 sm:p-7 shadow-xs space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-borda/60">
-            <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
-              3
-            </span>
-            <h2 className="font-serif text-base font-bold text-texto-escuro">
-              Método de Envio
-            </h2>
+          <div className="flex items-center justify-between gap-2.5 pb-3 border-b border-borda/60">
+            <div className="flex items-center gap-2.5">
+              <span className="w-6 h-6 rounded-full bg-primaria text-white text-xs font-bold flex items-center justify-center">
+                3
+              </span>
+              <h2 className="font-serif text-base font-bold text-texto-escuro">
+                Método de Envio
+              </h2>
+            </div>
+            {deliveryState && (
+              <span className="text-[11px] text-texto-claro font-medium">
+                Destino: {selectedAddress?.city ? `${selectedAddress.city} - ` : ""}{deliveryState} ({shippingQuote.regionName})
+              </span>
+            )}
+          </div>
+
+          {/* Banner Informativo da Regra Regional */}
+          <div
+            className={`p-3 rounded-2xl text-xs font-medium leading-relaxed flex items-center gap-2 ${
+              shippingQuote.isPacFree
+                ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60"
+                : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60"
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-primaria shrink-0" />
+            <span>{shippingQuote.ruleNotice}</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -404,12 +435,12 @@ export function CheckoutForm({
                   <span className="font-semibold text-texto-escuro">
                     Entrega Padrão (PAC)
                   </span>
-                  <span className="font-bold text-primaria">
-                    {isFreeShipping ? "GRÁTIS" : "R$ 18,90"}
+                  <span className={`font-bold ${shippingQuote.pac.isFree ? "text-emerald-600 dark:text-emerald-400" : "text-texto-escuro"}`}>
+                    {shippingQuote.pac.formatted}
                   </span>
                 </div>
                 <p className="text-texto-claro text-[11px] mt-0.5">
-                  Prazo de 5 a 8 dias úteis
+                  Prazo de {shippingQuote.pac.minDays} a {shippingQuote.pac.maxDays} dias úteis
                 </p>
               </div>
             </label>
@@ -435,10 +466,12 @@ export function CheckoutForm({
                   <span className="font-semibold text-texto-escuro">
                     Entrega Expressa (SEDEX)
                   </span>
-                  <span className="font-bold text-texto-escuro">R$ 29,90</span>
+                  <span className="font-bold text-texto-escuro">
+                    {shippingQuote.sedex.formatted}
+                  </span>
                 </div>
                 <p className="text-texto-claro text-[11px] mt-0.5">
-                  Prazo de 1 a 3 dias úteis
+                  Prazo de {shippingQuote.sedex.minDays} a {shippingQuote.sedex.maxDays} dias úteis
                 </p>
               </div>
             </label>
@@ -629,7 +662,26 @@ export function CheckoutForm({
                   <p className="text-texto-claro text-[11px] mt-0.5">
                     {item.quantity}x {formatPrice(item.price)}
                   </p>
-                  {item.customization && (
+                  {/* Variações Selecionadas */}
+                  {(item.customization?.size || item.customization?.color) && (
+                    <div className="flex items-center gap-1.5 flex-wrap mt-0.5 text-[10px]">
+                      {item.customization.size && (
+                        <span className="font-semibold text-primaria">
+                          Tam: {item.customization.size}
+                        </span>
+                      )}
+                      {item.customization.size && item.customization.color && (
+                        <span className="text-texto-claro">&bull;</span>
+                      )}
+                      {item.customization.color && (
+                        <span className="text-texto-medio">
+                          Cor: {item.customization.color}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {item.customization && (item.customization.text || item.customization.imageUrl) && (
                     <div className="mt-1 text-[10px] text-primaria font-medium flex items-center gap-1 truncate">
                       <Sparkles className="w-3 h-3 shrink-0" />
                       <span className="truncate">

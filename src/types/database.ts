@@ -109,26 +109,26 @@ export type Database = {
         Row: {
           cart_id: string
           created_at: string
+          customization: Json | null
           id: string
           product_id: string
           quantity: number
-          customization: Json | null
         }
         Insert: {
           cart_id: string
           created_at?: string
+          customization?: Json | null
           id?: string
           product_id: string
           quantity?: number
-          customization?: Json | null
         }
         Update: {
           cart_id?: string
           created_at?: string
+          customization?: Json | null
           id?: string
           product_id?: string
           quantity?: number
-          customization?: Json | null
         }
         Relationships: [
           {
@@ -215,9 +215,118 @@ export type Database = {
         }
         Relationships: []
       }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_discount_cents: number | null
+          min_subtotal_cents: number
+          starts_at: string | null
+          updated_at: string
+          usage_limit: number | null
+          used_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_type: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount_cents?: number | null
+          min_subtotal_cents?: number
+          starts_at?: string | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount_cents?: number | null
+          min_subtotal_cents?: number
+          starts_at?: string | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
+        }
+        Relationships: []
+      }
+      home_slides: {
+        Row: {
+          badge_text: string | null
+          bg_theme: string
+          created_at: string
+          id: string
+          image_url: string
+          is_active: boolean
+          primary_button_text: string | null
+          primary_button_url: string | null
+          secondary_button_text: string | null
+          secondary_button_url: string | null
+          slide_type: string
+          sort_order: number
+          subtitle: string | null
+          title: string
+          title_highlight: string | null
+          updated_at: string
+        }
+        Insert: {
+          badge_text?: string | null
+          bg_theme?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          is_active?: boolean
+          primary_button_text?: string | null
+          primary_button_url?: string | null
+          secondary_button_text?: string | null
+          secondary_button_url?: string | null
+          slide_type?: string
+          sort_order?: number
+          subtitle?: string | null
+          title: string
+          title_highlight?: string | null
+          updated_at?: string
+        }
+        Update: {
+          badge_text?: string | null
+          bg_theme?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          primary_button_text?: string | null
+          primary_button_url?: string | null
+          secondary_button_text?: string | null
+          secondary_button_url?: string | null
+          slide_type?: string
+          sort_order?: number
+          subtitle?: string | null
+          title?: string
+          title_highlight?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
+          customization: Json | null
           id: string
           order_id: string
           product_id: string | null
@@ -226,10 +335,10 @@ export type Database = {
           sku: string
           subtotal_cents: number
           unit_price_cents: number
-          customization: Json | null
         }
         Insert: {
           created_at?: string
+          customization?: Json | null
           id?: string
           order_id: string
           product_id?: string | null
@@ -238,10 +347,10 @@ export type Database = {
           sku: string
           subtotal_cents: number
           unit_price_cents: number
-          customization?: Json | null
         }
         Update: {
           created_at?: string
+          customization?: Json | null
           id?: string
           order_id?: string
           product_id?: string | null
@@ -250,7 +359,6 @@ export type Database = {
           sku?: string
           subtotal_cents?: number
           unit_price_cents?: number
-          customization?: Json | null
         }
         Relationships: [
           {
@@ -385,274 +493,6 @@ export type Database = {
         }
         Relationships: []
       }
-
-      store_settings: {
-        Row: {
-          id: string
-          store_name: string
-          store_tagline: string | null
-          store_description: string | null
-          logo_url: string | null
-          favicon_url: string | null
-          meta_title: string | null
-          meta_description: string | null
-          seo_keywords: string | null
-          og_image_url: string | null
-          canonical_url: string | null
-          support_email: string | null
-          support_phone: string | null
-          instagram_handle: string | null
-          announcement_banner_text: string | null
-          announcement_banner_active: boolean
-          free_shipping_threshold_cents: number
-          maintenance_mode: boolean
-          maintenance_message: string | null
-          brand_features_badge: string | null
-          brand_features_title: string | null
-          brand_features_subtitle: string | null
-          brand_features_cards: Json | null
-          daily_deals_active: boolean
-          daily_deals_discount_percent: number
-          daily_deals_product_limit: number
-          daily_deals_title: string | null
-          daily_deals_bg_color: string | null
-          cnpj: string | null
-          support_hours: string | null
-          footer_text: string | null
-          editorial_banner_active: boolean
-          editorial_banner_badge: string | null
-          editorial_banner_title: string | null
-          editorial_banner_description: string | null
-          editorial_banner_coupon_active: boolean
-          editorial_banner_coupon_code: string | null
-          editorial_banner_coupon_text: string | null
-          editorial_banner_button_text: string | null
-          editorial_banner_button_link: string | null
-          editorial_banner_whatsapp_button_text: string | null
-          editorial_banner_image_url: string | null
-          editorial_banner_image_tag: string | null
-          editorial_banner_image_title: string | null
-          editorial_banner_image_subtitle: string | null
-          contact_page_settings: Json | null
-          terms_page_settings: Json | null
-          privacy_page_settings: Json | null
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          store_name?: string
-          store_tagline?: string | null
-          store_description?: string | null
-          logo_url?: string | null
-          favicon_url?: string | null
-          meta_title?: string | null
-          meta_description?: string | null
-          seo_keywords?: string | null
-          og_image_url?: string | null
-          canonical_url?: string | null
-          support_email?: string | null
-          support_phone?: string | null
-          instagram_handle?: string | null
-          announcement_banner_text?: string | null
-          announcement_banner_active?: boolean
-          free_shipping_threshold_cents?: number
-          maintenance_mode?: boolean
-          maintenance_message?: string | null
-          brand_features_badge?: string | null
-          brand_features_title?: string | null
-          brand_features_subtitle?: string | null
-          brand_features_cards?: Json | null
-          daily_deals_active?: boolean
-          daily_deals_discount_percent?: number
-          daily_deals_product_limit?: number
-          daily_deals_title?: string | null
-          daily_deals_bg_color?: string | null
-          cnpj?: string | null
-          support_hours?: string | null
-          footer_text?: string | null
-          editorial_banner_active?: boolean
-          editorial_banner_badge?: string | null
-          editorial_banner_title?: string | null
-          editorial_banner_description?: string | null
-          editorial_banner_coupon_active?: boolean
-          editorial_banner_coupon_code?: string | null
-          editorial_banner_coupon_text?: string | null
-          editorial_banner_button_text?: string | null
-          editorial_banner_button_link?: string | null
-          editorial_banner_whatsapp_button_text?: string | null
-          editorial_banner_image_url?: string | null
-          editorial_banner_image_tag?: string | null
-          editorial_banner_image_title?: string | null
-          editorial_banner_image_subtitle?: string | null
-          contact_page_settings?: Json | null
-          terms_page_settings?: Json | null
-          privacy_page_settings?: Json | null
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          store_name?: string
-          store_tagline?: string | null
-          store_description?: string | null
-          logo_url?: string | null
-          favicon_url?: string | null
-          meta_title?: string | null
-          meta_description?: string | null
-          seo_keywords?: string | null
-          og_image_url?: string | null
-          canonical_url?: string | null
-          support_email?: string | null
-          support_phone?: string | null
-          instagram_handle?: string | null
-          announcement_banner_text?: string | null
-          announcement_banner_active?: boolean
-          free_shipping_threshold_cents?: number
-          maintenance_mode?: boolean
-          maintenance_message?: string | null
-          brand_features_badge?: string | null
-          brand_features_title?: string | null
-          brand_features_subtitle?: string | null
-          brand_features_cards?: Json | null
-          daily_deals_active?: boolean
-          daily_deals_discount_percent?: number
-          daily_deals_product_limit?: number
-          daily_deals_title?: string | null
-          daily_deals_bg_color?: string | null
-          cnpj?: string | null
-          support_hours?: string | null
-          footer_text?: string | null
-          editorial_banner_active?: boolean
-          editorial_banner_badge?: string | null
-          editorial_banner_title?: string | null
-          editorial_banner_description?: string | null
-          editorial_banner_coupon_active?: boolean
-          editorial_banner_coupon_code?: string | null
-          editorial_banner_coupon_text?: string | null
-          editorial_banner_button_text?: string | null
-          editorial_banner_button_link?: string | null
-          editorial_banner_whatsapp_button_text?: string | null
-          editorial_banner_image_url?: string | null
-          editorial_banner_image_tag?: string | null
-          editorial_banner_image_title?: string | null
-          editorial_banner_image_subtitle?: string | null
-          contact_page_settings?: Json | null
-          terms_page_settings?: Json | null
-          privacy_page_settings?: Json | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-
-      home_slides: {
-        Row: {
-          id: string
-          title: string
-          title_highlight: string | null
-          subtitle: string | null
-          badge_text: string | null
-          image_url: string
-          slide_type: string
-          primary_button_text: string | null
-          primary_button_url: string | null
-          secondary_button_text: string | null
-          secondary_button_url: string | null
-          bg_theme: string
-          is_active: boolean
-          sort_order: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          title_highlight?: string | null
-          subtitle?: string | null
-          badge_text?: string | null
-          image_url: string
-          slide_type?: string
-          primary_button_text?: string | null
-          primary_button_url?: string | null
-          secondary_button_text?: string | null
-          secondary_button_url?: string | null
-          bg_theme?: string
-          is_active?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          title_highlight?: string | null
-          subtitle?: string | null
-          badge_text?: string | null
-          image_url?: string
-          slide_type?: string
-          primary_button_text?: string | null
-          primary_button_url?: string | null
-          secondary_button_text?: string | null
-          secondary_button_url?: string | null
-          bg_theme?: string
-          is_active?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-
-      coupons: {
-        Row: {
-          id: string
-          code: string
-          description: string | null
-          discount_type: "percentage" | "fixed"
-          discount_value: number
-          min_subtotal_cents: number
-          max_discount_cents: number | null
-          usage_limit: number | null
-          used_count: number
-          is_active: boolean
-          starts_at: string | null
-          expires_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          code: string
-          description?: string | null
-          discount_type: "percentage" | "fixed"
-          discount_value: number
-          min_subtotal_cents?: number
-          max_discount_cents?: number | null
-          usage_limit?: number | null
-          used_count?: number
-          is_active?: boolean
-          starts_at?: string | null
-          expires_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          code?: string
-          description?: string | null
-          discount_type?: "percentage" | "fixed"
-          discount_value?: number
-          min_subtotal_cents?: number
-          max_discount_cents?: number | null
-          usage_limit?: number | null
-          used_count?: number
-          is_active?: boolean
-          starts_at?: string | null
-          expires_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-
       payments: {
         Row: {
           amount_cents: number
@@ -759,14 +599,18 @@ export type Database = {
       products: {
         Row: {
           category_id: string | null
+          colors: string[] | null
           created_at: string
           description: string | null
           featured: boolean
+          has_colors: boolean
+          has_sizes: boolean
           id: string
           name: string
           price_cents: number
           sale_price_cents: number | null
           short_description: string | null
+          sizes: string[] | null
           sku: string
           slug: string
           status: Database["public"]["Enums"]["product_status"]
@@ -776,14 +620,18 @@ export type Database = {
         }
         Insert: {
           category_id?: string | null
+          colors?: string[] | null
           created_at?: string
           description?: string | null
           featured?: boolean
+          has_colors?: boolean
+          has_sizes?: boolean
           id?: string
           name: string
           price_cents: number
           sale_price_cents?: number | null
           short_description?: string | null
+          sizes?: string[] | null
           sku: string
           slug: string
           status?: Database["public"]["Enums"]["product_status"]
@@ -793,14 +641,18 @@ export type Database = {
         }
         Update: {
           category_id?: string | null
+          colors?: string[] | null
           created_at?: string
           description?: string | null
           featured?: boolean
+          has_colors?: boolean
+          has_sizes?: boolean
           id?: string
           name?: string
           price_cents?: number
           sale_price_cents?: number | null
           short_description?: string | null
+          sizes?: string[] | null
           sku?: string
           slug?: string
           status?: Database["public"]["Enums"]["product_status"]
@@ -854,48 +706,215 @@ export type Database = {
         }
         Relationships: []
       }
+      store_settings: {
+        Row: {
+          announcement_banner_active: boolean
+          announcement_banner_text: string | null
+          brand_features_badge: string | null
+          brand_features_cards: Json | null
+          brand_features_subtitle: string | null
+          brand_features_title: string | null
+          canonical_url: string | null
+          cnpj: string | null
+          contact_page_settings: Json | null
+          daily_deals_active: boolean
+          daily_deals_bg_color: string | null
+          daily_deals_discount_percent: number
+          daily_deals_product_limit: number
+          daily_deals_title: string | null
+          editorial_banner_active: boolean | null
+          editorial_banner_badge: string | null
+          editorial_banner_button_link: string | null
+          editorial_banner_button_text: string | null
+          editorial_banner_coupon_active: boolean | null
+          editorial_banner_coupon_code: string | null
+          editorial_banner_coupon_text: string | null
+          editorial_banner_description: string | null
+          editorial_banner_image_subtitle: string | null
+          editorial_banner_image_tag: string | null
+          editorial_banner_image_title: string | null
+          editorial_banner_image_url: string | null
+          editorial_banner_title: string | null
+          editorial_banner_whatsapp_button_text: string | null
+          favicon_url: string | null
+          footer_text: string | null
+          free_shipping_threshold_cents: number
+          id: string
+          instagram_handle: string | null
+          logo_url: string | null
+          maintenance_message: string | null
+          maintenance_mode: boolean
+          meta_description: string | null
+          meta_title: string | null
+          og_image_url: string | null
+          privacy_page_settings: Json | null
+          seo_keywords: string | null
+          store_description: string | null
+          store_name: string
+          store_tagline: string | null
+          support_email: string | null
+          support_hours: string | null
+          support_phone: string | null
+          terms_page_settings: Json | null
+          updated_at: string
+        }
+        Insert: {
+          announcement_banner_active?: boolean
+          announcement_banner_text?: string | null
+          brand_features_badge?: string | null
+          brand_features_cards?: Json | null
+          brand_features_subtitle?: string | null
+          brand_features_title?: string | null
+          canonical_url?: string | null
+          cnpj?: string | null
+          contact_page_settings?: Json | null
+          daily_deals_active?: boolean
+          daily_deals_bg_color?: string | null
+          daily_deals_discount_percent?: number
+          daily_deals_product_limit?: number
+          daily_deals_title?: string | null
+          editorial_banner_active?: boolean | null
+          editorial_banner_badge?: string | null
+          editorial_banner_button_link?: string | null
+          editorial_banner_button_text?: string | null
+          editorial_banner_coupon_active?: boolean | null
+          editorial_banner_coupon_code?: string | null
+          editorial_banner_coupon_text?: string | null
+          editorial_banner_description?: string | null
+          editorial_banner_image_subtitle?: string | null
+          editorial_banner_image_tag?: string | null
+          editorial_banner_image_title?: string | null
+          editorial_banner_image_url?: string | null
+          editorial_banner_title?: string | null
+          editorial_banner_whatsapp_button_text?: string | null
+          favicon_url?: string | null
+          footer_text?: string | null
+          free_shipping_threshold_cents?: number
+          id?: string
+          instagram_handle?: string | null
+          logo_url?: string | null
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          privacy_page_settings?: Json | null
+          seo_keywords?: string | null
+          store_description?: string | null
+          store_name?: string
+          store_tagline?: string | null
+          support_email?: string | null
+          support_hours?: string | null
+          support_phone?: string | null
+          terms_page_settings?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          announcement_banner_active?: boolean
+          announcement_banner_text?: string | null
+          brand_features_badge?: string | null
+          brand_features_cards?: Json | null
+          brand_features_subtitle?: string | null
+          brand_features_title?: string | null
+          canonical_url?: string | null
+          cnpj?: string | null
+          contact_page_settings?: Json | null
+          daily_deals_active?: boolean
+          daily_deals_bg_color?: string | null
+          daily_deals_discount_percent?: number
+          daily_deals_product_limit?: number
+          daily_deals_title?: string | null
+          editorial_banner_active?: boolean | null
+          editorial_banner_badge?: string | null
+          editorial_banner_button_link?: string | null
+          editorial_banner_button_text?: string | null
+          editorial_banner_coupon_active?: boolean | null
+          editorial_banner_coupon_code?: string | null
+          editorial_banner_coupon_text?: string | null
+          editorial_banner_description?: string | null
+          editorial_banner_image_subtitle?: string | null
+          editorial_banner_image_tag?: string | null
+          editorial_banner_image_title?: string | null
+          editorial_banner_image_url?: string | null
+          editorial_banner_title?: string | null
+          editorial_banner_whatsapp_button_text?: string | null
+          favicon_url?: string | null
+          footer_text?: string | null
+          free_shipping_threshold_cents?: number
+          id?: string
+          instagram_handle?: string | null
+          logo_url?: string | null
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image_url?: string | null
+          privacy_page_settings?: Json | null
+          seo_keywords?: string | null
+          store_description?: string | null
+          store_name?: string
+          store_tagline?: string | null
+          support_email?: string | null
+          support_hours?: string | null
+          support_phone?: string | null
+          terms_page_settings?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      is_admin: { Args: never; Returns: boolean }
-      increment_category_access: {
-        Args: { category_slug: string }
-        Returns: void
-      }
       admin_create_customer: {
         Args: {
+          p_cpf?: string
           p_email: string
-          p_password: string
           p_full_name: string
-          p_phone?: string | null
-          p_cpf?: string | null
-          p_role?: string | null
+          p_password: string
+          p_phone?: string
+          p_role?: string
         }
         Returns: Json
       }
       admin_update_customer: {
         Args: {
-          p_user_id: string
-          p_full_name: string
+          p_cpf?: string
           p_email: string
-          p_phone?: string | null
-          p_cpf?: string | null
-          p_role?: string | null
-          p_password?: string | null
+          p_full_name: string
+          p_password?: string
+          p_phone?: string
+          p_role?: string
+          p_user_id: string
         }
         Returns: Json
       }
-      create_quick_whatsapp_order: {
-        Args: {
-          p_product_id: string
-          p_quantity?: number
-          p_customer_name?: string | null
-          p_customer_phone?: string | null
-        }
-        Returns: Json
+      create_quick_whatsapp_order:
+        | {
+            Args: {
+              p_customer_name?: string
+              p_customer_phone?: string
+              p_product_id: string
+              p_quantity?: number
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_customer_name?: string
+              p_customer_phone?: string
+              p_customization?: Json
+              p_product_id: string
+              p_quantity?: number
+            }
+            Returns: Json
+          }
+      increment_category_access: {
+        Args: { category_slug: string }
+        Returns: undefined
       }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       order_status:
@@ -1068,4 +1087,3 @@ export const Constants = {
     },
   },
 } as const
-

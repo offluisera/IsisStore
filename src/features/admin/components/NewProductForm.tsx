@@ -19,6 +19,7 @@ import { createProductAction } from "@/features/admin/product-actions";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { convertBatchToWebP } from "@/lib/images/convert-to-webp";
+import { ProductVariantsManager } from "@/components/admin/product-variants-manager";
 import type { CatalogCategory } from "@/services/catalog.service";
 
 interface NewProductFormProps {
@@ -42,6 +43,10 @@ export function NewProductForm({ categories }: NewProductFormProps) {
   const [primaryIndex, setPrimaryIndex] = React.useState<number>(0);
   const [isConverting, setIsConverting] = React.useState(false);
   const [showUrlInput, setShowUrlInput] = React.useState(false);
+  const [hasSizes, setHasSizes] = React.useState(false);
+  const [sizes, setSizes] = React.useState<string[]>([]);
+  const [hasColors, setHasColors] = React.useState(false);
+  const [colors, setColors] = React.useState<string[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Manipular seleção e conversão client-side para .webp
@@ -95,6 +100,10 @@ export function NewProductForm({ categories }: NewProductFormProps) {
       formData.append("files", item.file);
     }
     formData.append("primaryIndex", String(primaryIndex));
+    formData.append("hasSizes", hasSizes ? "true" : "false");
+    formData.append("sizes", JSON.stringify(sizes));
+    formData.append("hasColors", hasColors ? "true" : "false");
+    formData.append("colors", JSON.stringify(colors));
 
     formAction(formData);
   };
@@ -335,6 +344,21 @@ export function NewProductForm({ categories }: NewProductFormProps) {
           </div>
         </div>
 
+        {/* Gerenciamento de Variações: Tamanhos e Cores */}
+        <div className="md:col-span-2">
+          <ProductVariantsManager
+            hasSizes={hasSizes}
+            onHasSizesChange={setHasSizes}
+            sizes={sizes}
+            onSizesChange={setSizes}
+            hasColors={hasColors}
+            onHasColorsChange={setHasColors}
+            colors={colors}
+            onColorsChange={setColors}
+            renderHiddenInputs={false}
+          />
+        </div>
+
         {/* Resumo / Short Description */}
         <div className="md:col-span-2">
           <Input
@@ -364,8 +388,51 @@ export function NewProductForm({ categories }: NewProductFormProps) {
           />
         </div>
 
+        {/* Status de Publicação */}
+        <div className="md:col-span-2 flex flex-col gap-2.5 p-4 rounded-2xl bg-fundo/40 dark:bg-[#151012] border border-borda dark:border-[#38262C]">
+          <span className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
+            Visibilidade e Status Inicial
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="flex items-start gap-3 p-3.5 rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#1E1518] cursor-pointer hover:border-primaria transition-colors has-[:checked]:border-primaria has-[:checked]:bg-primaria/5">
+              <input
+                type="radio"
+                name="status"
+                value="published"
+                defaultChecked
+                className="mt-0.5 text-primaria accent-primaria"
+              />
+              <div className="text-xs">
+                <span className="font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                  Publicar Imediatamente
+                </span>
+                <span className="text-texto-claro dark:text-[#988087] text-[11px] leading-tight block mt-0.5">
+                  Ficará visível e disponível para compra na loja pública assim que salvo.
+                </span>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-3 p-3.5 rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#1E1518] cursor-pointer hover:border-primaria transition-colors has-[:checked]:border-primaria has-[:checked]:bg-primaria/5">
+              <input
+                type="radio"
+                name="status"
+                value="draft"
+                className="mt-0.5 text-primaria accent-primaria"
+              />
+              <div className="text-xs">
+                <span className="font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                  Salvar como Rascunho
+                </span>
+                <span className="text-texto-claro dark:text-[#988087] text-[11px] leading-tight block mt-0.5">
+                  Ficará privado na guia de Rascunhos. Não será exibido nem vendido na loja.
+                </span>
+              </div>
+            </label>
+          </div>
+        </div>
+
         {/* Destaque */}
-        <div className="md:col-span-2 flex items-center gap-2.5 pt-2">
+        <div className="md:col-span-2 flex items-center gap-2.5 pt-1">
           <input
             type="checkbox"
             id="featured"

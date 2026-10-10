@@ -9,6 +9,8 @@ export const productCustomizationSchema = z
       .or(z.literal(""))
       .nullish(),
     notes: z.string().max(300, "Observações muito longas").nullish(),
+    size: z.string().max(50, "Tamanho inválido").nullish(),
+    color: z.string().max(50, "Cor inválida").nullish(),
   })
   .nullish();
 

@@ -11,6 +11,7 @@ import { createInfinitePayCheckoutLink, type InfinitePaySettings } from "@/lib/p
 import { getStoreSettings } from "@/lib/settings/store-settings";
 import { validateCouponDiscount } from "@/lib/coupons/coupon-engine";
 import type { Coupon } from "@/lib/coupons/types";
+import { calculateOrderShippingCents } from "@/lib/shipping/regional-shipping";
 
 export type CheckoutActionResult = {
   success: boolean;
@@ -132,17 +133,12 @@ export async function createOrderAction(
       });
     }
 
-    // 5. Cálculo do Frete
-    const storeSettings = await getStoreSettings();
-    const freeShippingThreshold = storeSettings?.free_shipping_threshold_cents ?? 19900;
-
-    let shippingCents = 0;
-    if (shippingMethod === "sedex") {
-      shippingCents = 2990; // R$ 29,90
-    } else {
-      // PAC: grátis para compras >= limite configurado
-      shippingCents = subtotalCents >= freeShippingThreshold ? 0 : 1890; // R$ 18,90
-    }
+    // 5. Cálculo do Frete Regional Seguro (Sul/Sudeste grátis no PAC, demais regiões grátis >= R$ 200,00)
+    const shippingCents = calculateOrderShippingCents({
+      state: address.state,
+      subtotalCents,
+      shippingMethod,
+    });
 
     // 6. Cálculo de Descontos (Validação Server-Side de Cupons e Desconto Pix 5%)
     let discountCents = 0;
@@ -530,6 +526,8 @@ export async function createQuickWhatsAppOrderAction(input: {
     text?: string;
     imageUrl?: string;
     notes?: string;
+    size?: string;
+    color?: string;
   };
 }): Promise<{
   success: boolean;
@@ -545,8 +543,8 @@ export async function createQuickWhatsAppOrderAction(input: {
     const { data, error } = await supabase.rpc("create_quick_whatsapp_order", {
       p_product_id: input.productId,
       p_quantity: Math.max(1, input.quantity),
-      p_customer_name: input.customerName || null,
-      p_customer_phone: input.customerPhone || null,
+      p_customer_name: input.customerName || undefined,
+      p_customer_phone: input.customerPhone || undefined,
       p_customization: (input.customization as unknown as import("@/types/database").Json) || null,
     });
 
@@ -590,10 +588,17 @@ export async function createQuickWhatsAppOrderAction(input: {
       rpcResult.message_template ||
       "Olá tive interesse no produto {produto} meu pedido é numero {pedido} no valor {valor} gostaria de mais informação";
 
-    const finalMessage = template
+    let finalMessage = template
       .replace(/\{produto\}/gi, rpcResult.product_name || "Produto")
       .replace(/\{pedido\}/gi, rpcResult.order_number)
       .replace(/\{valor\}/gi, formattedPrice);
+
+    if (input.customization?.size || input.customization?.color) {
+      const parts: string[] = [];
+      if (input.customization.size) parts.push(`Tam: ${input.customization.size}`);
+      if (input.customization.color) parts.push(`Cor: ${input.customization.color}`);
+      finalMessage += ` [${parts.join(", ")}]`;
+    }
 
     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(finalMessage)}`;
 

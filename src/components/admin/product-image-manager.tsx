@@ -145,8 +145,8 @@ export function ProductImageManager({
 
   return (
     <>
-      {/* Botões Rápidos na Linha da Tabela do Admin */}
-      <div className="flex items-center gap-2">
+      {/* Botões Compactos na Linha da Tabela do Admin */}
+      <div className="flex items-center gap-1.5 shrink-0">
         {/* Input escondido para seleção direta do PC */}
         <input
           ref={fileInputRef}
@@ -158,36 +158,30 @@ export function ProductImageManager({
           disabled={isProcessing}
         />
 
-        {/* Botão rápido: Adicionar do PC */}
+        {/* Botão da Galeria com contagem de fotos */}
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:border-primaria text-xs font-medium transition-colors cursor-pointer"
+          title="Ver e gerenciar todas as fotos deste produto"
+        >
+          <ImageIcon className="w-3.5 h-3.5 text-primaria" />
+          <span>{images.length} {images.length === 1 ? "foto" : "fotos"}</span>
+        </button>
+
+        {/* Botão rápido: Adicionar do PC (+ icon) */}
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isProcessing}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primaria/40 bg-primaria-soft text-primaria text-xs font-semibold hover:bg-primaria hover:text-white transition-all duration-200 cursor-pointer disabled:opacity-50"
-          title="Selecionar fotos do seu computador e converter para .webp"
+          className="w-7 h-7 flex items-center justify-center rounded-xl border border-primaria/40 bg-primaria-soft text-primaria hover:bg-primaria hover:text-white transition-all cursor-pointer disabled:opacity-50 shrink-0"
+          title="Adicionar novas fotos do computador"
         >
           {isProcessing ? (
-            <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              <span>Convertendo...</span>
-            </>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
           ) : (
-            <>
-              <Plus className="w-3.5 h-3.5" />
-              <span>Subir Fotos</span>
-            </>
+            <Plus className="w-3.5 h-3.5" />
           )}
-        </button>
-
-        {/* Botão do Gerenciador / Galeria */}
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] text-xs font-medium hover:border-borda-destaque transition-colors cursor-pointer"
-          title="Ver e gerenciar todas as fotos deste produto"
-        >
-          <ImageIcon className="w-3.5 h-3.5" />
-          <span>{images.length} {images.length === 1 ? "foto" : "fotos"}</span>
         </button>
       </div>
 

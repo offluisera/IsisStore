@@ -12,6 +12,7 @@ import {
   Minus,
   Plus,
   MessageCircle,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,10 @@ import { useCart } from "@/features/cart/context/cart-context";
 import { useToast } from "@/components/ui/toast-context";
 import { useStoreSettings } from "@/lib/settings/store-settings-context";
 import { createQuickWhatsAppOrderAction } from "@/features/checkout/actions";
+import { calculateShippingAction } from "@/features/shipping/actions";
+import type { ShippingQuoteResult } from "@/lib/shipping/types";
 import { ProductCustomizationBox } from "@/components/commerce/product-customization-box";
+import { ProductVariantSelector } from "@/components/commerce/product-variant-selector";
 import type { ProductCustomization } from "@/features/cart/types";
 
 interface ProductActionsProps {
@@ -34,6 +38,10 @@ interface ProductActionsProps {
   categorySlug?: string;
   categoryName?: string;
   isCustomizable?: boolean;
+  hasSizes?: boolean;
+  sizes?: string[];
+  hasColors?: boolean;
+  colors?: string[];
 }
 
 export function ProductActions({
@@ -48,6 +56,10 @@ export function ProductActions({
   categorySlug,
   categoryName,
   isCustomizable,
+  hasSizes = false,
+  sizes = [],
+  hasColors = false,
+  colors = [],
 }: ProductActionsProps) {
   const router = useRouter();
   const cart = useCart();
@@ -57,10 +69,7 @@ export function ProductActions({
   const [quantity, setQuantity] = React.useState(1);
   const [isAdded, setIsAdded] = React.useState(false);
   const [cep, setCep] = React.useState("");
-  const [shippingResult, setShippingResult] = React.useState<{
-    pac: { price: number; days: number };
-    sedex: { price: number; days: number };
-  } | null>(null);
+  const [shippingQuote, setShippingQuote] = React.useState<ShippingQuoteResult | null>(null);
   const [isCalculatingShipping, setIsCalculatingShipping] = React.useState(false);
   const [isBuyingWhatsApp, setIsBuyingWhatsApp] = React.useState(false);
 
@@ -73,6 +82,37 @@ export function ProductActions({
 
   const [customization, setCustomization] = React.useState<ProductCustomization>({});
   const [hasCustomizationError, setHasCustomizationError] = React.useState(false);
+  const [selectedSize, setSelectedSize] = React.useState<string | undefined>(undefined);
+  const [selectedColor, setSelectedColor] = React.useState<string | undefined>(undefined);
+  const [sizeError, setSizeError] = React.useState(false);
+  const [colorError, setColorError] = React.useState(false);
+
+  const validateVariants = () => {
+    let isValid = true;
+    if (hasSizes && Array.isArray(sizes) && sizes.length > 0 && !selectedSize) {
+      setSizeError(true);
+      toast.error(
+        "Tamanho Obrigatório",
+        "Por favor, selecione um tamanho antes de continuar."
+      );
+      isValid = false;
+    } else {
+      setSizeError(false);
+    }
+
+    if (hasColors && Array.isArray(colors) && colors.length > 0 && !selectedColor) {
+      setColorError(true);
+      toast.error(
+        "Cor Obrigatória",
+        "Por favor, selecione uma cor antes de continuar."
+      );
+      isValid = false;
+    } else {
+      setColorError(false);
+    }
+
+    return isValid;
+  };
 
   const validateCustomization = () => {
     if (!isCustomizableProduct) return true;
@@ -92,6 +132,16 @@ export function ProductActions({
     return true;
   };
 
+  const getEffectiveCustomization = (): ProductCustomization | undefined => {
+    const hasAnyCustom = isCustomizableProduct || selectedSize || selectedColor;
+    if (!hasAnyCustom) return undefined;
+    return {
+      ...customization,
+      size: selectedSize,
+      color: selectedColor,
+    };
+  };
+
   const isOutOfStock = stock <= 0;
 
   const handleDecrease = () => {
@@ -107,10 +157,13 @@ export function ProductActions({
   };
 
   const handleAddToCart = (openDrawer = true) => {
+    if (!validateVariants()) return;
     if (!validateCustomization()) return;
 
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2500);
+
+    const effectiveCustomization = getEffectiveCustomization();
 
     cart.addItem(
       {
@@ -121,7 +174,7 @@ export function ProductActions({
         imageUrl: imageUrl || "/images/logo/logo.jpeg",
         slug,
         stock,
-        customization: isCustomizableProduct ? customization : undefined,
+        customization: effectiveCustomization,
       },
       quantity
     );
@@ -137,6 +190,7 @@ export function ProductActions({
   };
 
   const handleBuyNow = () => {
+    if (!validateVariants()) return;
     if (!validateCustomization()) return;
     handleAddToCart(false);
     router.push("/checkout");
@@ -144,14 +198,17 @@ export function ProductActions({
 
   const handleBuyWhatsApp = async () => {
     if (isOutOfStock) return;
+    if (!validateVariants()) return;
     if (!validateCustomization()) return;
 
     setIsBuyingWhatsApp(true);
     try {
+      const effectiveCustomization = getEffectiveCustomization();
+
       const res = await createQuickWhatsAppOrderAction({
         productId,
         quantity,
-        customization: isCustomizableProduct ? customization : undefined,
+        customization: effectiveCustomization,
       });
 
       if (res.success && res.whatsappUrl) {
@@ -173,20 +230,32 @@ export function ProductActions({
     }
   };
 
-  const handleCalculateShipping = (e: React.FormEvent) => {
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let raw = e.target.value.replace(/\D/g, "");
+    if (raw.length > 8) raw = raw.slice(0, 8);
+    if (raw.length > 5) {
+      raw = `${raw.slice(0, 5)}-${raw.slice(5)}`;
+    }
+    setCep(raw);
+  };
+
+  const handleCalculateShipping = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanCep = cep.replace(/\D/g, "");
-    if (cleanCep.length !== 8) return;
+    if (cleanCep.length !== 8) {
+      toast.warning("CEP incompleto", "Informe um CEP válido com 8 dígitos.");
+      return;
+    }
 
     setIsCalculatingShipping(true);
-    setTimeout(() => {
+    try {
+      const res = await calculateShippingAction(cleanCep, priceCents * quantity);
+      setShippingQuote(res);
+    } catch {
+      toast.error("Erro na cotação", "Não foi possível calcular o frete agora.");
+    } finally {
       setIsCalculatingShipping(false);
-      const freeThreshold = storeSettings.free_shipping_threshold_cents || 19900;
-      setShippingResult({
-        pac: { price: priceCents >= freeThreshold ? 0 : 1890, days: 5 },
-        sedex: { price: 2990, days: 2 },
-      });
-    }, 600);
+    }
   };
 
   return (
@@ -209,6 +278,26 @@ export function ProductActions({
           </div>
         )}
       </div>
+
+      {/* Seletor de Variações: Tamanho e Cor (Estilo Mercado Livre) */}
+      <ProductVariantSelector
+        hasSizes={hasSizes}
+        sizes={sizes}
+        selectedSize={selectedSize}
+        onSelectSize={(s) => {
+          setSelectedSize(s);
+          setSizeError(false);
+        }}
+        hasColors={hasColors}
+        colors={colors}
+        selectedColor={selectedColor}
+        onSelectColor={(c) => {
+          setSelectedColor(c);
+          setColorError(false);
+        }}
+        sizeError={sizeError}
+        colorError={colorError}
+      />
 
       {/* Box de Personalização da Joia se o produto for personalizado */}
       {isCustomizableProduct && (
@@ -314,11 +403,16 @@ export function ProductActions({
         )}
       </div>
 
-      {/* Simulador de Frete */}
-      <div className="p-4 rounded-2xl bg-fundo-card border border-borda shadow-xs flex flex-col gap-3">
-        <div className="flex items-center gap-2 text-xs font-semibold text-texto-escuro">
-          <Truck className="w-4 h-4 text-primaria" />
-          <span>Calcular Frete e Prazo</span>
+      {/* Simulador de Frete Regional */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-fundo-card border border-borda shadow-xs flex flex-col gap-3">
+        <div className="flex items-center justify-between text-xs font-semibold text-texto-escuro">
+          <div className="flex items-center gap-2">
+            <Truck className="w-4 h-4 text-primaria" />
+            <span>Calcular Frete e Prazo</span>
+          </div>
+          <span className="text-[11px] font-normal text-texto-claro hidden sm:inline">
+            Sul e Sudeste: Frete Grátis
+          </span>
         </div>
 
         <form onSubmit={handleCalculateShipping} className="flex gap-2">
@@ -327,8 +421,8 @@ export function ProductActions({
             placeholder="00000-000"
             value={cep}
             maxLength={9}
-            onChange={(e) => setCep(e.target.value)}
-            className="flex-1 h-10 px-3 rounded-xl border border-borda bg-input-fundo text-texto-escuro text-xs outline-none focus:border-primaria"
+            onChange={handleCepChange}
+            className="flex-1 h-10 px-3 rounded-xl border border-borda bg-input-fundo text-texto-escuro text-xs outline-none focus:border-primaria transition-colors"
           />
           <Button
             type="submit"
@@ -341,26 +435,41 @@ export function ProductActions({
           </Button>
         </form>
 
-        {shippingResult && (
-          <div className="flex flex-col gap-2 pt-2 border-t border-borda/60 text-xs">
-            <div className="flex justify-between items-center text-texto-escuro">
-              <span>Entrega Padrão (PAC) &bull; {shippingResult.pac.days} dias úteis</span>
-              <span className="font-semibold text-primaria">
-                {shippingResult.pac.price === 0
-                  ? "GRÁTIS"
-                  : (shippingResult.pac.price / 100).toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
+        {shippingQuote && (
+          <div className="flex flex-col gap-2.5 pt-2 border-t border-borda/60 text-xs">
+            {/* Localização detectada */}
+            {shippingQuote.state && (
+              <div className="flex items-center gap-1.5 text-[11px] text-texto-medio font-medium">
+                <MapPin className="w-3.5 h-3.5 text-primaria shrink-0" />
+                <span>
+                  {shippingQuote.city ? `${shippingQuote.city} - ` : ""}
+                  {shippingQuote.state} &bull; Região {shippingQuote.regionName}
+                </span>
+              </div>
+            )}
+
+            {/* Aviso da Regra Regional */}
+            <div
+              className={`p-2.5 rounded-xl text-[11px] font-medium leading-relaxed ${
+                shippingQuote.isPacFree
+                  ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60"
+                  : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60"
+              }`}
+            >
+              {shippingQuote.ruleNotice}
+            </div>
+
+            {/* Opções de envio */}
+            <div className="flex justify-between items-center text-texto-escuro py-1 border-b border-borda/40">
+              <span className="text-texto-medio">{shippingQuote.pac.label}</span>
+              <span className={`font-bold ${shippingQuote.pac.isFree ? "text-emerald-600 dark:text-emerald-400" : "text-texto-escuro"}`}>
+                {shippingQuote.pac.formatted}
               </span>
             </div>
-            <div className="flex justify-between items-center text-texto-escuro">
-              <span>Entrega Expressa (Sedex) &bull; {shippingResult.sedex.days} dias úteis</span>
-              <span className="font-semibold">
-                {(shippingResult.sedex.price / 100).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
+            <div className="flex justify-between items-center text-texto-escuro py-1">
+              <span className="text-texto-medio">{shippingQuote.sedex.label}</span>
+              <span className="font-semibold text-texto-escuro">
+                {shippingQuote.sedex.formatted}
               </span>
             </div>
           </div>

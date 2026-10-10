@@ -238,7 +238,23 @@ export default async function PedidoDetalhesPage({
                       <span>Unitário: {formatPrice(item.unit_price_cents)}</span>
                     </div>
 
-                    {item.customization && (
+                    {/* Variações Selecionadas pelo Cliente */}
+                    {Boolean((item.customization as { size?: string; color?: string } | null)?.size || (item.customization as { size?: string; color?: string } | null)?.color) && (
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        {(item.customization as { size?: string })?.size && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-primaria/10 text-primaria font-bold text-xs border border-primaria/25">
+                            Tamanho: {(item.customization as { size?: string }).size}
+                          </span>
+                        )}
+                        {(item.customization as { color?: string })?.color && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-fundo dark:bg-[#1E1518] text-texto-escuro dark:text-[#F8EFF1] font-semibold text-xs border border-borda dark:border-[#38262C]">
+                            Cor: {(item.customization as { color?: string }).color}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {item.customization && Boolean((item.customization as { text?: string; imageUrl?: string; notes?: string })?.text || (item.customization as { text?: string; imageUrl?: string; notes?: string })?.imageUrl || (item.customization as { text?: string; imageUrl?: string; notes?: string })?.notes) && (
                       <div className="mt-2.5 p-3 rounded-xl bg-primaria-soft/40 dark:bg-[#2A1820] border border-primaria/20 text-xs space-y-1.5 max-w-md">
                         <div className="flex items-center gap-1.5 font-semibold text-primaria">
                           <Sparkles className="w-3.5 h-3.5 shrink-0" />

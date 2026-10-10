@@ -26,6 +26,10 @@ export interface CatalogProduct {
   status: "draft" | "published" | "archived";
   featured: boolean;
   weight_grams?: number | null;
+  has_sizes?: boolean;
+  sizes?: string[];
+  has_colors?: boolean;
+  colors?: string[];
   created_at: string;
   categories: {
     id: string;

@@ -2,6 +2,8 @@ export interface ProductCustomization {
   text?: string;
   imageUrl?: string;
   notes?: string;
+  size?: string;
+  color?: string;
 }
 
 export interface CartItem {

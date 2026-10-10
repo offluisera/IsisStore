@@ -237,6 +237,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               isWhatsAppActive={isWhatsAppActive}
               categorySlug={product.categories?.slug}
               categoryName={product.categories?.name}
+              hasSizes={product.has_sizes}
+              sizes={product.sizes}
+              hasColors={product.has_colors}
+              colors={product.colors}
             />
           </div>
         </div>

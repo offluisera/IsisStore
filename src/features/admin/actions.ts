@@ -186,6 +186,7 @@ export async function updateProductStatusAction(
   );
 
   revalidatePath("/admin/produtos");
+  revalidatePath("/admin/produtos/rascunhos");
   revalidatePath("/admin/produtos/estoque");
   revalidatePath("/admin/produtos/relatorios");
   revalidatePath("/produtos");

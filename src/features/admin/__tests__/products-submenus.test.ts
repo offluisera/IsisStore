@@ -24,6 +24,10 @@ describe("Produtos — Submenus & Rotas Administrativas", () => {
       "Sidebar deve conter link para criar novo produto."
     );
     assert.ok(
+      content.includes("/admin/produtos/rascunhos"),
+      "Sidebar deve conter link para guia de rascunhos."
+    );
+    assert.ok(
       content.includes("/admin/produtos/relatorios"),
       "Sidebar deve conter link para relatórios de produtos mais vendidos."
     );
@@ -47,6 +51,8 @@ describe("Produtos — Submenus & Rotas Administrativas", () => {
     const requiredPages = [
       "src/app/admin/produtos/page.tsx",
       "src/app/admin/produtos/novo/page.tsx",
+      "src/app/admin/produtos/rascunhos/page.tsx",
+      "src/app/admin/produtos/editar/page.tsx",
       "src/app/admin/produtos/relatorios/page.tsx",
       "src/app/admin/produtos/estoque/page.tsx",
     ];
@@ -95,4 +101,34 @@ describe("Produtos — Submenus & Rotas Administrativas", () => {
       "Gestão de estoque deve permitir ajuste rápido e persistência via server action."
     );
   });
+
+  it("4. ProdutosManagementTable e EditProductModal devem permitir edição e gestão de rascunhos", () => {
+    const tablePath = path.join(
+      ROOT_DIR,
+      "src/components/admin/products-management-table.tsx"
+    );
+    const modalPath = path.join(
+      ROOT_DIR,
+      "src/components/admin/edit-product-modal.tsx"
+    );
+    assert.ok(fs.existsSync(tablePath), "products-management-table.tsx deve existir.");
+    assert.ok(fs.existsSync(modalPath), "edit-product-modal.tsx deve existir.");
+
+    const tableContent = fs.readFileSync(tablePath, "utf-8");
+    const modalContent = fs.readFileSync(modalPath, "utf-8");
+
+    assert.ok(
+      tableContent.includes("EditProductModal") && tableContent.includes("Editar"),
+      "Tabela de produtos deve conter botão Editar e integrar modal de edição."
+    );
+    assert.ok(
+      tableContent.includes("/admin/produtos/rascunhos") && tableContent.includes("draftCount"),
+      "Tabela de produtos deve conter guia de rascunhos e contagem de itens em rascunho."
+    );
+    assert.ok(
+      modalContent.includes("updateProductDirectAction") && modalContent.includes("status"),
+      "Modal de edição de produtos deve permitir atualizar dados e status (draft/published)."
+    );
+  });
 });
+

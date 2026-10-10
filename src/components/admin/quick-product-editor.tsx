@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/toast-context";
 import {
   updateProductStockAction,
   updateProductStatusAction,
@@ -18,6 +20,8 @@ export function QuickProductEditor({
   initialStock,
   initialStatus,
 }: QuickProductEditorProps) {
+  const router = useRouter();
+  const { toast } = useToast();
   const [stock, setStock] = React.useState(initialStock);
   const [status, setStatus] = React.useState(initialStatus);
   const [loadingStock, setLoadingStock] = React.useState(false);
@@ -52,10 +56,26 @@ export function QuickProductEditor({
     try {
       const res = await updateProductStatusAction(productId, newStatus);
       if (res.success) {
-        setFeedback("Status atualizado!");
-        setTimeout(() => setFeedback(null), 2000);
+        const msg =
+          newStatus === "draft"
+            ? "Movido para Rascunhos!"
+            : newStatus === "published"
+            ? "Publicado na loja!"
+            : "Arquivado!";
+        setFeedback(msg);
+        toast.success(
+          "Status Atualizado",
+          newStatus === "draft"
+            ? "O produto foi ocultado da loja pública e movido para a guia Rascunhos."
+            : newStatus === "published"
+            ? "O produto agora está visível e disponível para compra na loja."
+            : "O produto foi arquivado."
+        );
+        setTimeout(() => setFeedback(null), 2500);
+        router.refresh();
       } else {
         setStatus(status);
+        toast.error("Erro ao alterar status", res.message);
       }
     } catch {
       setStatus(status);
@@ -65,21 +85,21 @@ export function QuickProductEditor({
   };
 
   return (
-    <div className="flex items-center gap-4 text-xs">
+    <div className="flex items-center gap-2 text-xs shrink-0">
       {/* Controle Rápido de Estoque */}
       <div className="flex items-center border border-borda dark:border-[#38262C] rounded-xl bg-white dark:bg-[#151012] p-0.5 shadow-2xs">
         <button
           type="button"
           disabled={loadingStock || stock <= 0}
           onClick={() => handleStockChange(stock - 1)}
-          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] disabled:opacity-30 transition-colors"
+          className="w-6 h-6 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] disabled:opacity-30 transition-colors"
           title="Diminuir estoque"
         >
           <Minus className="w-3 h-3" />
         </button>
 
         <span
-          className={`w-12 text-center font-mono font-semibold text-xs ${
+          className={`w-9 text-center font-mono font-semibold text-xs ${
             stock <= 0
               ? "text-erro"
               : stock <= 5
@@ -98,7 +118,7 @@ export function QuickProductEditor({
           type="button"
           disabled={loadingStock}
           onClick={() => handleStockChange(stock + 1)}
-          className="w-7 h-7 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
+          className="w-6 h-6 flex items-center justify-center rounded-lg text-texto-medio dark:text-[#D4BFC5] hover:text-texto-escuro dark:hover:text-[#F8EFF1] hover:bg-fundo dark:hover:bg-[#251A1E] transition-colors"
           title="Aumentar estoque"
         >
           <Plus className="w-3 h-3" />
@@ -114,7 +134,7 @@ export function QuickProductEditor({
             e.target.value as "published" | "draft" | "archived"
           )
         }
-        className="bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl px-2.5 py-1.5 text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
+        className="bg-white dark:bg-[#151012] border border-borda dark:border-[#38262C] rounded-xl px-2 py-1 text-[11px] font-semibold text-texto-escuro dark:text-[#F8EFF1] focus:outline-none focus:ring-1 focus:ring-primaria transition-all"
       >
         <option value="published" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Publicado</option>
         <option value="draft" className="dark:bg-[#151012] dark:text-[#F8EFF1]">Rascunho</option>
