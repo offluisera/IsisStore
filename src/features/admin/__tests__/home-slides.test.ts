@@ -38,6 +38,39 @@ describe("Hero Slider & Admin Slides Management", () => {
     }
   });
 
+  it("deve validar UUIDs oficiais, seeds do banco e string vazia sem lançar 'Invalid UUID'", () => {
+    // 1. Testa DEFAULT_HOME_SLIDES diretamente (que continha o ID que disparava erro)
+    const seedResult = slideSchema.safeParse(DEFAULT_HOME_SLIDES[0]);
+    assert.ok(seedResult.success, "Deve validar slides com ID de seed (ex: a0000000-0000-0000-0000-000000000001)");
+    if (seedResult.success) {
+      assert.strictEqual(seedResult.data.id, "a0000000-0000-0000-0000-000000000001");
+    }
+
+    // 2. Testa UUID v4 padrão
+    const v4Result = slideSchema.safeParse({
+      ...DEFAULT_HOME_SLIDES[0],
+      id: "439febea-edee-4cef-a829-ee90052b145e",
+    });
+    assert.ok(v4Result.success, "Deve aceitar UUID v4 gerado pelo Supabase");
+
+    // 3. Testa string vazia (novo slide enviado sem id)
+    const emptyIdResult = slideSchema.safeParse({
+      ...DEFAULT_HOME_SLIDES[0],
+      id: "",
+    });
+    assert.ok(emptyIdResult.success, "Deve aceitar id como string vazia");
+    if (emptyIdResult.success) {
+      assert.strictEqual(emptyIdResult.data.id, undefined, "String vazia deve ser convertida para undefined");
+    }
+
+    // 4. Deve rejeitar UUID em formato incorreto
+    const badIdResult = slideSchema.safeParse({
+      ...DEFAULT_HOME_SLIDES[0],
+      id: "not-a-valid-uuid",
+    });
+    assert.strictEqual(badIdResult.success, false, "Deve rejeitar strings arbitrárias como UUID");
+  });
+
   it("deve rejeitar slides sem título ou sem imagem", () => {
     const invalidSlide = {
       title: "",

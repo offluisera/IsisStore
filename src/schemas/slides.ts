@@ -1,7 +1,15 @@
 import { z } from "zod";
 
+const uuidPattern =
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
 export const slideSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z
+    .string()
+    .regex(uuidPattern, "ID deve ser um UUID válido.")
+    .optional()
+    .or(z.literal(""))
+    .transform((val) => (val ? val : undefined)),
   title: z
     .string()
     .min(2, "O título deve ter pelo menos 2 caracteres.")
@@ -13,7 +21,7 @@ export const slideSchema = z.object({
   image_url: z
     .string()
     .min(1, "A imagem do slide é obrigatória.")
-    .max(500, "URL da imagem muito longa.")
+    .max(5_000_000, "URL da imagem muito longa.")
     .trim(),
   slide_type: z.enum(["editorial", "full_banner"]).default("editorial"),
   primary_button_text: z.string().max(50).default("").transform((v) => v || ""),

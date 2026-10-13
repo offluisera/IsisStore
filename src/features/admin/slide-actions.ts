@@ -97,10 +97,11 @@ export async function saveSlideAction(
 
   try {
     if (slideData.id) {
-      // Atualizar slide existente
+      // Atualizar slide existente ou criar via upsert
       const { data, error } = await auth.supabase
         .from("home_slides")
-        .update({
+        .upsert({
+          id: slideData.id,
           title: slideData.title,
           title_highlight: slideData.title_highlight,
           subtitle: slideData.subtitle,
@@ -116,7 +117,6 @@ export async function saveSlideAction(
           sort_order: slideData.sort_order,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", slideData.id)
         .select()
         .single();
 

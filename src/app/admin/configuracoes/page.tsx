@@ -4,6 +4,8 @@ import { StoreSettingsView } from "@/components/admin/store-settings-view";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_HOME_SLIDES, HomeSlide } from "@/lib/slides/types";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Configurações Gerais da Loja — Isis Store Admin",
   description:
