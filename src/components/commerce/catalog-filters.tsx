@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Search, X, ArrowUpDown } from "lucide-react";
+import { Search, X, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { CatalogCategory } from "@/services/catalog.service";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,63 @@ export function CatalogFilters({
   const currentSort = searchParams.get("ordem") || "newest";
 
   const [searchTerm, setSearchTerm] = React.useState(currentSearch);
+
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const activePillRef = React.useRef<HTMLButtonElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(false);
+
+  const updateScrollStatus = React.useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 4);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 4);
+  }, []);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const offset = direction === "left" ? -260 : 260;
+    el.scrollBy({ left: offset, behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    updateScrollStatus();
+    const handleResize = () => updateScrollStatus();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateScrollStatus, categories]);
+
+  // Rolar horizontalmente com scroll wheel do mouse para conveniência
+  React.useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0 && el.scrollWidth > el.clientWidth) {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          el.scrollLeft += e.deltaY;
+          updateScrollStatus();
+        }
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [updateScrollStatus]);
+
+  // Centralizar automaticamente a categoria ativa na inicialização
+  React.useEffect(() => {
+    if (activePillRef.current) {
+      activePillRef.current.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, [currentCategory]);
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -92,37 +149,78 @@ export function CatalogFilters({
         </div>
       </div>
 
-      {/* Middle: Category Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-        <button
-          type="button"
-          onClick={() => updateParam("categoria", null)}
-          className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
-            currentCategory === ""
-              ? "bg-primaria text-white border-primaria shadow-xs"
-              : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50"
-          }`}
-        >
-          Todas as Categorias
-        </button>
+      {/* Middle: Category Pills com Navegação e Scrollbar de Luxo */}
+      <div className="relative group/cats">
+        {/* Botão de Rolar para Esquerda */}
+        {canScrollLeft && (
+          <button
+            type="button"
+            onClick={() => handleScroll("left")}
+            aria-label="Rolar categorias para a esquerda"
+            className="hidden sm:flex absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-fundo-card/95 backdrop-blur-md border border-borda shadow-md text-texto-escuro hover:text-white hover:bg-primaria hover:border-primaria transition-all duration-200 items-center justify-center cursor-pointer active:scale-95"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+        )}
 
-        {categories.map((cat) => {
-          const isSelected = currentCategory === cat.slug;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => updateParam("categoria", cat.slug)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
-                isSelected
-                  ? "bg-primaria text-white border-primaria shadow-xs"
-                  : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50"
-              }`}
-            >
-              {cat.name}
-            </button>
-          );
-        })}
+        {/* Botão de Rolar para Direita */}
+        {canScrollRight && (
+          <button
+            type="button"
+            onClick={() => handleScroll("right")}
+            aria-label="Rolar categorias para a direita"
+            className="hidden sm:flex absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-fundo-card/95 backdrop-blur-md border border-borda shadow-md text-texto-escuro hover:text-white hover:bg-primaria hover:border-primaria transition-all duration-200 items-center justify-center cursor-pointer active:scale-95"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Gradientes sutis nas bordas quando há overflow */}
+        {canScrollLeft && (
+          <div className="hidden sm:block absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-fundo-card to-transparent pointer-events-none z-10 rounded-l-xl" />
+        )}
+        {canScrollRight && (
+          <div className="hidden sm:block absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-fundo-card to-transparent pointer-events-none z-10 rounded-r-xl" />
+        )}
+
+        {/* Container de Categorias */}
+        <div
+          ref={scrollContainerRef}
+          onScroll={updateScrollStatus}
+          className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-luxury scroll-smooth"
+        >
+          <button
+            ref={currentCategory === "" ? activePillRef : null}
+            type="button"
+            onClick={() => updateParam("categoria", null)}
+            className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
+              currentCategory === ""
+                ? "bg-primaria text-white border-primaria shadow-xs shadow-primaria/30"
+                : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50 hover:bg-fundo-elevado"
+            }`}
+          >
+            Todas as Categorias
+          </button>
+
+          {categories.map((cat) => {
+            const isSelected = currentCategory === cat.slug;
+            return (
+              <button
+                key={cat.id}
+                ref={isSelected ? activePillRef : null}
+                type="button"
+                onClick={() => updateParam("categoria", cat.slug)}
+                className={`shrink-0 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
+                  isSelected
+                    ? "bg-primaria text-white border-primaria shadow-xs shadow-primaria/30"
+                    : "bg-fundo-card text-texto-escuro border-borda hover:border-primaria/50 hover:bg-fundo-elevado"
+                }`}
+              >
+                {cat.name}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Bottom Summary & Clear Button */}
