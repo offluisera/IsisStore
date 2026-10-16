@@ -252,17 +252,31 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </h2>
           </div>
 
-          <div className="prose max-w-none text-sm text-texto-medio leading-relaxed space-y-4">
+          <div className="max-w-none text-sm text-texto-medio leading-relaxed space-y-4">
             {product.short_description && (
-              <p className="font-medium text-texto-escuro text-base">
+              <p className="font-medium text-texto-escuro text-base whitespace-pre-line leading-relaxed">
                 {product.short_description}
               </p>
             )}
 
-            <p>
-              {product.description ||
-                "Este produto foi confeccionado com matérias-primas selecionadas e acabamento refinado, refletindo a excelência e o compromisso da Isis Store com produtos duráveis, elegantes e sofisticados."}
-            </p>
+            {product.description ? (
+              <div className="space-y-4 text-sm sm:text-base text-texto-medio leading-relaxed">
+                {product.description
+                  .replace(/\r\n/g, "\n")
+                  .split(/\n{2,}/)
+                  .map((p) => p.trim())
+                  .filter(Boolean)
+                  .map((paragraph, idx) => (
+                    <p key={idx} className="whitespace-pre-line">
+                      {paragraph}
+                    </p>
+                  ))}
+              </div>
+            ) : (
+              <p className="text-sm sm:text-base text-texto-medio leading-relaxed">
+                Este produto foi confeccionado com matérias-primas selecionadas e acabamento refinado, refletindo a excelência e o compromisso da Isis Store com produtos duráveis, elegantes e sofisticados.
+              </p>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-borda/60">
               <div className="flex items-start gap-3">

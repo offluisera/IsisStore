@@ -450,18 +450,23 @@ export function EditProductModal({
 
             {/* Descrição Detalhada */}
             <div className="sm:col-span-2 flex flex-col gap-1.5 text-left">
-              <label
-                htmlFor="edit-description"
-                className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] select-none"
-              >
-                Descrição Completa do Produto
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="edit-description"
+                  className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] select-none"
+                >
+                  Descrição Completa do Produto
+                </label>
+                <span className="text-[11px] text-texto-claro dark:text-[#988087]">
+                  Aceita parágrafos e quebras de linha (Enter)
+                </span>
+              </div>
               <textarea
                 id="edit-description"
-                rows={4}
+                rows={7}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Detalhes sobre materiais, dimensões, cuidados e acabamentos especiais..."
+                placeholder="Detalhes sobre materiais, dimensões, cuidados e acabamentos especiais... Use Enter para criar parágrafos e tópicos."
                 disabled={isSaving}
                 className="w-full rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] p-3.5 text-sm text-texto-escuro dark:text-[#F8EFF1] placeholder:text-texto-claro dark:placeholder:text-[#988087] outline-none focus:border-primaria focus:ring-2 focus:ring-primaria/20 resize-y transition-all"
               />
