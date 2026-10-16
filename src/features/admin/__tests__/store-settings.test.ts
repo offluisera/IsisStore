@@ -159,14 +159,22 @@ describe("Gate de Configurações Gerais da Loja (SEO, Identidade, Favicon, Oper
     assert.strictEqual(DEFAULT_STORE_SETTINGS.daily_deals_discount_percent, 15);
     assert.strictEqual(DEFAULT_STORE_SETTINGS.daily_deals_product_limit, 15);
     assert.strictEqual(DEFAULT_STORE_SETTINGS.daily_deals_title, "Ofertas do dia");
+    assert.strictEqual(DEFAULT_STORE_SETTINGS.daily_deals_mode, "auto");
+    assert.deepStrictEqual(DEFAULT_STORE_SETTINGS.daily_deals_product_ids, []);
+    assert.ok(DEFAULT_STORE_SETTINGS.crafting_delivery_notice?.includes("prazo de confecção"));
+    assert.strictEqual(DEFAULT_STORE_SETTINGS.crafting_days_text, "3 a 5 dias úteis");
 
-    // 2. Validação de schema com dados válidos
+    // 2. Validação de schema com dados válidos (incluindo modo manual e IDs)
     const validDeals = {
       store_name: "Isis Store",
       daily_deals_active: true,
       daily_deals_discount_percent: 20,
       daily_deals_product_limit: 12,
       daily_deals_title: "Super Ofertas de Hoje",
+      daily_deals_mode: "manual",
+      daily_deals_product_ids: ["prod_1", "prod_2", "prod_3"],
+      crafting_delivery_notice: "Peças artesanais com confecção de 3 a 5 dias.",
+      crafting_days_text: "3 a 5 dias úteis",
     };
     const parsed = updateStoreSettingsSchema.safeParse(validDeals);
     assert.strictEqual(parsed.success, true);
@@ -174,6 +182,10 @@ describe("Gate de Configurações Gerais da Loja (SEO, Identidade, Favicon, Oper
       assert.strictEqual(parsed.data.daily_deals_discount_percent, 20);
       assert.strictEqual(parsed.data.daily_deals_product_limit, 12);
       assert.strictEqual(parsed.data.daily_deals_title, "Super Ofertas de Hoje");
+      assert.strictEqual(parsed.data.daily_deals_mode, "manual");
+      assert.deepStrictEqual(parsed.data.daily_deals_product_ids, ["prod_1", "prod_2", "prod_3"]);
+      assert.strictEqual(parsed.data.crafting_delivery_notice, "Peças artesanais com confecção de 3 a 5 dias.");
+      assert.strictEqual(parsed.data.crafting_days_text, "3 a 5 dias úteis");
     }
 
     // 3. Validação de rejeição para limites absurdos (ex: desconto > 99%)

@@ -13,6 +13,8 @@ import {
   Plus,
   MessageCircle,
   MapPin,
+  Clock,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -476,8 +478,35 @@ export function ProductActions({
         )}
       </div>
 
+      {/* Observação Oficial de Prazo de Confecção e Entrega */}
+      <div className="p-4 rounded-2xl bg-amber-500/10 dark:bg-amber-500/10 border border-amber-500/25 dark:border-amber-400/20 text-texto-escuro dark:text-[#F8EFF1] space-y-2 shadow-2xs">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+              <Clock className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
+              Prazo de Confecção & Entrega
+            </span>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/50 px-2.5 py-0.5 rounded-full shrink-0">
+            {storeSettings.crafting_days_text || "3 a 5 dias úteis"}
+          </span>
+        </div>
+
+        <p className="text-xs text-texto-medio dark:text-[#C5B4B9] leading-relaxed">
+          {storeSettings.crafting_delivery_notice ||
+            "Peças personalizadas ou sob encomenda possuem prazo de confecção de 3 a 5 dias úteis após a aprovação do pagamento, além do prazo de transporte da transportadora."}
+        </p>
+
+        <div className="flex items-center gap-1.5 pt-1 border-t border-amber-500/15 text-[11px] text-texto-claro dark:text-[#988087]">
+          <Sparkles className="w-3.5 h-3.5 text-primaria shrink-0" />
+          <span>Produção artesanal cuidadosa + envio rastreado com seguro</span>
+        </div>
+      </div>
+
       {/* Selos de Confiança */}
-      <div className="grid grid-cols-2 gap-3 pt-2">
+      <div className="grid grid-cols-2 gap-3 pt-1">
         <div className="flex items-center gap-2 text-[11px] text-texto-claro">
           <ShieldCheck className="w-4 h-4 text-sucesso shrink-0" />
           <span>Garantia de 30 dias</span>

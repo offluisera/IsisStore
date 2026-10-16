@@ -720,8 +720,12 @@ export type Database = {
           daily_deals_active: boolean
           daily_deals_bg_color: string | null
           daily_deals_discount_percent: number
+          daily_deals_mode: string | null
+          daily_deals_product_ids: Json | null
           daily_deals_product_limit: number
           daily_deals_title: string | null
+          crafting_delivery_notice: string | null
+          crafting_days_text: string | null
           editorial_banner_active: boolean | null
           editorial_banner_badge: string | null
           editorial_banner_button_link: string | null
@@ -771,8 +775,12 @@ export type Database = {
           daily_deals_active?: boolean
           daily_deals_bg_color?: string | null
           daily_deals_discount_percent?: number
+          daily_deals_mode?: string | null
+          daily_deals_product_ids?: Json | null
           daily_deals_product_limit?: number
           daily_deals_title?: string | null
+          crafting_delivery_notice?: string | null
+          crafting_days_text?: string | null
           editorial_banner_active?: boolean | null
           editorial_banner_badge?: string | null
           editorial_banner_button_link?: string | null
@@ -822,8 +830,12 @@ export type Database = {
           daily_deals_active?: boolean
           daily_deals_bg_color?: string | null
           daily_deals_discount_percent?: number
+          daily_deals_mode?: string | null
+          daily_deals_product_ids?: Json | null
           daily_deals_product_limit?: number
           daily_deals_title?: string | null
+          crafting_delivery_notice?: string | null
+          crafting_days_text?: string | null
           editorial_banner_active?: boolean | null
           editorial_banner_badge?: string | null
           editorial_banner_button_link?: string | null

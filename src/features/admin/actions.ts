@@ -1527,6 +1527,16 @@ export async function updateStoreSettingsAction(
     }
   }
 
+  let dailyDealsProductIds;
+  const productIdsRaw = formData.get("daily_deals_product_ids");
+  if (productIdsRaw && typeof productIdsRaw === "string") {
+    try {
+      dailyDealsProductIds = JSON.parse(productIdsRaw);
+    } catch {
+      dailyDealsProductIds = [];
+    }
+  }
+
   const raw: Record<string, any> = {
     store_name: formData.get("store_name") || "Isis Store",
     store_tagline: formData.has("store_tagline") ? (formData.get("store_tagline") ?? "") : undefined,
@@ -1578,6 +1588,18 @@ export async function updateStoreSettingsAction(
   }
   if (formData.has("daily_deals_bg_color")) {
     raw.daily_deals_bg_color = formData.get("daily_deals_bg_color");
+  }
+  if (formData.has("daily_deals_mode")) {
+    raw.daily_deals_mode = formData.get("daily_deals_mode");
+  }
+  if (dailyDealsProductIds !== undefined) {
+    raw.daily_deals_product_ids = dailyDealsProductIds;
+  }
+  if (formData.has("crafting_delivery_notice")) {
+    raw.crafting_delivery_notice = formData.get("crafting_delivery_notice");
+  }
+  if (formData.has("crafting_days_text")) {
+    raw.crafting_days_text = formData.get("crafting_days_text");
   }
   if (formData.has("cnpj")) {
     raw.cnpj = formData.get("cnpj");

@@ -16,23 +16,40 @@ export default async function AdminConfiguracoesPage() {
   const settings = await getStoreSettings();
 
   let slides: HomeSlide[] = DEFAULT_HOME_SLIDES;
+  let products: any[] = [];
   try {
     const supabase = await createClient();
-    const { data } = await supabase
-      .from("home_slides")
-      .select("*")
-      .order("sort_order", { ascending: true });
+    const [slidesRes, productsRes] = await Promise.all([
+      supabase
+        .from("home_slides")
+        .select("*")
+        .order("sort_order", { ascending: true }),
+      supabase
+        .from("products")
+        .select(
+          "id, name, slug, sku, category_id, price_cents, sale_price_cents, stock, status, categories(id, name, slug), product_images(id, public_url, is_primary)"
+        )
+        .eq("status", "published")
+        .order("name", { ascending: true }),
+    ]);
 
-    if (data && data.length > 0) {
-      slides = data as HomeSlide[];
+    if (slidesRes.data && slidesRes.data.length > 0) {
+      slides = slidesRes.data as HomeSlide[];
+    }
+    if (productsRes.data && productsRes.data.length > 0) {
+      products = productsRes.data;
     }
   } catch (err) {
-    console.error("Erro ao carregar slides em AdminConfiguracoesPage:", err);
+    console.error("Erro ao carregar slides e produtos em AdminConfiguracoesPage:", err);
   }
 
   return (
     <Suspense fallback={null}>
-      <StoreSettingsView settings={settings} initialSlides={slides} />
+      <StoreSettingsView
+        settings={settings}
+        initialSlides={slides}
+        initialProducts={products}
+      />
     </Suspense>
   );
 }

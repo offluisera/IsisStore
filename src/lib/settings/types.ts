@@ -89,6 +89,10 @@ export interface StoreSettings {
   daily_deals_product_limit: number;
   daily_deals_title: string;
   daily_deals_bg_color?: string;
+  daily_deals_mode?: "auto" | "manual";
+  daily_deals_product_ids?: string[];
+  crafting_delivery_notice?: string;
+  crafting_days_text?: string;
   cnpj?: string;
   support_hours?: string;
   footer_text?: string;
@@ -401,6 +405,11 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   daily_deals_product_limit: 15,
   daily_deals_title: "Ofertas do dia",
   daily_deals_bg_color: "#D9480F",
+  daily_deals_mode: "auto",
+  daily_deals_product_ids: [],
+  crafting_delivery_notice:
+    "Peças personalizadas ou sob encomenda possuem prazo de confecção de 3 a 5 dias úteis após a aprovação do pagamento, além do prazo de transporte.",
+  crafting_days_text: "3 a 5 dias úteis",
   editorial_banner_active: true,
   editorial_banner_badge: "Experiência Exclusiva de Compra",
   editorial_banner_title: "A Arte de Presentear quem você mais Ama",

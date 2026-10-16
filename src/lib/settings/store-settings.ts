@@ -97,6 +97,16 @@ export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
         data.daily_deals_title || DEFAULT_STORE_SETTINGS.daily_deals_title,
       daily_deals_bg_color:
         data.daily_deals_bg_color || DEFAULT_STORE_SETTINGS.daily_deals_bg_color,
+      daily_deals_mode:
+        data.daily_deals_mode === "manual" ? "manual" : "auto",
+      daily_deals_product_ids:
+        Array.isArray(data.daily_deals_product_ids)
+          ? (data.daily_deals_product_ids.filter((id): id is string => typeof id === "string"))
+          : DEFAULT_STORE_SETTINGS.daily_deals_product_ids,
+      crafting_delivery_notice:
+        data.crafting_delivery_notice || DEFAULT_STORE_SETTINGS.crafting_delivery_notice,
+      crafting_days_text:
+        data.crafting_days_text || DEFAULT_STORE_SETTINGS.crafting_days_text,
       cnpj: data.cnpj || DEFAULT_STORE_SETTINGS.cnpj,
       support_hours: data.support_hours || DEFAULT_STORE_SETTINGS.support_hours,
       footer_text: data.footer_text || DEFAULT_STORE_SETTINGS.footer_text,

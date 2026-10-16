@@ -119,13 +119,32 @@ export default function Home() {
     loadHomeData();
   }, []);
 
-  // 15 produtos de ofertas do dia selecionados deterministicamente todo dia
+  // Ofertas do dia: manual (escolhidos no admin) ou automático (sorteio diário determinístico)
   const dailyDealsProducts = React.useMemo(() => {
+    const mode = storeSettings.daily_deals_mode || "auto";
+    const manualIds = storeSettings.daily_deals_product_ids;
+
+    if (mode === "manual" && Array.isArray(manualIds) && manualIds.length > 0) {
+      const idMap = new Map(products.map((p) => [p.id, p]));
+      const selected = manualIds
+        .map((id) => idMap.get(id))
+        .filter((p): p is (typeof products)[0] => Boolean(p));
+
+      if (selected.length > 0) {
+        return selected.slice(0, storeSettings.daily_deals_product_limit || 15);
+      }
+    }
+
     return getDailyDealsProducts(
       products,
       storeSettings.daily_deals_product_limit || 15
     );
-  }, [products, storeSettings.daily_deals_product_limit]);
+  }, [
+    products,
+    storeSettings.daily_deals_mode,
+    storeSettings.daily_deals_product_ids,
+    storeSettings.daily_deals_product_limit,
+  ]);
 
   // Vitrines das categorias (até 15 produtos cada)
   const brinquedosProducts = React.useMemo(() => {

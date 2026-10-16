@@ -35,6 +35,10 @@ import {
   Upload,
   Loader2,
   HardDrive,
+  X,
+  Package,
+  CheckSquare,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +53,11 @@ import { BrandFeaturesManager } from "@/components/admin/brand-features-manager"
 import { ContactPageManager } from "@/components/admin/institutional/contact-page-manager";
 import { TermsPageManager } from "@/components/admin/institutional/terms-page-manager";
 import { PrivacyPageManager } from "@/components/admin/institutional/privacy-page-manager";
+import {
+  DailyDealsProductPickerModal,
+  type DailyDealsPickerProduct,
+} from "@/components/admin/daily-deals-product-picker-modal";
+import { createClient } from "@/lib/supabase/client";
 
 function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
@@ -71,6 +80,7 @@ function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
 interface StoreSettingsViewProps {
   settings: StoreSettings;
   initialSlides?: HomeSlide[];
+  initialProducts?: DailyDealsPickerProduct[];
 }
 
 type TabType =
@@ -85,7 +95,11 @@ type TabType =
   | "terms-page"
   | "privacy-page";
 
-export function StoreSettingsView({ settings, initialSlides }: StoreSettingsViewProps) {
+export function StoreSettingsView({
+  settings,
+  initialSlides,
+  initialProducts,
+}: StoreSettingsViewProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -182,6 +196,50 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
   const [dailyDealsBgColor, setDailyDealsBgColor] = React.useState(
     settings.daily_deals_bg_color || "#D9480F"
   );
+  const [dailyDealsMode, setDailyDealsMode] = React.useState<"auto" | "manual">(
+    settings.daily_deals_mode === "manual" ? "manual" : "auto"
+  );
+  const [dailyDealsProductIds, setDailyDealsProductIds] = React.useState<string[]>(
+    Array.isArray(settings.daily_deals_product_ids)
+      ? settings.daily_deals_product_ids
+      : []
+  );
+  const [isDealsPickerOpen, setIsDealsPickerOpen] = React.useState(false);
+  const [availableProducts, setAvailableProducts] = React.useState<DailyDealsPickerProduct[]>(
+    initialProducts || []
+  );
+
+  // Observação sobre Prazo de Confecção e Entrega (Página de Produtos)
+  const [craftingDeliveryNotice, setCraftingDeliveryNotice] = React.useState(
+    settings.crafting_delivery_notice ||
+      "Peças personalizadas ou sob encomenda possuem prazo de confecção de 3 a 5 dias úteis após a aprovação do pagamento, além do prazo de transporte."
+  );
+  const [craftingDaysText, setCraftingDaysText] = React.useState(
+    settings.crafting_days_text || "3 a 5 dias úteis"
+  );
+
+  React.useEffect(() => {
+    if (!initialProducts || initialProducts.length === 0) {
+      const loadPickerProducts = async () => {
+        try {
+          const supabase = createClient();
+          const { data } = await supabase
+            .from("products")
+            .select(
+              "id, name, slug, sku, category_id, price_cents, sale_price_cents, stock, status, categories(id, name, slug), product_images(id, public_url, is_primary)"
+            )
+            .eq("status", "published")
+            .order("name", { ascending: true });
+          if (data) {
+            setAvailableProducts(data as DailyDealsPickerProduct[]);
+          }
+        } catch (e) {
+          console.error("Erro ao carregar produtos para seletor de ofertas:", e);
+        }
+      };
+      loadPickerProducts();
+    }
+  }, [initialProducts]);
 
   // Banner Editorial de Presentes & Cupom
   const [editorialBannerActive, setEditorialBannerActive] = React.useState(
@@ -485,6 +543,10 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
     formData.append("daily_deals_discount_percent", String(dailyDealsDiscount || 15));
     formData.append("daily_deals_product_limit", String(dailyDealsLimit || 15));
     formData.append("daily_deals_bg_color", dailyDealsBgColor.trim());
+    formData.append("daily_deals_mode", dailyDealsMode);
+    formData.append("daily_deals_product_ids", JSON.stringify(dailyDealsProductIds));
+    formData.append("crafting_delivery_notice", craftingDeliveryNotice.trim());
+    formData.append("crafting_days_text", craftingDaysText.trim());
 
     // Banner Editorial de Presentes & Cupom
     formData.append("editorial_banner_active", String(editorialBannerActive));
@@ -524,6 +586,22 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Produtos selecionados manualmente para Ofertas do Dia
+  const selectedDealsProducts = React.useMemo(() => {
+    const map = new Map(availableProducts.map((p) => [p.id, p]));
+    return dailyDealsProductIds
+      .map((id) => map.get(id))
+      .filter((p): p is DailyDealsPickerProduct => Boolean(p));
+  }, [availableProducts, dailyDealsProductIds]);
+
+  const handleRemoveDealProduct = (productId: string) => {
+    setDailyDealsProductIds((prev) => prev.filter((id) => id !== productId));
+  };
+
+  const handleClearDealProducts = () => {
+    setDailyDealsProductIds([]);
   };
 
   // Previews reativos inteligentes
@@ -2203,22 +2281,180 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                     </span>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 sm:col-span-2 pt-2 border-t border-borda/40 dark:border-[#38262C]/40">
                     <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
-                      Quantidade de Produtos
+                      Modo de Inserção dos Produtos
                     </label>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={dailyDealsLimit}
-                      onChange={(e) => setDailyDealsLimit(Number(e.target.value) || 15)}
-                      className="bg-white dark:bg-[#151012] text-xs font-bold"
-                    />
-                    <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
-                      Total de itens sorteados aleatoriamente todo dia (padrão: 15).
-                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Opção Automática */}
+                      <div
+                        onClick={() => setDailyDealsMode("auto")}
+                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col gap-1.5 ${
+                          dailyDealsMode === "auto"
+                            ? "bg-orange-50/70 dark:bg-orange-950/20 border-orange-500 text-texto-escuro dark:text-[#F8EFF1] shadow-xs ring-1 ring-orange-500/30"
+                            : "bg-white dark:bg-[#151012] border-borda dark:border-[#38262C] hover:border-orange-300 text-texto-medio dark:text-[#988087]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs flex items-center gap-1.5 text-texto-escuro dark:text-[#F8EFF1]">
+                            <Zap className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+                            Sorteio Automático
+                          </span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300">
+                            Atual
+                          </span>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-texto-claro dark:text-[#988087]">
+                          O sistema sorteia todo dia à meia-noite uma seleção dinâmica de produtos do catálogo.
+                        </p>
+                      </div>
+
+                      {/* Opção Manual */}
+                      <div
+                        onClick={() => setDailyDealsMode("manual")}
+                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col gap-1.5 ${
+                          dailyDealsMode === "manual"
+                            ? "bg-orange-50/70 dark:bg-orange-950/20 border-orange-500 text-texto-escuro dark:text-[#F8EFF1] shadow-xs ring-1 ring-orange-500/30"
+                            : "bg-white dark:bg-[#151012] border-borda dark:border-[#38262C] hover:border-orange-300 text-texto-medio dark:text-[#988087]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs flex items-center gap-1.5 text-texto-escuro dark:text-[#F8EFF1]">
+                            <Package className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+                            Seleção Manual
+                          </span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300">
+                            {dailyDealsProductIds.length} item{dailyDealsProductIds.length === 1 ? "" : "s"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-texto-claro dark:text-[#988087]">
+                          Escolha manualmente produtos específicos da loja que participarão das ofertas.
+                        </p>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Configurações específicas conforme o modo */}
+                  {dailyDealsMode === "auto" ? (
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                        Quantidade de Produtos (Limite Diário)
+                      </label>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="50"
+                        value={dailyDealsLimit}
+                        onChange={(e) => setDailyDealsLimit(Number(e.target.value) || 15)}
+                        className="bg-white dark:bg-[#151012] text-xs font-bold"
+                      />
+                      <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
+                        Total de itens sorteados aleatoriamente todo dia (padrão: 15).
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 sm:col-span-2 pt-1">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                          Produtos Escolhidos ({selectedDealsProducts.length})
+                        </label>
+                        <div className="flex items-center gap-2">
+                          {selectedDealsProducts.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={handleClearDealProducts}
+                              className="text-[11px] text-erro hover:underline font-semibold"
+                            >
+                              Limpar todos
+                            </button>
+                          )}
+                          <Button
+                            type="button"
+                            size="sm"
+                            onClick={() => setIsDealsPickerOpen(true)}
+                            className="text-xs bg-orange-600 hover:bg-orange-700 text-white font-semibold gap-1.5 shadow-xs"
+                          >
+                            <Package className="w-3.5 h-3.5" />
+                            <span>
+                              {selectedDealsProducts.length === 0
+                                ? "Escolher Produtos da Loja"
+                                : "Gerenciar Produtos Selecionados"}
+                            </span>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Lista de Preview dos Produtos Selecionados */}
+                      {selectedDealsProducts.length === 0 ? (
+                        <div
+                          onClick={() => setIsDealsPickerOpen(true)}
+                          className="p-5 rounded-2xl border border-dashed border-orange-300 dark:border-orange-800/40 bg-orange-50/40 dark:bg-orange-950/10 text-center cursor-pointer hover:bg-orange-50/60 transition-all space-y-1.5"
+                        >
+                          <Package className="w-8 h-8 text-orange-500 mx-auto opacity-70" />
+                          <p className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1]">
+                            Nenhum produto selecionado manualmente ainda
+                          </p>
+                          <p className="text-[11px] text-texto-claro dark:text-[#988087]">
+                            Clique para abrir o modal com o catálogo da loja e escolher os produtos em destaque.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="max-h-60 overflow-y-auto space-y-2 p-1">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {selectedDealsProducts.map((p) => {
+                              const primaryImg =
+                                p.product_images?.find((img) => img.is_primary)?.public_url ||
+                                p.product_images?.[0]?.public_url ||
+                                "/images/logo/logo.jpeg";
+                              const basePrice = (p.sale_price_cents || p.price_cents) / 100;
+                              const dealPrice = basePrice * (1 - dailyDealsDiscount / 100);
+
+                              return (
+                                <div
+                                  key={p.id}
+                                  className="p-2.5 rounded-xl border border-borda dark:border-[#38262C] bg-fundo/40 dark:bg-[#151012] flex items-center justify-between gap-2.5 text-xs shadow-2xs"
+                                >
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <div className="w-9 h-9 rounded-lg overflow-hidden bg-white dark:bg-[#1E1518] border border-borda/60 dark:border-[#38262C]/60 shrink-0 relative">
+                                      <Image
+                                        src={primaryImg}
+                                        alt={p.name}
+                                        fill
+                                        sizes="36px"
+                                        className="object-cover"
+                                      />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="font-semibold text-texto-escuro dark:text-[#F8EFF1] truncate max-w-[140px]" title={p.name}>
+                                        {p.name}
+                                      </p>
+                                      <div className="flex items-center gap-1.5 text-[10px]">
+                                        <span className="line-through text-texto-claro dark:text-[#988087]">
+                                          R$ {basePrice.toFixed(2).replace(".", ",")}
+                                        </span>
+                                        <span className="font-bold text-orange-600 dark:text-orange-400">
+                                          R$ {dealPrice.toFixed(2).replace(".", ",")}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveDealProduct(p.id)}
+                                    className="w-6 h-6 rounded-lg text-texto-claro hover:text-erro hover:bg-erro/10 flex items-center justify-center transition-colors shrink-0"
+                                    title="Remover das ofertas"
+                                  >
+                                    <X className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Seleção da Cor de Fundo da Faixa */}
@@ -2568,6 +2804,94 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
                   </div>
                 </div>
               </div>
+
+              {/* Card de Configuração: Prazo de Confecção & Entrega */}
+              <div className="bg-white dark:bg-[#1E1518] p-6 rounded-3xl border border-borda dark:border-[#38262C] shadow-xs space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-borda/60 dark:border-[#38262C]/60">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-800/40">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-sm font-bold text-texto-escuro dark:text-[#F8EFF1]">
+                        Prazo de Confecção & Entrega (Páginas de Produto)
+                      </h3>
+                      <p className="text-[11px] text-texto-claro dark:text-[#988087]">
+                        Aviso exibido em todos os produtos da loja informando o prazo de confecção artesanal e prazos de transporte.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-semibold px-2 py-0.5 rounded-full border border-amber-300/60 dark:border-amber-700/50">
+                    Todas as Páginas
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                      Prazo Médio de Produção em Destaque (Badge)
+                    </label>
+                    <Input
+                      type="text"
+                      value={craftingDaysText}
+                      onChange={(e) => setCraftingDaysText(e.target.value)}
+                      placeholder="Ex: 3 a 5 dias úteis"
+                      className="bg-white dark:bg-[#151012] text-xs font-semibold"
+                    />
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
+                      Selo sintético exibido no cabeçalho do aviso em cada produto (ex: &quot;3 a 5 dias úteis&quot;).
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-texto-escuro dark:text-[#F8EFF1] block">
+                      Texto da Observação Oficial
+                    </label>
+                    <textarea
+                      value={craftingDeliveryNotice}
+                      onChange={(e) => setCraftingDeliveryNotice(e.target.value)}
+                      rows={3}
+                      placeholder="Peças personalizadas ou sob encomenda possuem prazo de confecção de 3 a 5 dias úteis após a aprovação do pagamento, além do prazo de transporte da transportadora."
+                      className="w-full rounded-xl border border-borda dark:border-[#38262C] bg-white dark:bg-[#151012] p-3 text-xs text-texto-escuro dark:text-[#F8EFF1] outline-none focus:border-primaria transition-all resize-y"
+                    />
+                    <span className="text-[10px] text-texto-claro dark:text-[#988087] block">
+                      Esclarece de forma transparente a soma entre confecção artesanal e prazo de envio das transportadoras.
+                    </span>
+                  </div>
+
+                  {/* Preview Fiel em Tempo Real */}
+                  <div className="space-y-1.5 pt-2 border-t border-borda/40 dark:border-[#38262C]/40">
+                    <span className="text-[11px] font-semibold text-texto-claro dark:text-[#988087] block">
+                      Preview em Tempo Real (Como o Cliente Vê no Produto)
+                    </span>
+                    <div className="p-4 rounded-2xl bg-amber-500/10 dark:bg-amber-500/10 border border-amber-500/25 dark:border-amber-400/20 text-texto-escuro dark:text-[#F8EFF1] space-y-2 shadow-2xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+                            <Clock className="w-3.5 h-3.5" />
+                          </div>
+                          <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
+                            Prazo de Confecção & Entrega
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/50 px-2.5 py-0.5 rounded-full shrink-0">
+                          {craftingDaysText || "3 a 5 dias úteis"}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-texto-medio dark:text-[#C5B4B9] leading-relaxed">
+                        {craftingDeliveryNotice ||
+                          "Peças personalizadas ou sob encomenda possuem prazo de confecção de 3 a 5 dias úteis após a aprovação do pagamento, além do prazo de transporte da transportadora."}
+                      </p>
+
+                      <div className="flex items-center gap-1.5 pt-1 border-t border-amber-500/15 text-[11px] text-texto-claro dark:text-[#988087]">
+                        <Sparkles className="w-3.5 h-3.5 text-primaria shrink-0" />
+                        <span>Produção artesanal cuidadosa + envio rastreado com seguro</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -2590,6 +2914,16 @@ export function StoreSettingsView({ settings, initialSlides }: StoreSettingsView
         </div>
       </form>
       )}
+
+      {/* Modal de Escolha Manual de Produtos para Ofertas do Dia */}
+      <DailyDealsProductPickerModal
+        isOpen={isDealsPickerOpen}
+        onClose={() => setIsDealsPickerOpen(false)}
+        products={availableProducts}
+        selectedProductIds={dailyDealsProductIds}
+        discountPercent={dailyDealsDiscount}
+        onConfirm={(newIds) => setDailyDealsProductIds(newIds)}
+      />
     </div>
   );
 }

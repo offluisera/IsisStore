@@ -7,12 +7,10 @@ import { ProductGallery } from "@/components/commerce/product-gallery";
 import { ProductActions } from "@/components/commerce/product-actions";
 import { ProductCard } from "@/components/commerce/product-card";
 import { ProductViewTracker } from "@/components/commerce/product-view-tracker";
-import {
-  getProductBySlug,
-  getRelatedProducts,
-} from "@/services/catalog.service";
+import { getProductBySlug, getRelatedProducts } from "@/services/catalog.service";
 import { createClient } from "@/lib/supabase/server";
-import { Star, ShieldCheck, RefreshCw, Sparkles } from "lucide-react";
+import { getStoreSettings } from "@/lib/settings/store-settings";
+import { Star, ShieldCheck, RefreshCw, Sparkles, Clock } from "lucide-react";
 import type { Metadata } from "next";
 
 interface ProductPageProps {
@@ -91,11 +89,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
   const supabase = await createClient();
 
-  const [{ data: gateways }] = await Promise.all([
+  const [{ data: gateways }, storeSettings] = await Promise.all([
     supabase
       .from("payment_gateways")
       .select("name, is_active")
       .eq("is_active", true),
+    getStoreSettings(),
   ]);
 
   const activeGatewayNames = gateways?.map((g) => g.name) || [];
@@ -265,7 +264,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 "Este produto foi confeccionado com matérias-primas selecionadas e acabamento refinado, refletindo a excelência e o compromisso da Isis Store com produtos duráveis, elegantes e sofisticados."}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-borda/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-borda/60">
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-xl bg-primaria-soft text-primaria flex items-center justify-center shrink-0">
                   <Sparkles className="w-4 h-4" />
@@ -274,6 +273,18 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <h3 className="font-semibold text-xs text-texto-escuro">Qualidade Premium</h3>
                   <p className="text-[11px] text-texto-claro mt-0.5">
                     Materiais duráveis de alto padrão de acabamento.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-xs text-texto-escuro">Confecção & Envio</h3>
+                  <p className="text-[11px] text-texto-claro mt-0.5">
+                    {storeSettings.crafting_days_text || "3 a 5 dias úteis"} de confecção + prazo de transporte.
                   </p>
                 </div>
               </div>
