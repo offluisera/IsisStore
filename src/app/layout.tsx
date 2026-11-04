@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/features/cart/context/cart-context";
 import { ToastProvider } from "@/components/ui/toast-context";
@@ -15,6 +15,13 @@ const inter = Inter({
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  variable: "--font-great-vibes",
   subsets: ["latin"],
   display: "swap",
 });
@@ -90,7 +97,7 @@ export default async function RootLayout({
   const settings = await getStoreSettings();
 
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${greatVibes.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-fundo text-texto-escuro font-sans selection:bg-secundaria selection:text-texto-escuro overflow-x-hidden w-full max-w-full">
         <ThemeProvider>
           <StoreSettingsProvider initialSettings={settings}>

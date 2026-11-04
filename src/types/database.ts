@@ -706,6 +706,63 @@ export type Database = {
         }
         Relationships: []
       }
+      qr_homenagens: {
+        Row: {
+          arquivo_audio: string | null
+          arquivo_video: string | null
+          atualizado_em: string
+          chave_seguranca: string
+          cor_qr: string
+          criado_em: string
+          estilo_icone_qr: string
+          foto_principal: string | null
+          galeria_fotos: Json
+          hash_acesso: string
+          id: string
+          identificacao_pedido: string
+          mensagem_texto: string
+          nome_homenageado: string
+          titulo_homenagem: string
+          visualizacoes: number
+        }
+        Insert: {
+          arquivo_audio?: string | null
+          arquivo_video?: string | null
+          atualizado_em?: string
+          chave_seguranca: string
+          cor_qr?: string
+          criado_em?: string
+          estilo_icone_qr?: string
+          foto_principal?: string | null
+          galeria_fotos?: Json
+          hash_acesso: string
+          id?: string
+          identificacao_pedido: string
+          mensagem_texto: string
+          nome_homenageado: string
+          titulo_homenagem?: string
+          visualizacoes?: number
+        }
+        Update: {
+          arquivo_audio?: string | null
+          arquivo_video?: string | null
+          atualizado_em?: string
+          chave_seguranca?: string
+          cor_qr?: string
+          criado_em?: string
+          estilo_icone_qr?: string
+          foto_principal?: string | null
+          galeria_fotos?: Json
+          hash_acesso?: string
+          id?: string
+          identificacao_pedido?: string
+          mensagem_texto?: string
+          nome_homenageado?: string
+          titulo_homenagem?: string
+          visualizacoes?: number
+        }
+        Relationships: []
+      }
       store_settings: {
         Row: {
           announcement_banner_active: boolean
@@ -925,6 +982,10 @@ export type Database = {
       increment_category_access: {
         Args: { category_slug: string }
         Returns: undefined
+      }
+      increment_qr_homenagem_views: {
+        Args: { p_hash_acesso: string; p_chave_seguranca: string }
+        Returns: number
       }
       is_admin: { Args: never; Returns: boolean }
     }

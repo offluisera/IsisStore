@@ -1,0 +1,24 @@
+[
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "hash_acesso": "a8f9d2e1-4b7c-49a3-9e21-7c6d5a4b3f10",
+    "chave_seguranca": "vm2026k9",
+    "identificacao_pedido": "Pedido #1042 - Caneca Vó Maria",
+    "titulo_homenagem": "Para Sempre em Nossos Corações",
+    "nome_homenageado": "Vó Maria",
+    "mensagem_texto": "Querida Vó Maria,\n\nCada gole de café nesta caneca carrega o abraço quentinho que só a senhora sabe dar. Obrigado por todas as histórias na mesa da cozinha, pelo bolo de chuva nas tardes de domingo e por ensinar que o amor mora nos pequenos gestos.\n\nNós te amamos infinitamente! ❤️✨🌹",
+    "foto_principal": "/images/products/colar-coracao-delicado-ouro-rosa.jpg",
+    "galeria_fotos": [
+      "/images/products/ursinho-de-pelucia-carinho.jpg",
+      "/images/products/colar-coracao-delicado-ouro-rosa.jpg",
+      "https://wjhmukemyvimgxapscao.supabase.co/storage/v1/object/public/products/qr-homenagens/galeria-1793835156632-e7908a39.jpg"
+    ],
+    "arquivo_video": "/api/media/homenagens/video-1793835259507-dde97bc7.mp4",
+    "arquivo_audio": "/api/media/homenagens/preset-violao-afetivo.wav",
+    "estilo_icone_qr": "coracao",
+    "cor_qr": "#000000",
+    "visualizacoes": 36,
+    "criado_em": "2026-11-02T23:23:08.693Z",
+    "atualizado_em": "2026-11-04T23:40:17.803Z"
+  }
+]

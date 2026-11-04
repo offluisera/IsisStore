@@ -39,6 +39,7 @@ import {
   Package,
   CheckSquare,
   Layers,
+  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,11 +49,13 @@ import {
 } from "@/features/admin/actions";
 import type { StoreSettings } from "@/lib/settings/types";
 import type { HomeSlide } from "@/lib/slides/types";
+import type { QrHomenagem } from "@/lib/qrcodes/types";
 import { HomeSlidesManager } from "@/components/admin/home-slides-manager";
 import { BrandFeaturesManager } from "@/components/admin/brand-features-manager";
 import { ContactPageManager } from "@/components/admin/institutional/contact-page-manager";
 import { TermsPageManager } from "@/components/admin/institutional/terms-page-manager";
 import { PrivacyPageManager } from "@/components/admin/institutional/privacy-page-manager";
+import { QrCodesManager } from "@/components/admin/qrcodes/qr-codes-manager";
 import {
   DailyDealsProductPickerModal,
   type DailyDealsPickerProduct,
@@ -81,10 +84,12 @@ interface StoreSettingsViewProps {
   settings: StoreSettings;
   initialSlides?: HomeSlide[];
   initialProducts?: DailyDealsPickerProduct[];
+  initialQrCodes?: QrHomenagem[];
 }
 
 type TabType =
   | "general"
+  | "qrcodes"
   | "slides"
   | "features"
   | "editorial"
@@ -99,6 +104,7 @@ export function StoreSettingsView({
   settings,
   initialSlides,
   initialProducts,
+  initialQrCodes = [],
 }: StoreSettingsViewProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -117,6 +123,7 @@ export function StoreSettingsView({
       tabParam &&
       [
         "general",
+        "qrcodes",
         "slides",
         "features",
         "editorial",
@@ -700,6 +707,19 @@ export function StoreSettingsView({
 
         <button
           type="button"
+          onClick={() => handleTabChange("qrcodes")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
+            activeTab === "qrcodes"
+              ? "bg-primaria text-white shadow-2xs"
+              : "text-texto-medio dark:text-[#C5B0B6] hover:text-texto-escuro dark:hover:text-white hover:bg-fundo dark:hover:bg-[#25181E]"
+          }`}
+        >
+          <QrCode className="w-3.5 h-3.5" />
+          <span>QR Codes Personalizados</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => handleTabChange("slides")}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
             activeTab === "slides"
@@ -871,7 +891,12 @@ export function StoreSettingsView({
       </div>
 
       {/* Conteúdo da Aba Ativa */}
-      {activeTab === "slides" ? (
+      {activeTab === "qrcodes" ? (
+        <QrCodesManager
+          initialItems={initialQrCodes}
+          storeName={storeName}
+        />
+      ) : activeTab === "slides" ? (
         <HomeSlidesManager initialSlides={initialSlides} />
       ) : activeTab === "features" ? (
         <BrandFeaturesManager

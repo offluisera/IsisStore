@@ -3,17 +3,21 @@ import { getStoreSettings } from "@/lib/settings/store-settings";
 import { StoreSettingsView } from "@/components/admin/store-settings-view";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_HOME_SLIDES, HomeSlide } from "@/lib/slides/types";
+import { listQrHomenagens } from "@/lib/qrcodes/qrcode-store";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Configurações Gerais da Loja — Isis Store Admin",
   description:
-    "Gerencie a identidade visual, slides da home, favicon, metadados SEO, tags de busca, contato e operação da loja.",
+    "Gerencie a identidade visual, slides da home, QR Codes personalizados para estamparia, favicon, metadados SEO, contato e operação da loja.",
 };
 
 export default async function AdminConfiguracoesPage() {
-  const settings = await getStoreSettings();
+  const [settings, qrHomenagens] = await Promise.all([
+    getStoreSettings(),
+    listQrHomenagens(),
+  ]);
 
   let slides: HomeSlide[] = DEFAULT_HOME_SLIDES;
   let products: any[] = [];
@@ -49,6 +53,7 @@ export default async function AdminConfiguracoesPage() {
         settings={settings}
         initialSlides={slides}
         initialProducts={products}
+        initialQrCodes={qrHomenagens}
       />
     </Suspense>
   );

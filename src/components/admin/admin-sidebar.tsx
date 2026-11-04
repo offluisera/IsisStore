@@ -34,6 +34,7 @@ import {
   Sparkles,
   Gift,
   Globe,
+  QrCode,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -207,16 +208,19 @@ const NAV_ITEMS: NavItem[] = [
         icon: Store,
       },
       {
+        label: "QR Codes Personalizados",
+        href: "/admin/configuracoes?tab=qrcodes",
+        icon: QrCode,
+      },
+      {
         label: "Slides da Home",
         href: "/admin/configuracoes?tab=slides",
         icon: Sliders,
-        badge: "Novo",
       },
       {
         label: "Diferenciais da Loja",
         href: "/admin/configuracoes?tab=features",
         icon: Sparkles,
-        badge: "Novo",
       },
       {
         label: "Banner de Presentes",
@@ -439,7 +443,7 @@ export function AdminSidebar({ onCloseMobile, isMobile = false }: AdminSidebarPr
                               : "text-[#6B5558] dark:text-[#CCAAB2] hover:text-primaria hover:bg-[#FFF5F6] dark:hover:bg-[#2C1D23]"
                           )}
                         >
-                          <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-2.5 min-w-0">
                             {SubIcon && (
                               <SubIcon
                                 className={cn(
