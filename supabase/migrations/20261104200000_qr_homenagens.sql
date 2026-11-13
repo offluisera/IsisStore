@@ -27,14 +27,17 @@ ALTER TABLE public.qr_homenagens ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
     CREATE POLICY "QR Homenagens: Admins gerenciam tudo" ON public.qr_homenagens
-        FOR ALL USING (public.is_admin());
+        FOR ALL TO authenticated
+        USING (public.is_admin())
+        WITH CHECK (public.is_admin());
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
 
 DO $$ BEGIN
     CREATE POLICY "QR Homenagens: Leitura publica validada por aplicacao" ON public.qr_homenagens
-        FOR SELECT USING (true);
+        FOR SELECT TO anon, authenticated
+        USING (true);
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;

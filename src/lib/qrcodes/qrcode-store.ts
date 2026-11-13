@@ -128,20 +128,20 @@ async function writeLocalStore(items: QrHomenagem[]): Promise<void> {
   }
 }
 
-export async function listQrHomenagens(): Promise<QrHomenagem[]> {
+export async function listQrHomenagens(client?: any): Promise<QrHomenagem[]> {
   const localItems = await readLocalStore();
 
   try {
-    const supabase = await createClient();
+    const supabase = client || (await createClient());
     const { data, error } = await supabase
       .from("qr_homenagens")
       .select("*")
       .order("criado_em", { ascending: false });
 
     if (!error && data) {
-      const dbItems = data.map((r) => normalizeRow(r as unknown as Record<string, unknown>));
+      const dbItems = data.map((r: any) => normalizeRow(r as unknown as Record<string, unknown>));
       // Mesclar itens do banco com itens locais ainda não sincronizados
-      const dbIds = new Set(dbItems.map((i) => i.id));
+      const dbIds = new Set(dbItems.map((i: any) => i.id));
       const merged = [...dbItems, ...localItems.filter((l) => !dbIds.has(l.id))];
       merged.sort(
         (a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime()
@@ -157,9 +157,9 @@ export async function listQrHomenagens(): Promise<QrHomenagem[]> {
   );
 }
 
-export async function getQrHomenagemById(id: string): Promise<QrHomenagem | null> {
+export async function getQrHomenagemById(id: string, client?: any): Promise<QrHomenagem | null> {
   try {
-    const supabase = await createClient();
+    const supabase = client || (await createClient());
     const { data, error } = await supabase
       .from("qr_homenagens")
       .select("*")
@@ -177,9 +177,9 @@ export async function getQrHomenagemById(id: string): Promise<QrHomenagem | null
   return localItems.find((item) => item.id === id) || null;
 }
 
-export async function getQrHomenagemByHash(hashAcesso: string): Promise<QrHomenagem | null> {
+export async function getQrHomenagemByHash(hashAcesso: string, client?: any): Promise<QrHomenagem | null> {
   try {
-    const supabase = await createClient();
+    const supabase = client || (await createClient());
     const { data, error } = await supabase
       .from("qr_homenagens")
       .select("*")
@@ -236,13 +236,14 @@ export async function incrementQrHomenagemViews(
 }
 
 export async function saveQrHomenagem(
-  input: CreateQrHomenagemInput
+  input: CreateQrHomenagemInput,
+  client?: any
 ): Promise<QrHomenagem> {
   const localItems = await readLocalStore();
   const now = new Date().toISOString();
 
   const existing = input.id
-    ? (await getQrHomenagemById(input.id)) || localItems.find((i) => i.id === input.id)
+    ? (await getQrHomenagemById(input.id, client)) || localItems.find((i) => i.id === input.id)
     : null;
 
   const record: QrHomenagem = {
@@ -265,7 +266,7 @@ export async function saveQrHomenagem(
   };
 
   try {
-    const supabase = await createClient();
+    const supabase = client || (await createClient());
     const { data, error } = await supabase
       .from("qr_homenagens")
       .upsert({
@@ -289,7 +290,23 @@ export async function saveQrHomenagem(
       .select("*")
       .single();
 
-    if (!error && data) {
+    if (error) {
+      console.error("Erro ao salvar no Supabase qr_homenagens:", error);
+      const isMissingTable =
+        error.code === "42P01" ||
+        error.code === "PGRST205" ||
+        error.message?.includes("schema cache") ||
+        error.message?.includes("does not exist");
+
+      if (isMissingTable) {
+        throw new Error(
+          "A tabela 'qr_homenagens' ainda não foi criada no banco de dados Supabase. Execute a migration '20261104200000_qr_homenagens.sql' no SQL Editor do painel Supabase."
+        );
+      }
+      throw new Error(`Erro ao salvar no Supabase: ${error.message}`);
+    }
+
+    if (data) {
       const saved = normalizeRow(data as unknown as Record<string, unknown>);
       const nextLocal = localItems.some((i) => i.id === saved.id)
         ? localItems.map((i) => (i.id === saved.id ? saved : i))
@@ -297,8 +314,12 @@ export async function saveQrHomenagem(
       await writeLocalStore(nextLocal);
       return saved;
     }
-  } catch {
-    // Continua salvando localmente se a tabela ainda não foi migrada no banco remoto
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.includes("Supabase")) {
+      throw err;
+    }
+    console.error("Exceção ao persistir QR Homenagem no Supabase:", err);
+    throw err;
   }
 
   const nextLocal = localItems.some((i) => i.id === record.id)
@@ -309,9 +330,9 @@ export async function saveQrHomenagem(
   return record;
 }
 
-export async function deleteQrHomenagem(id: string): Promise<boolean> {
+export async function deleteQrHomenagem(id: string, client?: any): Promise<boolean> {
   try {
-    const supabase = await createClient();
+    const supabase = client || (await createClient());
     await supabase.from("qr_homenagens").delete().eq("id", id);
   } catch {
     // Ignora erro caso tabela remota não exista

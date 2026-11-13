@@ -18,7 +18,7 @@ export async function GET(
   }
 
   const { id } = await context.params;
-  const item = await getQrHomenagemById(id);
+  const item = await getQrHomenagemById(id, auth.supabase);
 
   if (!item) {
     return NextResponse.json(
@@ -43,8 +43,8 @@ export async function DELETE(
   }
 
   const { id } = await context.params;
-  const existing = await getQrHomenagemById(id);
-  await deleteQrHomenagem(id);
+  const existing = await getQrHomenagemById(id, auth.supabase);
+  await deleteQrHomenagem(id, auth.supabase);
 
   await logAdminAudit(
     auth.supabase,

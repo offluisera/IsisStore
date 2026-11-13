@@ -12,7 +12,7 @@ export async function GET() {
     );
   }
 
-  const items = await listQrHomenagens();
+  const items = await listQrHomenagens(auth.supabase);
   return NextResponse.json({ success: true, items });
 }
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       arquivo_audio: parsed.data.arquivo_audio || null,
       estilo_icone_qr: parsed.data.estilo_icone_qr,
       cor_qr: parsed.data.cor_qr,
-    });
+    }, auth.supabase);
 
     await logAdminAudit(
       auth.supabase,

@@ -26,7 +26,7 @@ export async function listQrHomenagensAction(): Promise<{
     };
   }
 
-  const items = await listQrHomenagens();
+  const items = await listQrHomenagens(auth.supabase);
   return { success: true, items };
 }
 
@@ -62,7 +62,7 @@ export async function saveQrHomenagemAction(
       arquivo_audio: parsed.data.arquivo_audio || null,
       estilo_icone_qr: parsed.data.estilo_icone_qr,
       cor_qr: parsed.data.cor_qr,
-    });
+    }, auth.supabase);
 
     await logAdminAudit(
       auth.supabase,
@@ -109,8 +109,8 @@ export async function deleteQrHomenagemAction(
     return { success: false, message: "ID do QR Code não informado." };
   }
 
-  const existing = await getQrHomenagemById(id);
-  await deleteQrHomenagem(id);
+  const existing = await getQrHomenagemById(id, auth.supabase);
+  await deleteQrHomenagem(id, auth.supabase);
 
   await logAdminAudit(
     auth.supabase,
